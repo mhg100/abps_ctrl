@@ -3,7 +3,7 @@
 
     $usuario = $_POST['id'];
     $password = $_POST['password'];
-    $conexion = fSesion($usuario, $password);
+    $conexion = fSesion();
     session_start();
 
     $tabla = '';
@@ -37,7 +37,7 @@
         {
             $_SESSION['nombres']  = $resultado['nombres_admin'];
             $_SESSION['apellidos']= $resultado['apellidos_admin'];
-            header('Location: index2.php');
+            header('Location: landmin.php');
         }
         $_SESSION['ns'] = 0;
     }

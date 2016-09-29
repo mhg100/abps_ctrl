@@ -1,8 +1,8 @@
 <?php
     include 'php/php_func.php';
     session_start();
+    fTimeStamp();
     $_SESSION['rol'] = '0';
-    fTimeStamp($_SESSION['rol']);
     echo initHTML($_SESSION['rol']);
 ?>
 <body>
@@ -30,46 +30,13 @@
                         <div class="col-md-4">
                             <button id="" name="" class="btn btn-primary">Ingresar</button>
                         </div>
-                        
                         <?php
-                        
-                            if(isset($_SESSION['ns'])){
-                                if($_SESSION['ns'] == 1){
-                                    echo '
-                        <label class="alert alert-danger col-md-8">
-                            <strong>Usuario o clave incorrectos</strong>
-                        </label>
-                                    ';
-                                }else if($_SESSION['ns'] == 0){
-                                    echo '
-                        <label class="alert alert-success col-md-8">
-                            <strong>logueado</strong>
-                        </label>
-                            ';
-                                }else if($_SESSION['ns'] == 2){
-                                    echo '
-                        <label class="alert alert-warning col-md-8">
-                            <strong>Sesión cerrada por inactividad</strong>
-                        </label>
-                                    ';
-                                }else if($_SESSION['ns'] == 3){
-                                    echo '
-                        <label class="alert alert-danger col-md-8">
-                            <strong>Error al iniciar sesion (codigo 0x8160)</strong>
-                        </label>
-                                    ';
-                                }else echo '';
-                            }
-                        
+                            validaEstadoLogin();
                         ?>
                     </div>
                 </div>
             </fieldset>
-            <?php
-                
-            ?>
         </form>
     </div>
 </body>
-
 </html>

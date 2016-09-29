@@ -1,5 +1,5 @@
 <?php
-    function fSesion($usuario, $clave){
+    function fSesion(){
         $db_srv = '172.27.48.125';
         $db_usr = 'merhengo';
         $db_psw = '10ceroun0';
@@ -17,9 +17,9 @@
         return $conn;
     }
     
-    function fTimeStamp($rol){
+    function fTimeStamp(){
         if(isset($_SESSION['horaAcceso'])){
-            if  ($_SESSION['horaAcceso']) unset(
+            if  ($_SESSION['horaAcceso'] > 5) unset(
                                                 $_SESSION['nombres'],
                                                 $_SESSION['apellidos'],
                                                 $_SESSION['horaAcceso'],
@@ -46,10 +46,126 @@
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+            <script type="text/javascript" src="js/charts.loader.js"></script>
             <script src="js/jquery.min.js"></script>
             <script src="js/bootstrap.min.js"></script>
         </head>
         
         ';
+    }
+
+    function llamarPieChart($datos, $width, $height){
+        echo    '<script type="text/javascript">';
+        echo        "google.charts.load('current', {'packages':['corechart']});
+                    google.charts.setOnLoadCallback(drawChart);
+                    function drawChart() {
+                        var data = google.visualization.arrayToDataTable([
+                          ['Campaña', '% de diademas'],
+                          ['Colsanitas',           11],
+                          ['ETB',                   2],
+                          ['UARIV',                 2],
+                          ['Cafam',                 2],
+                          ['Acueducto',             2],
+                          ['Familias en acción',    1],
+                          ['Icetex',                2],
+                          ['DPS',                   7]
+                        ]);
+
+                        var options = {
+                            title: '',
+                            width: ".$width.",
+                            height: ".$height.",
+                            backgroundColor: { fill:'transparent' },
+                            is3D: false
+                        };
+                        var chart = new google.visualization.PieChart(document.getElementById('tortaOperaciones'));
+                        chart.draw(data, options);
+                    }
+                </script>";
+
+    }
+
+    function llamarAreaChart($datos, $width, $height){
+        echo    '<script type="text/javascript">';
+        echo        "google.charts.load('current', {'packages':['corechart']});
+                    google.charts.setOnLoadCallback(drawChart);
+
+                    function drawChart() {
+                        var data = google.visualization.arrayToDataTable([
+                            ['Year', 'Sales', 'Expenses'],
+                            ['2013',  1000,      400],
+                            ['2014',  1170,      460],
+                            ['2015',  660,      1120],
+                            ['2016',  1030,      540]
+                        ]);
+                        var options = {
+                            title: '',
+                            hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+                            vAxis: {minValue: 0},
+                            width: ".$width.",
+                            height: ".$height.",
+                            backgroundColor: { fill: 'transparent' },
+                            is3D: false
+                        };
+                        var chart = new google.visualization.AreaChart(document.getElementById('movimientos'));
+                        chart.draw(data, options);
+                    }
+                </script>";
+    }
+
+    function llamarCantidadOperaciones($datos, $width, $height){
+        //funcion para tener toda la informacion 
+    }
+
+    function consultarOperaciones(){
+        $conexion = fSesion();
+    }
+    
+    function validaEstadoLogin(){
+        
+        if(isset($_SESSION['ns']))
+        {
+            if($_SESSION['ns'] == 1)
+            {
+                echo '
+    <label class="alert alert-danger col-md-8">
+        <strong>Usuario o clave incorrectos</strong>
+    </label>
+                ';
+            }
+            else if($_SESSION['ns'] == 0)
+            {
+                echo '
+    <label class="alert alert-success col-md-8">
+        <strong>logueado</strong>
+    </label>
+        ';
+            }
+            else if($_SESSION['ns'] == 2)
+            {
+                echo '
+    <label class="alert alert-warning col-md-8">
+        <strong>Sesión cerrada por inactividad</strong>
+    </label>
+                ';
+            }
+            else if($_SESSION['ns'] == 3)
+            {
+                echo '
+    <label class="alert alert-danger col-md-8">
+        <strong>Error al iniciar sesion (codigo 0x8160)</strong>
+    </label>
+                ';
+            }
+            else echo '';
+        }
+        else if($_GET['ns'] == 4)
+        {
+            echo '
+        <label class="alert alert-warning col-md-8">
+            <strong>Sesión finalizada</strong>
+        </label>
+            ';
+        }
     }
 ?>
