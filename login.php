@@ -10,12 +10,14 @@
     $columna='';
     $passw = '';
 
-    if($_SESSION['rol'] == '0'){
+    if($_SESSION['rol'] == '0')
+    {
         $tabla = 'dbo.admins';
         $columna='id_admin';
         $passw = 'pass_admin';
-    }else
-        if($_SESSION['rol'] == '1'){
+    }
+    else if($_SESSION['rol'] == '1')
+        {
             $tabla = 'dbo.coordinadores';
             $columna='id_coordinador';
             $passw = 'pass_coordinador';
@@ -31,13 +33,14 @@
         {
             $_SESSION['nombres']  = $resultado['nombres_coordinador'];
             $_SESSION['apellidos']= $resultado['apellidos_coordinador'];
-            $_SESSION['horaAcceso']= time();
-            header('Location: index.php');
+            $_SESSION['horaAcceso'] = time();
+            header('Location: time.php');
         }
-        else if($_SESSION['rol'] == '0')
+        else if ($_SESSION['rol'] == '0')
         {
             $_SESSION['nombres']  = $resultado['nombres_admin'];
             $_SESSION['apellidos']= $resultado['apellidos_admin'];
+            $_SESSION['horaAcceso'] = time();
             header('Location: landmin.php');
         }
         $_SESSION['ns'] = 0;

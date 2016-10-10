@@ -1,5 +1,6 @@
 <?php
-    function fSesion(){
+    function fSesion()
+    {
         $db_srv = '172.27.48.125';
         $db_usr = 'merhengo';
         $db_psw = '10ceroun0';
@@ -16,20 +17,25 @@
         
         return $conn;
     }
-    
-    function fTimeStamp(){
-        if(isset($_SESSION['horaAcceso'])){
-            if  ($_SESSION['horaAcceso'] > 5) unset(
-                                                $_SESSION['nombres'],
-                                                $_SESSION['apellidos'],
-                                                $_SESSION['horaAcceso'],
-                                                $_SESSION['ns']
-                                                );
+    function fTimeStamp()
+    {
+        if(isset($_SESSION['horaAcceso']))
+        {
+            if (time() - $_SESSION['horaAcceso'] > 600)
+            {
+                unset(
+                    $_SESSION['nombres'],
+                    $_SESSION['apellidos'],
+                    $_SESSION['horaAcceso'],
+                    $_SESSION['ns']
+                    );
+                header('Location: logout.php?mtv=1');
+            }
             else $_SESSION['horaAcceso'] = time();
         }
     }
-
-    function initHTML($environment){
+    function initHTML($environment)
+    {
         $tipoUsuario = '';
         
         if($environment == 0){
@@ -54,8 +60,8 @@
         
         ';
     }
-
-    function llamarPieChart($datos, $width, $height){
+    function llamarPieChart($datos, $width, $height)
+    {
         echo    '<script type="text/javascript">';
         echo        "google.charts.load('current', {'packages':['corechart']});
                     google.charts.setOnLoadCallback(drawChart);
@@ -85,8 +91,8 @@
                 </script>";
 
     }
-
-    function llamarAreaChart($datos, $width, $height){
+    function llamarAreaChart($datos, $width, $height)
+    {
         echo    '<script type="text/javascript">';
         echo        "google.charts.load('current', {'packages':['corechart']});
                     google.charts.setOnLoadCallback(drawChart);
@@ -113,16 +119,16 @@
                     }
                 </script>";
     }
-
-    function llamarCantidadOperaciones($datos, $width, $height){
+    function llamarCantidadOperaciones($datos, $width, $height)
+    {
         //funcion para tener toda la informacion 
     }
-
-    function consultarOperaciones(){
+    function consultarOperaciones()
+    {
         $conexion = fSesion();
     }
-    
-    function validaEstadoLogin(){
+    function validaEstadoLogin()
+    {
         
         if(isset($_SESSION['ns']))
         {
@@ -142,14 +148,6 @@
     </label>
         ';
             }
-            else if($_SESSION['ns'] == 2)
-            {
-                echo '
-    <label class="alert alert-warning col-md-8">
-        <strong>Sesión cerrada por inactividad</strong>
-    </label>
-                ';
-            }
             else if($_SESSION['ns'] == 3)
             {
                 echo '
@@ -160,6 +158,14 @@
             }
             else echo '';
         }
+        else if($_GET['ns'] == 2)
+        {
+            echo '
+<label class="alert alert-warning col-md-8">
+    <strong>Sesión cerrada por inactividad</strong>
+</label>
+            ';
+            }
         else if($_GET['ns'] == 4)
         {
             echo '
@@ -168,5 +174,8 @@
         </label>
             ';
         }
+    }
+    function cambioDeUsuario(){
+        
     }
 ?>

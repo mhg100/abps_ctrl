@@ -10,6 +10,12 @@
         <form class="form-horizontal" role="form" action="login.php" method="post">
             <fieldset class="">
                 <legend>Control diademas - inicio de sesión</legend>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <a href="index2.php" class="btn btn-success" role="button">Cambiar a administrador</a>
+                        <p></p>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="col-md-4 control-label" for="id" name="id"></label>
                     <div class="col-md-4 input-group">
