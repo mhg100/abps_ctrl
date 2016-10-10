@@ -72,9 +72,22 @@
                             <h4 class="text-center">Movimientos de los tres últimos meses</h4>
                             <div id="movimientos"></div>
                         </div>
-                        <div class="col-md-4" style="outline: 1px solid #E7E7E7;">
-                            <h4 class="text-center">Comparación de entrada/salida</h4>
-                            <div id="comparacion"></div>
+                        <div class="col-md-4" style="outline: 1px solid #E7E7E7; height:289px">
+                            <h4 class="text-center">Últimos 10 movimientos</h4>
+                            <div>
+                                <ol type="1">
+                                    <li>ABPS1010 - Entregada en DPS</li>
+                                    <li>ABPS2025 - Cambio por ABPS0321 en Cafam</li>
+                                    <li>ABPS1032 - Entregada en DPS</li>
+                                    <li>ABPS1010 - Entregada en UARIV</li>
+                                    <li>ABPS2021 - Cambio por ABPS1019 en Colsanitas</li>
+                                    <li>ABPS2041 - Cambio por ABPS0485 en MFA</li>
+                                    <li>Mov 7</li>
+                                    <li>Mov 8</li>
+                                    <li>Mov 9</li>
+                                    <li>Mov 10</li>
+                                </ol>
+                            </div>
                         </div>
                     </div>
                 </div>

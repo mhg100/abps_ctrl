@@ -37,6 +37,7 @@
         }else if($environment == 1){
             $tipoUsuario = 'Coordinador';
         }
+        //172.27.32.134 IP control
         return '
         
         <!DOCTYPE html>
