@@ -27,8 +27,8 @@
                                 <ul class="dropdown-menu">
                                     <li><a href="#">Ver coordinadores</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="#">Crear</a></li>
-                                    <li><a href="#">Modificar</a></li>
+                                    <li><a href="default-opman.php?id=1">Crear</a></li>
+                                    <li><a href="default-opman.php?id=2">Modificar</a></li>
                                 </ul>
                             </li>
                         </ul>

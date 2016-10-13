@@ -41,7 +41,7 @@
             $_SESSION['nombres']  = $resultado['nombres_admin'];
             $_SESSION['apellidos']= $resultado['apellidos_admin'];
             $_SESSION['horaAcceso'] = time();
-            header('Location: landmin.php');
+            header('Location: default.php');
         }
         $_SESSION['ns'] = 0;
     }

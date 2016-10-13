@@ -1,7 +1,6 @@
 <?php
     include 'php/php_func.php';
     session_start();
-    fTimeStamp();
     $_SESSION['rol'] = '1';
     echo initHTML($_SESSION['rol']);
 ?>
