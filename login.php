@@ -23,7 +23,7 @@
             $passw = 'pass_coordinador';
     }
 
-    $sql = "SELECT * FROM ".$tabla." where ".$columna." = '".$usuario."' and ".$passw." like '".$password."'";
+    $sql = "SELECT * FROM ".$tabla." where ".$columna." = '".$usuario."' and ".$passw." = '".$password."'";
     $qry = sqlsrv_query($conexion, $sql, array(), array( "Scrollable" => 'static' ));
     $resultado = sqlsrv_fetch_array($qry);
 
