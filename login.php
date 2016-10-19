@@ -15,20 +15,23 @@
         $tabla = 'dbo.admins';
         $columna='id_admin';
         $passw = 'pass_admin';
+        $fecha = 'ultimoacceso_admin';
     }
     else if($_SESSION['rol'] == '1')
-        {
-            $tabla = 'dbo.coordinadores';
-            $columna='id_coordinador';
-            $passw = 'pass_coordinador';
+    {
+        $tabla = 'dbo.coordinadores';
+        $columna='id_coordinador';
+        $passw = 'pass_coordinador';
+        $fecha = 'ultimoacceso_coordinador';
     }
-
-    $sql = "SELECT * FROM ".$tabla." where ".$columna." = '".$usuario."' and ".$passw." = '".$password."'";
+    $sql = "select * from ".$tabla." where ".$columna." = '".$usuario."' and ".$passw." COLLATE Latin1_General_CS_AS = '".$password."'";
     $qry = sqlsrv_query($conexion, $sql, array(), array( "Scrollable" => 'static' ));
     $resultado = sqlsrv_fetch_array($qry);
 
     if($resultado[0] == $usuario)//--------------------------------acceso autorizado
     {
+        $sql = "update ".$tabla." set ".$fecha." = GETDATE() where ".$columna." = '".$usuario."'";
+        $qry = sqlsrv_query($conexion, $sql, array(), array( "Scrollable" => 'static' ));
         if($_SESSION['rol'] == '1')
         {
             $_SESSION['nombres']  = $resultado['nombres_coordinador'];
