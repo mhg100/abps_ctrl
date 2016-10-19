@@ -54,7 +54,7 @@
         <html lang="es">
         <head>
             <title>'.$tipoUsuario.' - Inicio de sesión</title>
-            <meta charset="utf-8">
+            <meta http-equiv="Content-type" content="text/html; iso-8859-2" />
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
             <script type="text/javascript" src="js/charts.loader.js"></script>
@@ -206,10 +206,10 @@
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Coordinadores<span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#">Ver coordinadores</a></li>
+                                    <li><a href="default-opman.php?ic=0">Ver coordinadores</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="default-opman.php?id=1">Crear</a></li>
-                                    <li><a href="default-opman.php?id=2">Modificar</a></li>
+                                    <li><a href="default-opman.php?ic=1">Crear</a></li>
+                                    <li><a href="default-opman.php?ic=2">Modificar</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -239,5 +239,102 @@
                         </ul>
                     </div>
                 </nav>';
+    }
+    function crearCoordinadores()
+    {
+        $conn = fSesion();
+        $sql = "select nombre_campaign, id_campaign from campaigns order by nombre_campaign";
+        $stmt = sqlsrv_query($conn, $sql);
+        if($stmt === false)
+        {
+            die(print_r( sqlsrv_errors(), true));
+        }
+        echo '<form class="form-horizontal" role="form" action="crearCoordinador.php" method="post">';
+        //echo '<div class="form-group">';
+        $index = 0;
+        echo '
+                                    <div class="col-md-10 text-left col-md-offset-2">
+                                    <p>&nbsp;</p>
+        
+                                                        <!--Formulario-->
+                                        <div class="form-group">
+                                            <label for="nombres" class="col-sm-2 control-label">Nombre(s):</label>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Nombres" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="apellidos" class="col-sm-2 control-label">Apellidos: </label>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="Apellidos" required>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="campa" class="col-sm-2 control-label">Campaña:</label>
+                                            <div class="col-md-8">
+                                                <select class="form-control selectpicker" data-live-search="true" id="campa" name="campa">
+                                                      <option>--Seleccione--</option>
+                                                  ';
+                                                  while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC))
+                                                  {
+                                                      echo '<option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>
+                                                      ';
+                                                  }
+                                                  sqlsrv_free_stmt($stmt);
+        echo '</select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <button type="submit" class="btn btn-default">
+                                                    Agregar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+        ';
+    }
+    function verCoordinadores($edit)
+    {
+        $conn = fSesion();
+        $sql = "select id_coordinador, nombres_coordinador, apellidos_coordinador, campaign_coordinador, ultimoacceso_coordinador from coordinadores;";
+        $stmt = sqlsrv_query($conn, $sql);
+        if($stmt === false)
+        {
+            die(print_r( sqlsrv_errors(), true));
+        }
+        echo '<form class="form-horizontal" role="form">';
+        //echo '<div class="form-group">';
+        $index = 0;
+        while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC))
+        {
+            $nombres   = ucwords($row['nombres_coordinador']);
+            $apellidos = ucwords($row['apellidos_coordinador']);
+            $campaign  = ucwords($row['campaign_coordinador']);
+            $deshabilitar = '';
+            if($edit == 1) $deshabilitar = '';
+            else if($edit == 0) $deshabilitar = 'disabled';
+            echo '
+                                        <div class="form-group">
+                                            <p>&nbsp;</p>
+                                            <label for="nombres'.$index.'" class="col-sm-3 control-label">Nombre(s):</label>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" id="nombres'.$index.'" placeholder="Nombre(s)" required value="'.$nombres.'" '.$deshabilitar.'>
+                                            </div>
+                                            <label for="apellidos'.$index.'" class="col-sm-3 control-label">Apellidos:</label>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" id="apellidos'.$index.'" placeholder="Apellidos" required value="'.$apellidos.'" '.$deshabilitar.'>
+                                            </div>
+                                            <label for="campaign'.$index.'" class="col-sm-3 control-label">Campaña:</label>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" id="campaign'.$index.'" placeholder="Campaña" required value="'.$campaign.'" '.$deshabilitar.'>
+                                            </div>
+                                        </div>
+            ';
+            $index++;
+        }  
+        echo '</form>';
+        sqlsrv_free_stmt($stmt);
     }
 ?>
