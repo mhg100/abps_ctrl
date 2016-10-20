@@ -57,9 +57,11 @@
             <meta http-equiv="Content-type" content="text/html; iso-8859-2" />
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+            <link rel="stylesheet" type="text/css" href="css/bootstrap-select.css">
             <script type="text/javascript" src="js/charts.loader.js"></script>
             <script src="js/jquery.min.js"></script>
             <script src="js/bootstrap.min.js"></script>
+            <script src="js/bootstrap-select.js"></script>
         </head>
         
         ';
@@ -260,7 +262,7 @@
                                         <div class="form-group">
                                             <label for="nombres" class="col-sm-2 control-label">Nombre(s):</label>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Nombres" required>
+                                                <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Nombres" required autofocus>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -269,25 +271,29 @@
                                                 <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="Apellidos" required>
                                             </div>
                                         </div>
-                                        
                                         <div class="form-group">
                                             <label for="campa" class="col-sm-2 control-label">Campaña:</label>
+                                            <div class="col-md-4">
+                                                <select id="selectorCampaign" name="selectorCampaign" class="selectpicker" data-live-search="true" title="Seleccione una campaña">
+                                                    ';
+                                                    while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC))
+                                                    {
+                                                        echo '<option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>
+                                                        ';
+                                                    }
+                                                    sqlsrv_free_stmt($stmt);
+                                          echo '</select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cant_agentes" class="col-sm-2 control-label">Cantidad de agentes: </label>
                                             <div class="col-md-8">
-                                                <select class="form-control selectpicker" data-live-search="true" id="campa" name="campa">
-                                                      <option>--Seleccione--</option>
-                                                  ';
-                                                  while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC))
-                                                  {
-                                                      echo '<option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>
-                                                      ';
-                                                  }
-                                                  sqlsrv_free_stmt($stmt);
-        echo '</select>
+                                                <input type="text" class="form-control bfh-number" name="cantagentes" id="cantagentes">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-sm-offset-2 col-sm-10">
-                                                <button type="submit" class="btn btn-default">
+                                                <button type="submit" class="btn btn-default" id="cant_agentes" name="cant_agentes">
                                                     Agregar
                                                 </button>
                                             </div>
@@ -298,7 +304,7 @@
     function verCoordinadores($edit)
     {
         $conn = fSesion();
-        $sql = "select id_coordinador, nombres_coordinador, apellidos_coordinador, campaign_coordinador, ultimoacceso_coordinador from coordinadores;";
+        $sql = "select id_coordinador as id, nombres_coordinador as nombres, apellidos_coordinador as apellidos, cantidad_agentes_coordinador as cantagentes, nombre_campaign as campaign from coordinadores, campaigns";
         $stmt = sqlsrv_query($conn, $sql);
         if($stmt === false)
         {
@@ -309,15 +315,21 @@
         $index = 0;
         while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC))
         {
-            $nombres   = ucwords($row['nombres_coordinador']);
-            $apellidos = ucwords($row['apellidos_coordinador']);
-            $campaign  = ucwords($row['campaign_coordinador']);
+            $id = $row['id'];
+            $nombres   = ucwords($row['nombres']);
+            $apellidos = ucwords($row['apellidos']);
+            $campaign  = ucwords($row['campaign']);
+            $cantagentes=ucwords($row['cantagentes']);
             $deshabilitar = '';
             if($edit == 1) $deshabilitar = '';
             else if($edit == 0) $deshabilitar = 'disabled';
             echo '
                                         <div class="form-group">
                                             <p>&nbsp;</p>
+                                            <label for="nombres'.$index.'" class="col-sm-3 control-label">ID:</label>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" id="id'.$index.'" placeholder="ID del agente" required value="'.$id.'" '.$deshabilitar.'>
+                                            </div>
                                             <label for="nombres'.$index.'" class="col-sm-3 control-label">Nombre(s):</label>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" id="nombres'.$index.'" placeholder="Nombre(s)" required value="'.$nombres.'" '.$deshabilitar.'>
@@ -329,6 +341,10 @@
                                             <label for="campaign'.$index.'" class="col-sm-3 control-label">Campaña:</label>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" id="campaign'.$index.'" placeholder="Campaña" required value="'.$campaign.'" '.$deshabilitar.'>
+                                            </div>
+                                            <label for="campaign'.$index.'" class="col-sm-3 control-label">Cantidad de agentes: </label>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" id="cantagentes'.$index.'" placeholder="Cantidad de agentes" required value="'.$cantagentes.'" '.$deshabilitar.'>
                                             </div>
                                         </div>
             ';
