@@ -54,7 +54,7 @@
         <html lang="es">
         <head>
             <title>'.$tipoUsuario.' - Inicio de sesión</title>
-            <meta http-equiv="Content-type" content="text/html; iso-8859-2" />
+            <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
             <script src="js/jquery.min.js"></script>
@@ -206,10 +206,10 @@
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Coordinadores<span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="default-opman.php?ic=0">Ver coordinadores</a></li>
+                                    <li><a href="#">Ver coordinadores</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="default-opman.php?ic=1">Crear</a></li>
-                                    <li><a href="default-opman.php?ic=2">Modificar</a></li>
+                                    <li><a href="default-opman.php?id=1">Crear</a></li>
+                                    <li><a href="default-opman.php?id=2">Modificar</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -240,6 +240,7 @@
                     </div>
                 </nav>';
     }
+<<<<<<< HEAD
     function crearCoordinadores()
     {
         $conn = fSesion();
@@ -337,4 +338,6 @@
         echo '</form>';
         sqlsrv_free_stmt($stmt);
     }
+=======
+>>>>>>> parent of d49ccf5... Actualizaciones
 ?>
