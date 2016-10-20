@@ -11,9 +11,11 @@
             <div class="col-md-12">
                 <?php
                     navbar();
+                    if ($_GET['ic'] == 0)      $opcion = 'Ver';
+                    else if ($_GET['ic'] == 1) $opcion = 'Crear';
                 ?>
                 <div class="jumbotron" style="background-color: #F8F8F8; outline: 1px solid #E7E7E7;">
-                    <h2 class="text-center">Gestor de coordinadores - Crear</h2>
+                    <h2 class="text-center">Gestor de coordinadores - <?php echo $opcion; ?></h2>
                     <p>&nbsp;</p>
                     <div class="row text-center">
                         <div class="col-md-8 col-lg-offset-2" style="outline: 1px solid #E7E7E7;">

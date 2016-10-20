@@ -8,7 +8,6 @@
 
         $connection_options = array('Database'=>'abps_control', 'UID'=>'merhengo', 'PWD'=>'10ceroun0');
         $conn = sqlsrv_connect($db_srv, $connection_options);
-
         if(!is_resource($conn)){
             session_start();
             $_SESSION['ns'] = 3;
@@ -68,14 +67,26 @@
     }
     function llamarPieChart($datos, $width, $height)
     {
+        $conn = fSesion();
+        $stmt = sqlsrv_query($conn, $sql);
+        if($stmt === false)
+        {
+            die(print_r(sqlsrv_errors(), true));
+        }
+        while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC))
+        {
+            //echo $row['id_campaign'].' '.$row['nombre_campaign'];
+        }
+        sqlsrv_free_stmt($stmt);
+        
         echo    '<script type="text/javascript">';
         echo        "google.charts.load('current', {'packages':['corechart']});
                     google.charts.setOnLoadCallback(drawChart);
                     function drawChart() {
                         var data = google.visualization.arrayToDataTable([
                           ['Campaña', '% de diademas'],
-                          ['Colsanitas',           11],
-                          ['ETB',                   2],
+                          ['".fetchNombreCampaign("colcolcol")."', " .fetchCantCampaign("13")."],
+                          ['".fetchNombreCampaign("eitibi")."',    ".fetchCantCampaign("200")."],
                           ['UARIV',                 2],
                           ['Cafam',                 2],
                           ['Acueducto',             2],
@@ -352,5 +363,15 @@
         }  
         echo '</form>';
         sqlsrv_free_stmt($stmt);
+    }
+    function fetchNombreCampaign($nombreCampaign, $conn)
+    {
+        return $nombreCampaign;
+        //return "select sum(cantidad_agentes_coordinador) from coordinadores where campaign_coordinador = (select id_campaign from campaigns where nombre_campaign = '".$nombreCampaign."')";
+    }
+    function fetchCantCampaign($cantCampaign, $conn)
+    {
+        return $cantCampaign;
+        //return "select sum(cantidad_agentes_coordinador) from coordinadores where campaign_coordinador = (select id_campaign from campaigns where nombre_campaign = '".$nombreCampaign."')";
     }
 ?>
