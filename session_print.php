@@ -15,7 +15,7 @@
             //echo "['".$campaigns["nombre"]."', " .$cant['total']."],";
             echo '<pre>'.$campaigns["nombre"].' '.$cant['total'].'</pre>';
         }
-    }*/ 
+    }
 
     $campaign = '6244';
     $sql2 = "select nombre_campaign as nc from campaigns where id_campaign = '6244'";
@@ -25,5 +25,7 @@
     {
         $nombreCampa = $cmpgn['nc'];
         echo $nombreCampa;
-    }
+    }*/
+
+    echo extension_loaded("mongo") ? "loaded\n" : "not loaded\n";
 ?>
