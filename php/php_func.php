@@ -321,50 +321,58 @@
     function verCoordinadores($edit)
     {
         $conn = fSesion();
-        $sql = "select id_coordinador as id, nombres_coordinador as nombres, apellidos_coordinador as apellidos, cantidad_agentes_coordinador as cantagentes, nombre_campaign as campaign from coordinadores, campaigns";
-        $stmt = sqlsrv_query($conn, $sql);
-        if($stmt === false)
+        $sql1 = "select id_coordinador as id, nombres_coordinador as nombres, apellidos_coordinador as apellidos, cantidad_agentes_coordinador as cantagentes, campaign_coordinador as idcampa from coordinadores";
+        $stmt1 = sqlsrv_query($conn, $sql1);
+        $stmt2 = sqlsrv_query($conn, $sql2);
+        if($stmt1 === false)
         {
             die(print_r( sqlsrv_errors(), true));
         }
         echo '<form class="form-horizontal" role="form">';
         //echo '<div class="form-group">';
         $index = 0;
-        while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC))
+        while($ppl = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC))
         {
-            $id = $row['id'];
-            $nombres   = ucwords($row['nombres']);
-            $apellidos = ucwords($row['apellidos']);
-            $campaign  = ucwords($row['campaign']);
-            $cantagentes=ucwords($row['cantagentes']);
+            $id = $ppl['id'];
+            $nombres   = ucwords($ppl['nombres']);
+            $apellidos = ucwords($ppl['apellidos']);
+            $campaign  = ucwords($ppl['idcampa']);
+            $cantagentes=ucwords($ppl['cantagentes']);
+            $nombreCampa=' ';
+            $sql2 = "select nombre_campaign as nc from campaigns where id_campaign = ".$campaign."";
+            $stmt2 = sqlsrv_query($conn, $sql2);
+            while($cmpgn = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC))
+            {
+                $nombreCampa = ucwords($cmpgn['nc']);
+            }
             $deshabilitar = '';
             if($edit == 1) $deshabilitar = '';
             else if($edit == 0) $deshabilitar = 'disabled';
             echo '
-                                        <div class="form-group">
-                                            <p>&nbsp;</p>
-                                            <label for="nombres'.$index.'" class="col-sm-3 control-label">ID:</label>
-                                            <div class="col-md-8">
-                                                <input type="text" class="form-control" id="id'.$index.'" placeholder="ID del agente" required value="'.$id.'" '.$deshabilitar.'>
+                                            <div class="form-group">
+                                                <p>&nbsp;</p>
+                                                <label for="nombres'.$index.'" class="col-sm-3 control-label">ID:</label>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="form-control" id="id'.$index.'" placeholder="ID del agente" required value="'.$id.'" '.$deshabilitar.'>
+                                                </div>
+                                                <label for="nombres'.$index.'" class="col-sm-3 control-label">Nombre(s):</label>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="form-control" id="nombres'.$index.'" placeholder="Nombre(s)" required value="'.$nombres.'" '.$deshabilitar.'>
+                                                </div>
+                                                <label for="apellidos'.$index.'" class="col-sm-3 control-label">Apellidos:</label>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="form-control" id="apellidos'.$index.'" placeholder="Apellidos" required value="'.$apellidos.'" '.$deshabilitar.'>
+                                                </div>
+                                                <label for="campaign'.$index.'" class="col-sm-3 control-label">Campaña:</label>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="form-control" id="campaign'.$index.'" placeholder="Campaña" required value="'.$nombreCampa.'" '.$deshabilitar.'>
+                                                </div>
+                                                <label for="campaign'.$index.'" class="col-sm-3 control-label">Cantidad de agentes: </label>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="form-control" id="cantagentes'.$index.'" placeholder="Cantidad de agentes" required value="'.$cantagentes.'" '.$deshabilitar.'>
+                                                </div>
                                             </div>
-                                            <label for="nombres'.$index.'" class="col-sm-3 control-label">Nombre(s):</label>
-                                            <div class="col-md-8">
-                                                <input type="text" class="form-control" id="nombres'.$index.'" placeholder="Nombre(s)" required value="'.$nombres.'" '.$deshabilitar.'>
-                                            </div>
-                                            <label for="apellidos'.$index.'" class="col-sm-3 control-label">Apellidos:</label>
-                                            <div class="col-md-8">
-                                                <input type="text" class="form-control" id="apellidos'.$index.'" placeholder="Apellidos" required value="'.$apellidos.'" '.$deshabilitar.'>
-                                            </div>
-                                            <label for="campaign'.$index.'" class="col-sm-3 control-label">Campaña:</label>
-                                            <div class="col-md-8">
-                                                <input type="text" class="form-control" id="campaign'.$index.'" placeholder="Campaña" required value="'.$campaign.'" '.$deshabilitar.'>
-                                            </div>
-                                            <label for="campaign'.$index.'" class="col-sm-3 control-label">Cantidad de agentes: </label>
-                                            <div class="col-md-8">
-                                                <input type="text" class="form-control" id="cantagentes'.$index.'" placeholder="Cantidad de agentes" required value="'.$cantagentes.'" '.$deshabilitar.'>
-                                            </div>
-                                        </div>
-            ';
+                ';
             $index++;
         }  
         echo '</form>';
