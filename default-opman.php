@@ -13,6 +13,7 @@
                     navbar();
                     if ($_GET['ic'] == 0)      $opcion = 'Ver';
                     else if ($_GET['ic'] == 1) $opcion = 'Crear';
+                    else if ($_GET['ic'] == 2) $opcion = 'Modificar';
                 ?>
                 <div class="jumbotron" style="background-color: #F8F8F8; outline: 1px solid #E7E7E7;">
                     <h2 class="text-center">Gestor de coordinadores - <?php echo $opcion; ?></h2>
