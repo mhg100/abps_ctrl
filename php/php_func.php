@@ -68,15 +68,12 @@
     function llamarPieChart($datos, $width, $height)
     {
         $conn = fSesion();
-        $stmt = sqlsrv_query($conn, $sql);
-        if($stmt === false)
-        {
-            die(print_r(sqlsrv_errors(), true));
-        }
-        while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC))
-        {
-            //echo $row['id_campaign'].' '.$row['nombre_campaign'];
-        }
+        $sql_ObtenerNombres  = "select nombre_campaign as nombre from campaigns";
+        $stmt_ObtenerNombres = sqlsrv_query($conn, $sql_ObtenerNombres);
+
+        
+            //echo             "['".fetchNombreCampaign($row[''])."', " .fetchCantCampaign("13")."],";
+
         sqlsrv_free_stmt($stmt);
         
         echo    '<script type="text/javascript">';
@@ -84,15 +81,23 @@
                     google.charts.setOnLoadCallback(drawChart);
                     function drawChart() {
                         var data = google.visualization.arrayToDataTable([
-                          ['Campaña', '% de diademas'],
-                          ['".fetchNombreCampaign("colcolcol")."', " .fetchCantCampaign("13")."],
-                          ['".fetchNombreCampaign("eitibi")."',    ".fetchCantCampaign("200")."],
-                          ['UARIV',                 2],
-                          ['Cafam',                 2],
-                          ['Acueducto',             2],
-                          ['Familias en acción',    1],
-                          ['Icetex',                2],
-                          ['DPS',                   7]
+                          ['Campaña', '% de diademas'],";
+
+        while($campaigns = sqlsrv_fetch_array($stmt_ObtenerNombres, SQLSRV_FETCH_ASSOC))
+        {
+            $stmt_ObtenerCantCampaign = sqlsrv_query($conn, fetchCantCampaign($campaigns["nombre"]));
+            while($cant = sqlsrv_fetch_array($stmt_ObtenerCantCampaign, SQLSRV_FETCH_ASSOC))
+            {
+                if($cant['total'] == NULL){
+                    $cant['total'] = 0;
+                }
+                echo "['".$campaigns["nombre"]."', " .$cant['total']."],";
+            }
+        }
+        sqlsrv_free_stmt($stmt_ObtenerNombres);
+        sqlsrv_free_stmt($stmt_ObtenerCantCampaign);
+        
+        echo             "['',                   '']
                         ]);
 
                         var options = {
@@ -105,7 +110,8 @@
                         var chart = new google.visualization.PieChart(document.getElementById('tortaOperaciones'));
                         chart.draw(data, options);
                     }
-                </script>";
+                </script>
+                ";
 
     }
     function llamarAreaChart($datos, $width, $height)
@@ -364,14 +370,8 @@
         echo '</form>';
         sqlsrv_free_stmt($stmt);
     }
-    function fetchNombreCampaign($nombreCampaign, $conn)
+    function fetchCantCampaign($nombreCampaign)
     {
-        return $nombreCampaign;
-        //return "select sum(cantidad_agentes_coordinador) from coordinadores where campaign_coordinador = (select id_campaign from campaigns where nombre_campaign = '".$nombreCampaign."')";
-    }
-    function fetchCantCampaign($cantCampaign, $conn)
-    {
-        return $cantCampaign;
-        //return "select sum(cantidad_agentes_coordinador) from coordinadores where campaign_coordinador = (select id_campaign from campaigns where nombre_campaign = '".$nombreCampaign."')";
+        return "select sum(cantidad_agentes_coordinador) as total from coordinadores where campaign_coordinador = (select id_campaign from campaigns where nombre_campaign = '".$nombreCampaign."')";
     }
 ?>
