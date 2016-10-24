@@ -27,5 +27,11 @@
         echo $nombreCampa;
     }*/
 
-    echo extension_loaded("mongo") ? "loaded\n" : "not loaded\n";
+    if(extension_loaded("mongodb")){
+        echo "Cargada";
+    }else
+    {
+        echo "No cargada";
+    }
+    //echo extension_loaded("mongodb") ? "loaded\n" : "not loaded\n";
 ?>
