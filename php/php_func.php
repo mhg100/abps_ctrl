@@ -382,4 +382,8 @@
     {
         return "select sum(cantidad_agentes_coordinador) as total from coordinadores where campaign_coordinador = (select id_campaign from campaigns where nombre_campaign = '".$nombreCampaign."')";
     }
+    function comprobarAdmin()
+    {
+        header('Location: defaultcoord.php');
+    }
 ?>

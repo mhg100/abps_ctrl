@@ -2,10 +2,11 @@
     include 'php/php_func.php';
     session_start();
     fTimeStamp();
-    $_SESSION['rol'] = '0';
     echo initHTML($_SESSION['rol']);
     llamarPieChart(' ', 400, 250);
     llamarAreaChart('', 400, 250);
+    if($_SESSION['rol'] == 1)
+    comprobarAdmin();
 ?>
 <body>
     <div class="container-fluid">
@@ -13,10 +14,14 @@
             <div class="col-md-12">
                 <?php
                     navbar();
+                    if($_SESSION['rol'] == 1)
+                    {
+                        header('Location: defaultcoord.php');
+                    }
                 ?>
                 <div></div>
                 <div class="jumbotron" style="background-color: #F8F8F8; outline: 1px solid #E7E7E7;">
-                    <h2 class="text-center">Información general</h2>
+                    <h2 class="text-center">Información general <?php echo $_SESSION['rol']; ?></h2>
                     <br /><br />
                     <!--<p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>-->
                     <div class="row">

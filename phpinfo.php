@@ -1,4 +1,8 @@
-﻿<?php
+<?php
 	//phpinfo();
-	print_r(get_loaded_extensions());
+	//print_r(get_loaded_extensions());
+    session_start();
+    echo "<h3> PHP List All Session Variables</h3>";
+    foreach ($_SESSION as $key=>$val)
+    echo $key." ".$val."<br/>";
 ?>
