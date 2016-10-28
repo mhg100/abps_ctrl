@@ -37,7 +37,7 @@
             $_SESSION['nombres']  = $resultado['nombres_coordinador'];
             $_SESSION['apellidos']= $resultado['apellidos_coordinador'];
             $_SESSION['horaAcceso'] = time();
-            header('Location: time.php');
+            header('Location: defaultcoord.php');
         }
         else if ($_SESSION['rol'] == '0')
         {

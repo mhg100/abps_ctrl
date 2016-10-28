@@ -14,10 +14,6 @@
             <div class="col-md-12">
                 <?php
                     navbar();
-                    if($_SESSION['rol'] == 1)
-                    {
-                        header('Location: defaultcoord.php');
-                    }
                 ?>
                 <div></div>
                 <div class="jumbotron" style="background-color: #F8F8F8; outline: 1px solid #E7E7E7;">

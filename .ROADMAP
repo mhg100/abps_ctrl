@@ -2,10 +2,10 @@
     1.0 login--------------------------------------
     1.1 land page ('post' las politicas)+++++++++++
         1.1.1 operaciones con coordinadores
-            1.1.1.1 listar coordinadores
-                1.1.1.1.1 listar todos
-                1.1.1.1.2 listar por campaña
-            1.1.1.2 crear
+            1.1.1.1 listar coordinadores-----------
+                1.1.1.1.1 listar todos-------------
+                1.1.1.1.2 listar por campaña+++++++
+            1.1.1.2 crear--------------------------
             1.1.1.3 modificar
                 1.1.1.3.1 nombres y apellidos
                 1.1.1.3.2 resetear clave
@@ -13,9 +13,9 @@
     1.2 modificar datos personales
         1.2.1 modificar nombre y apellido
         1.2.2 modificar clave
-    1.3 logout
+    1.3 logout-------------------------------------
 2. coordinadores
-    2.0 login----------------------------------------
+    2.0 login--------------------------------------
     2.1 diademas
         2.1.2 lista de dispositivos
         2.1.2 agregar dispositivo

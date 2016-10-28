@@ -6,7 +6,7 @@
         $db_psw = '10ceroun0';
         $db_name = 'abps_control';
 
-        $connection_options = array('Database'=>'abps_control', 'UID'=>'merhengo', 'PWD'=>'10ceroun0');
+        $connection_options = array('Database'=>''.$db_name.'', 'UID'=>''.$db_usr.'', 'PWD'=>''.$db_psw.'');
         $conn = sqlsrv_connect($db_srv, $connection_options);
         if(!is_resource($conn)){
             session_start();
@@ -60,6 +60,7 @@
             <script type="text/javascript" src="js/charts.loader.js"></script>
             <script src="js/jquery.min.js"></script>
             <script src="js/bootstrap.min.js"></script>
+            <script src="js/bootstrap.custom.js"></script>
             <script src="js/bootstrap-select.js"></script>
         </head>
         
@@ -157,11 +158,14 @@
             }
             else if($_SESSION['ns'] == 0)
             {
+                header('location: default.php');
+                
+                /*
                 echo '
     <label class="alert alert-success col-md-8">
         <strong>logueado</strong>
     </label>
-        ';
+        ';*/
             }
             else if($_SESSION['ns'] == 3)
             {
@@ -200,22 +204,11 @@
     }
     function navbar()
     {
-        echo '<nav class="navbar navbar-default" role="navigation">
+        echo '<nav class="navbar navbar-default nav-center" role="navigation">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                             <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-                        </button><a class="navbar-brand" href="';
-                        
-                            if($_SESSION['rol'] == 0)
-                            {
-                                echo 'default.php';
-                            }
-                            else
-                            {
-                                echo 'landco.php';
-                            }
-            
-                        echo '">ADMin</a>
+                        </button><a class="navbar-brand" href="default.php">ADMin</a>
                     </div>
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
@@ -244,7 +237,54 @@
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                     <span class="caret"></span>
-                                    <span class="glyphicon glyphicon-user"></span>';
+                                    <span class="glyphicon glyphicon-user"></span> ';
+        
+                                        echo $_SESSION['nombres'].' '.$_SESSION['apellidos'];
+                                echo '
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#"><span class="glyphicon glyphicon-info-sign"></span> Ver información personal</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="logout.php?rol=0"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>';
+    }
+    function navbarCoordinadores()
+    {
+        echo '<nav class="navbar navbar-default" role="navigation">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                            <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                        </button><a class="navbar-brand" href="default.php">COOrd</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="defaultDevice.php?ic=0">Ver lista de diademas</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="defaultDevice.php?ic=1">Crear diadema</a></li>
+                                    <li><a href="cambios.php">Solicitud de cambio</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <form class="navbar-form navbar-left" role="search">
+                            <div class="form-group">
+                                <input type="text" class="form-control">
+                            </div>
+                            <button type="submit" class="btn btn-default">
+                                Buscar diadema
+                            </button>
+                        </form>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <span class="caret"></span>
+                                    <span class="glyphicon glyphicon-user"></span> ';
         
                                         echo $_SESSION['nombres'].' '.$_SESSION['apellidos'];
                                 echo '
@@ -384,6 +424,9 @@
     }
     function comprobarAdmin()
     {
-        header('Location: defaultcoord.php');
+        if($_SESSION['rol'] == 1)
+        {
+            header('Location: defaultcoord.php');
+        }
     }
 ?>
