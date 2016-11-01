@@ -30,14 +30,13 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-4 control-label" for=""></label>
-                    <div class="col-md-4 input-group">
-                        <div class="col-md-4">
-                            <button id="" name="" class="btn btn-primary">Ingresar</button>
-                        </div>
+                    <div class="col-md-8 input-group" align="right">
+                        <fieldset>
+                            <button id="ingresar" name="ingresar" class="btn btn-primary" style="padding:15px">Ingresar</button>
                         <?php
                             validaEstadoLogin();
                         ?>
+                        </fieldset>
                     </div>
                 </div>
             </fieldset>

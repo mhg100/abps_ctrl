@@ -53,7 +53,7 @@
         <html lang="es">
         <head>
             <title>'.$tipoUsuario.' - Inicio de sesión</title>
-            <meta http-equiv="Content-type" content="text/html; iso-8859-2" />
+            <meta http-equiv="Content-type" content="text/html; utf-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
             <link rel="stylesheet" type="text/css" href="css/bootstrap-select.css">
@@ -77,8 +77,8 @@
 
         sqlsrv_free_stmt($stmt);
         
-        echo    '<script type="text/javascript">';
-        echo        "google.charts.load('current', {'packages':['corechart']});
+        echo '<script type="text/javascript">';
+        echo     "google.charts.load('current', {'packages':['corechart']});
                     google.charts.setOnLoadCallback(drawChart);
                     function drawChart() {
                         var data = google.visualization.arrayToDataTable([
@@ -92,13 +92,14 @@
                 if($cant['total'] == NULL){
                     $cant['total'] = 0;
                 }
-                echo "['".$campaigns["nombre"]."', " .$cant['total']."],";
+                echo "
+                          ['".$campaigns["nombre"]."', " .$cant['total']."],\r";
             }
         }
         sqlsrv_free_stmt($stmt_ObtenerNombres);
         sqlsrv_free_stmt($stmt_ObtenerCantCampaign);
         
-        echo             "['',                   '']
+        echo             "\r\n                          ['',                   '']
                         ]);
 
                         var options = {
@@ -111,7 +112,7 @@
                         var chart = new google.visualization.PieChart(document.getElementById('tortaOperaciones'));
                         chart.draw(data, options);
                     }
-                </script>
+        </script>
                 ";
 
     }
@@ -150,15 +151,17 @@
         {
             if($_SESSION['ns'] == 1)
             {
+                unset($_SESSION['ns']);
                 echo '
-    <label class="alert alert-danger col-md-8">
+    <label class="alert alert-danger col-md-4 col-md-offset-6 text-center">
         <strong>Usuario o clave incorrectos</strong>
     </label>
                 ';
             }
             else if($_SESSION['ns'] == 0)
             {
-                header('location: default.php');
+                if($_SESSION['rol'] == 0) header('location: default.php');
+                else if($_SESSION['rol'] == 1) header('location: defaultcoord.php');
                 
                 /*
                 echo '
@@ -170,7 +173,7 @@
             else if($_SESSION['ns'] == 3)
             {
                 echo '
-    <label class="alert alert-danger col-md-8">
+    <label class="alert alert-danger col-md-4 col-md-offset-6 text-center">
         <strong>Error al iniciar sesion (codigo 0x8160)</strong>
     </label>
                 ';
@@ -180,15 +183,16 @@
         else if($_GET['ns'] == 2)
         {
             echo '
-<label class="alert alert-warning col-md-8">
-    <strong>Sesión cerrada por inactividad</strong>
-</label>
+    <label class="alert alert-warning col-md-4 col-md-offset-6 text-center">
+        <strong>Sesión cerrada por inactividad</strong>
+    </label>
+
             ';
             }
         else if($_GET['ns'] == 4)
         {
             echo '
-        <label class="alert alert-warning col-md-8">
+        <label class="alert alert-warning col-md-4 col-md-offset-6 text-center">
             <strong>Sesión finalizada</strong>
         </label>
             ';
@@ -196,7 +200,7 @@
         else if($_GET['ns'] == 5)
         {
             echo '
-        <label class="alert alert-warning col-md-8">
+        <label class="alert alert-warning col-md-4 col-md-offset-6 text-center">
             <strong>Sesión no iniciada</strong>
         </label>
             ';
@@ -265,9 +269,9 @@
                             <li class="dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="defaultDevice.php?ic=0">Ver lista de diademas</a></li>
+                                    <li><a href="defaultdevice.php?ic=0">Ver lista de diademas</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="defaultDevice.php?ic=1">Crear diadema</a></li>
+                                    <li><a href="defaultdevice.php?ic=1">Crear diadema</a></li>
                                     <li><a href="cambios.php">Solicitud de cambio</a></li>
                                 </ul>
                             </li>
@@ -301,16 +305,13 @@
     }
     function crearCoordinadores()
     {
-        $conn = fSesion();
-        $sql = "select nombre_campaign, id_campaign from campaigns order by nombre_campaign";
-        $stmt = sqlsrv_query($conn, $sql);
-        if($stmt === false)
-        {
-            die(print_r( sqlsrv_errors(), true));
-        }
+        
         echo '<form class="form-horizontal" role="form" action="crearCoordinador.php" method="post">';
-        //echo '<div class="form-group">';
-        $index = 0;
+        
+        $conn = fSesion();
+        $sql = "select nombre_campaign, id_campaign from campaigns order by nombre_campaign asc";
+        $stmt = sqlsrv_query($conn, $sql);
+        //$stmt = sqlsrv_query($conexion, $sql, array(), array( "Scrollable" => 'static'));
         echo '
                                     <div class="col-md-10 text-left col-md-offset-2">
                                     <p>&nbsp;</p>
@@ -319,19 +320,25 @@
                                         <div class="form-group">
                                             <label for="nombres" class="col-sm-2 control-label">Nombre(s):</label>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Nombres" required autofocus>
+                                                <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Nombres" required autofocus autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="apellidos" class="col-sm-2 control-label">Apellidos: </label>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="Apellidos" required>
+                                                <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="Apellidos" required autocomplete="off">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cedula" class="col-sm-2 control-label">Cédula: </label>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" id="cedula" name="cedula" placeholder="Cédula" required autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="campa" class="col-sm-2 control-label">Campaña:</label>
                                             <div class="col-md-4">
-                                                <select id="selectorCampaign" name="selectorCampaign" class="selectpicker" data-live-search="true" title="Seleccione una campaña">
+                                                <select id="selectorCampaign" name="selectorCampaign" class="selectpicker" data-live-search="true" title="Seleccione una campaña" required autocomplete="off">
                                                     ';
                                                     while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC))
                                                     {
@@ -345,7 +352,7 @@
                                         <div class="form-group">
                                             <label for="cant_agentes" class="col-sm-2 control-label">Cantidad de agentes: </label>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control bfh-number" name="cantagentes" id="cantagentes">
+                                                <input type="text" class="form-control bfh-number" name="cantagentes" id="cantagentes" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -428,5 +435,70 @@
         {
             header('Location: defaultcoord.php');
         }
+    }
+    function crearDiadema()
+    {
+        echo '<form class="form-horizontal" role="form" action="crear_diadema.php" method="post">';
+        //echo '<div class="form-group">';
+        $index = 0;
+        echo '
+                                    <div align="center">
+                                    <p>&nbsp;</p>
+        
+                                                        <!--Formulario-->
+                                        <div class="form-group">
+                                            <label for="serial" class="col-md-4 control-label">Serial:</label>
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" id="serial" name="serial" placeholder="Si no tiene serial, digite 00" required autofocus>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="nombres" class="col-md-4 control-label">Nombre(s) y apellidos o Dirección IP: </label>
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Nombres o dirección IP" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="marca" class="col-md-4 control-label">Marca:</label>
+                                            <div class="col-md-4">
+                                                <select id="marca" name="marca" class="selectpicker" data-live-search="true" title="Seleccione una marca" width="200px" required>
+                                                    <option value="Jabra">Jabra</option>
+                                                    <option value="Plantronics">Plantronics</option>
+                                                    <option value="China">China</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="serialnumber" class="col-sm-4 control-label">S/N: </label>
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control bfh-number" name="serialnumber" id="serialnumber" disabled required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-10" align="right">
+                                                <fieldset>
+                                                    <button type="submit" class="btn btn-success" id="agregar" name="agregar" style="padding: 15px;">Agregar</button>
+                                                    ';
+                                                    if(isset($_GET['err']))
+                                                    {
+                                                        if($_GET['err'] == 1)
+                                                        {
+                                                        echo    '<label for="agregar" class="alert alert-danger col-md-4 col-md-offset-5 text-center">
+                                                        <strong>Error: Serial duplicado</strong>
+                                                    </label>';
+                                                        }
+                                                    }
+        echo '
+                                                </fieldset>
+                                            </div>
+                                    </form>
+                                    <script>
+                                        $("#marca").on("changed.bs.select", function (e) {
+                                            var val = $("#marca").val();
+                                            if(val == "Jabra") $( "#serialnumber" ).prop( "disabled", false );
+                                            else $( "#serialnumber" ).prop( "disabled", true );
+                                        });
+                                    </script>
+        ';
     }
 ?>

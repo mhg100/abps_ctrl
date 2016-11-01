@@ -3,6 +3,10 @@
     $conn = fSesion();
     $sql_ObtenerNombres  = "select nombre_campaign as nombre from campaigns";
     $stmt_ObtenerNombres = sqlsrv_query($conn, $sql_ObtenerNombres);
+    session_start();
+    echo '<pre>';
+    var_dump($_SESSION);
+    echo '</pre>';
 
     /*while($campaigns = sqlsrv_fetch_array($stmt_ObtenerNombres, SQLSRV_FETCH_ASSOC))
     {
@@ -25,7 +29,7 @@
     {
         $nombreCampa = $cmpgn['nc'];
         echo $nombreCampa;
-    }*/
+    }
 
     if(extension_loaded("mongodb")){
         echo "Cargada";
@@ -33,5 +37,5 @@
     {
         echo "No cargada";
     }
-    //echo extension_loaded("mongodb") ? "loaded\n" : "not loaded\n";
+    //echo extension_loaded("mongodb") ? "loaded\n" : "not loaded\n";*/
 ?>

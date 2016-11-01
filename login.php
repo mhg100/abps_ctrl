@@ -12,19 +12,22 @@
 
     if($_SESSION['rol'] == '0')
     {
-        $tabla = 'dbo.admins';
-        $columna='id_admin';
-        $passw = 'pass_admin';
-        $fecha = 'ultimoacceso_admin';
+        $tabla    = 'dbo.admins';
+        $columna  = 'id_admin';
+        $passw    = 'pass_admin';
+        $apellido = 'apellidos_admin';
+        $fecha    = 'ultimoacceso_admin';
     }
     else if($_SESSION['rol'] == '1')
     {
         $tabla = 'dbo.coordinadores';
         $columna='id_coordinador';
         $passw = 'pass_coordinador';
+        $apellido = 'apellidos_coordinador';
         $fecha = 'ultimoacceso_coordinador';
     }
-    $sql = "select * from ".$tabla." where ".$columna." = '".$usuario."' and ".$passw." COLLATE Latin1_General_CS_AS = '".$password."'";
+    $sql = "select * from ".$tabla." where ".$columna." = '".$usuario."' and ".$passw." COLLATE Modern_Spanish_CS_AS = '".$password."' order by ".$apellido." COLLATE Modern_Spanish_CS_AS_KS";
+    //$sql = "select * from ".$tabla." where ".$columna." COLLATE Modern_Spanish_CS_AS = '".$usuario."' and ".$passw." COLLATE Modern_Spanish_CS_AS = '".$password."' COLLATE latin2_czech_cs";
     $qry = sqlsrv_query($conexion, $sql, array(), array( "Scrollable" => 'static' ));
     $resultado = sqlsrv_fetch_array($qry);
 
@@ -36,6 +39,7 @@
         {
             $_SESSION['nombres']  = $resultado['nombres_coordinador'];
             $_SESSION['apellidos']= $resultado['apellidos_coordinador'];
+            $_SESSION['id']= $usuario;
             $_SESSION['horaAcceso'] = time();
             header('Location: defaultcoord.php');
         }

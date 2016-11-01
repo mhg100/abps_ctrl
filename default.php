@@ -1,12 +1,12 @@
 <?php
-    include 'php/php_func.php';
-    session_start();
-    fTimeStamp();
-    echo initHTML($_SESSION['rol']);
-    llamarPieChart(' ', 400, 250);
-    llamarAreaChart('', 400, 250);
-    if($_SESSION['rol'] == 1)
-    comprobarAdmin();
+include 'php/php_func.php';
+session_start();
+fTimeStamp();
+echo initHTML($_SESSION['rol']);
+llamarPieChart(' ', 400, 250);
+llamarAreaChart('', 400, 250);
+if($_SESSION['rol'] == 1)
+comprobarAdmin();
 ?>
 <body>
     <div class="container-fluid">
@@ -17,9 +17,8 @@
                 ?>
                 <div></div>
                 <div class="jumbotron" style="background-color: #F8F8F8; outline: 1px solid #E7E7E7;">
-                    <h2 class="text-center">Información general <?php echo $_SESSION['rol']; ?></h2>
+                    <h2 class="text-center">Información general</h2>
                     <br /><br />
-                    <!--<p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>-->
                     <div class="row">
                         <div class="col-md-4" style="outline: 1px solid #E7E7E7;">
                             <h4 class="text-center">Total diademas</h4>
