@@ -4,9 +4,12 @@
     $usuario = $_POST['id'];
     $password = $_POST['password'];
     $conexion = fSesion();
+    
+    $comilladoble = '"';
+    $prohibidos = array("'", $comilladoble, ";", "=");
 
-    $usuario = str_replace("'", "-", $usuario);
-    $password = str_replace("'", "-", $password);
+    $usuario = str_replace($prohibidos, "-", $usuario);
+    $password = str_replace($prohibidos, "-", $password);
     
     session_start();
 
