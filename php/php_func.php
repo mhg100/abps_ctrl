@@ -365,19 +365,39 @@
                                     </form>
         ';
     }
-    function verCoordinadores($edit)
+    function verCoordinadores($edit, $camp)
     {
         $conn = fSesion();
         $sql1 = "select id_coordinador as id, nombres_coordinador as nombres, apellidos_coordinador as apellidos, cantidad_agentes_coordinador as cantagentes, campaign_coordinador as idcampa from coordinadores";
-        $stmt1 = sqlsrv_query($conn, $sql1);
+        $sql2 = "select nombre_campaign, id_campaign from campaigns order by nombre_campaign asc";
         $stmt2 = sqlsrv_query($conn, $sql2);
-        if($stmt1 === false)
-        {
-            die(print_r( sqlsrv_errors(), true));
-        }
-        echo '<form class="form-horizontal" role="form">';
-        //echo '<div class="form-group">';
+        $inject = "' or ''='";
+        
+        echo '<form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label for="listarcampaign" class="col-sm-3 control-label">Listar por campaña:</label>
+                    <div class="col-md-3">
+                        <select id="selectorCampaign" name="selectorCampaign" class="selectpicker" data-live-search="true" title="Seleccione una campaña" required autocomplete="off">
+                            <option value="'.$inject.'">Todas las campañas</option>
+                            ';
+                            while($row = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC))
+                            {
+                                echo '<option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>
+                                ';
+                            }
+                            sqlsrv_free_stmt($stmt);
+                  echo '</select>
+                    </div>
+                </div>
+        ';
+        
         $index = 0;
+        
+        if(isset($camp))
+        {
+            $sql1 = $sql1." where campaign_coordinador = '".$camp."'";
+        }
+        $stmt1 = sqlsrv_query($conn, $sql1);
         while($ppl = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC))
         {
             $id = $ppl['id'];
@@ -388,42 +408,57 @@
             $nombreCampa=' ';
             $sql2 = "select nombre_campaign as nc from campaigns where id_campaign = ".$campaign."";
             $stmt2 = sqlsrv_query($conn, $sql2);
+            
             while($cmpgn = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC))
             {
                 $nombreCampa = ucwords($cmpgn['nc']);
             }
+            
             $deshabilitar = '';
             if($edit == 1) $deshabilitar = '';
             else if($edit == 0) $deshabilitar = 'disabled';
+            
             echo '
-                                            <div class="form-group">
-                                                <p>&nbsp;</p>
-                                                <label for="nombres'.$index.'" class="col-sm-3 control-label">ID:</label>
-                                                <div class="col-md-8">
-                                                    <input type="text" class="form-control" id="id'.$index.'" placeholder="ID del agente" required value="'.$id.'" '.$deshabilitar.'>
-                                                </div>
-                                                <label for="nombres'.$index.'" class="col-sm-3 control-label">Nombre(s):</label>
-                                                <div class="col-md-8">
-                                                    <input type="text" class="form-control" id="nombres'.$index.'" placeholder="Nombre(s)" required value="'.$nombres.'" '.$deshabilitar.'>
-                                                </div>
-                                                <label for="apellidos'.$index.'" class="col-sm-3 control-label">Apellidos:</label>
-                                                <div class="col-md-8">
-                                                    <input type="text" class="form-control" id="apellidos'.$index.'" placeholder="Apellidos" required value="'.$apellidos.'" '.$deshabilitar.'>
-                                                </div>
-                                                <label for="campaign'.$index.'" class="col-sm-3 control-label">Campaña:</label>
-                                                <div class="col-md-8">
-                                                    <input type="text" class="form-control" id="campaign'.$index.'" placeholder="Campaña" required value="'.$nombreCampa.'" '.$deshabilitar.'>
-                                                </div>
-                                                <label for="campaign'.$index.'" class="col-sm-3 control-label">Cantidad de agentes: </label>
-                                                <div class="col-md-8">
-                                                    <input type="text" class="form-control" id="cantagentes'.$index.'" placeholder="Cantidad de agentes" required value="'.$cantagentes.'" '.$deshabilitar.'>
-                                                </div>
-                                            </div>
+            <div class="form-group">
+                <p>&nbsp;</p>
+                <label for="nombres'.$index.'" class="col-sm-3 control-label">ID:</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" id="id'.$index.'" placeholder="ID del agente" required value="'.$id.'" '.$deshabilitar.'>
+                </div>
+                <label for="nombres'.$index.'" class="col-sm-3 control-label">Nombre(s):</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" id="nombres'.$index.'" placeholder="Nombre(s)" required value="'.$nombres.'" '.$deshabilitar.'>
+                </div>
+                <label for="apellidos'.$index.'" class="col-sm-3 control-label">Apellidos:</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" id="apellidos'.$index.'" placeholder="Apellidos" required value="'.$apellidos.'" '.$deshabilitar.'>
+                </div>
+                <label for="campaign'.$index.'" class="col-sm-3 control-label">Campaña:</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" id="campaign'.$index.'" placeholder="Campaña" required value="'.$nombreCampa.'" '.$deshabilitar.'>
+                </div>
+                <label for="campaign'.$index.'" class="col-sm-3 control-label">Cantidad de agentes: </label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" id="cantagentes'.$index.'" placeholder="Cantidad de agentes" required value="'.$cantagentes.'" '.$deshabilitar.'>
+                </div>
+            </div>
                 ';
             $index++;
         }  
-        echo '</form>';
-        sqlsrv_free_stmt($stmt);
+        echo '
+    </form>
+        <script>
+            $("#selectorCampaign").on("changed.bs.select", function (e) {
+                var val = $("#selectorCampaign").val();
+                if(val == "Todas las campañas")
+                {
+                    window.location.href = "default-opman.php?ic=0";
+                }
+                window.location.href = "default-opman.php?ic=0&camplist="+val;
+            });
+        </script>';
+        sqlsrv_free_stmt($stmt1);
+        sqlsrv_free_stmt($stmt2);
     }
     function fetchCantCampaign($nombreCampaign)
     {

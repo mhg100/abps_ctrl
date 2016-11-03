@@ -19,7 +19,7 @@
                     <label class="col-md-4 control-label" for="id" name="id"></label>
                     <div class="col-md-4 input-group">
                         <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-user"></span></span>
-                        <input id="id" name="id" type="text" placeholder="ID de usuario" class="form-control input-md" required autocomplete="off">
+                        <input id="id" name="id" type="text" placeholder="ID de usuario" class="form-control input-md" required autofocus autocomplsete="off">
                     </div>
                 </div>
                 <div class="form-group">

@@ -4,6 +4,10 @@
     $usuario = $_POST['id'];
     $password = $_POST['password'];
     $conexion = fSesion();
+
+    $usuario = str_replace("'", "-", $usuario);
+    $password = str_replace("'", "-", $password);
+    
     session_start();
 
     $tabla = '';

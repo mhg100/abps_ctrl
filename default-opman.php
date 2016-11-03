@@ -24,8 +24,7 @@
                                     <?php
                                         if($_GET['ic'] == 0)
                                         {
-                                            //ver coordinadores
-                                            echo verCoordinadores('0');
+                                            verCoordinadores('0', $_GET['camplist']);
                                         }
                                         else if($_GET['ic'] == 1)
                                         {
@@ -68,6 +67,5 @@
                 </p>
             </div>
         </div>
-    </div>
 </body>
 </html>

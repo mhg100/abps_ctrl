@@ -7,7 +7,12 @@
     echo '<pre>';
     var_dump($_SESSION);
     echo '</pre>';
-
+    echo '<pre>'.time()-$_SESSION['horaAcceso'].'</pre>';
+    
+    $string = "tengo 'estos valores' y 'estos otros' ";
+    echo "<pre>".$string."</pre>";
+    $string = str_replace("'", "-", $string); // Replaces all spaces with hyphens.
+    echo "<pre>".$string."</pre>";
     /*while($campaigns = sqlsrv_fetch_array($stmt_ObtenerNombres, SQLSRV_FETCH_ASSOC))
     {
         $stmt_ObtenerCantCampaign = sqlsrv_query($conn, fetchCantCampaign($campaigns["nombre"]));
