@@ -13,6 +13,9 @@
     echo "<pre>".$string."</pre>";
     $string = str_replace("'", "-", $string); // Replaces all spaces with hyphens.
     echo "<pre>".$string."</pre>";
+    
+    echo $_POST['agregar'];
+
     /*while($campaigns = sqlsrv_fetch_array($stmt_ObtenerNombres, SQLSRV_FETCH_ASSOC))
     {
         $stmt_ObtenerCantCampaign = sqlsrv_query($conn, fetchCantCampaign($campaigns["nombre"]));

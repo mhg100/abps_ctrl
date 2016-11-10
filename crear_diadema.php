@@ -1,6 +1,14 @@
 <?php
+
+    include 'php/php_func.php';
 /*
 {
+estados:
+0: en inventario
+1: en campaña
+2: en mantenimiento
+3: baja (entra una con el mismo consecutivo)
+
 _id:	consecutivo de la diadema
 Marca:	Plantronics, Jabra, Chinas
 Serial:	Solo para las Jabra.
@@ -39,30 +47,23 @@ resumen: [
 ]
 }
 */
-    $conn = new MongoClient();
-    $db = $conn->ctrltest;
-    $collection = $db->diademas;
+    $collection = fMongoDB();
     session_start();
-
-    /*$diadema = array(
-        "_id"=>"avion",
-        "letras"=>["primera" => "a",
-                   "segunda" => "v",
-                   "tercera" => "i",
-                   "cuarta" => "o",
-                   "quinta" => "n"]
-    );*/
-    $diadema = array(
-        "_id"    => $_POST['serial'],
-        "Marca"  => $_POST['marca'],
-        "serial" => $_POST['serialnumber'],
-        "resumen"=> [
-            "estado" => "1",
-            "nombresAg" => $_POST['nombres'],
-            "coordinador_id" => $_SESSION['id'],
-            "fechaMov" => date("d-m-Y H:i")
-        ]
+    $infoDiadema = array(
+        "_id"    => strtoupper($_POST['serial']),
+        "Marca"  => strtoupper($_POST['marca']),
+        "serial" => strtoupper($_POST['serialnumber'])
     );
+    $resumen = array("_id" => "001",
+                     "estado" => "1",
+                     "nombresAg" => $_POST['nombres'],
+                     "coordinador_id" => $_SESSION['id'],
+                     "fechaMov" => date("Y-m-d H:i"),
+    );
+    $resumenDiadema = array("resumen" => [$resumen]);
+
+    $diadema = array_merge($infoDiadema, $resumenDiadema);
+
     echo '<pre>';
     var_dump($diadema);
     echo '</pre>';
@@ -70,12 +71,12 @@ resumen: [
 
     try {
         $collection->insert($diadema);
-        header( 'Location: defaultdevice.php?ic=1');
+        header( "refresh:0; defaultdevice.php?ic=1&ag=1&sd=".$_POST['serial']);
     }
     catch (MongoCursorException $e) {
         echo "error message: ".$e->getMessage()."\n";
         echo "error code: ".$e->getCode()."\n";
-        header( "refresh:5; defaultdevice.php?ic=1&err=1" );
+        header( "refresh:0; defaultdevice.php?ic=1&ag=0&sd=".$_POST['serial']);
     }
 
 

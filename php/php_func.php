@@ -16,6 +16,12 @@
         
         return $conn;
     }
+    function fMongoDB()
+    {
+            $conn = new MongoClient();
+            $db = $conn->ctrltest;
+            return $db->diademas;
+    }
     function fTimeStamp()
     {
         if(isset($_SESSION['horaAcceso']))
@@ -208,100 +214,104 @@
     }
     function navbar()
     {
-        echo '<nav class="navbar navbar-default nav-center" role="navigation">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                            <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-                        </button><a class="navbar-brand" href="default.php">ADMin</a>
-                    </div>
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav">
-                            <li>
-                                <a href="#">Diademas</a>
-                            </li>
-                            <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Coordinadores<span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="default-opman.php?ic=0">Ver coordinadores</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="default-opman.php?ic=1">Crear</a></li>
-                                    <li><a href="default-opman.php?ic=2">Modificar</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <form class="navbar-form navbar-left" role="search">
-                            <div class="form-group">
-                                <input type="text" class="form-control">
-                            </div>
-                            <button type="submit" class="btn btn-default">
-                                Buscar coordinador
-                            </button>
-                        </form>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <span class="caret"></span>
-                                    <span class="glyphicon glyphicon-user"></span> ';
-        
-                                        echo $_SESSION['nombres'].' '.$_SESSION['apellidos'];
-                                echo '
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#"><span class="glyphicon glyphicon-info-sign"></span> Ver información personal</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="logout.php?rol=0"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>';
+        echo '<nav class="navbar navbar-default nav-center" role="navigation">';
+        echo '            <div class="navbar-header">';
+        echo '                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">';
+        echo '                    <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>';
+        echo '                </button><a class="navbar-brand" href="default.php">ADMin</a>';
+        echo '            </div>';
+        echo '            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">';
+        echo '                <ul class="nav navbar-nav">';
+        echo '                    <li class="dropdown">';
+        echo '                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>';
+        echo '                        <ul class="dropdown-menu">';
+        echo '                            <li><a href="device.php?ic=0">Ver todas las diademas</a></li>';
+        echo '                            <li><a href="device.php?ic=0">Ver diademas por coordinador</a></li>';
+        echo '                            <li><a href="device.php?ic=0">Ver diademas por campaña</a></li>';
+        echo '                            <li><a href="cambios.php">Realizar cambio</a></li>';
+        echo '                        </ul>';
+        echo '                        ';
+        echo '                        ';
+        echo '                    </li>';
+        echo '                    <li class="dropdown">';
+        echo '                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Coordinadores<span class="caret"></span></a>';
+        echo '                        <ul class="dropdown-menu">';
+        echo '                            <li><a href="default-opman.php?ic=0">Ver coordinadores</a></li>';
+        echo '                            <li class="divider"></li>';
+        echo '                            <li><a href="default-opman.php?ic=1">Crear</a></li>';
+        echo '                            <li><a href="default-opman.php?ic=2">Modificar</a></li>';
+        echo '                        </ul>';
+        echo '                    </li>';
+        echo '                </ul>';
+        echo '                <form class="navbar-form navbar-left" role="search">';
+        echo '                    <div class="form-group">';
+        echo '                        <input type="text" class="form-control">';
+        echo '                    </div>';
+        echo '                    <button type="submit" class="btn btn-default">';
+        echo '                        Buscar coordinador';
+        echo '                    </button>';
+        echo '                </form>';
+        echo '                <ul class="nav navbar-nav navbar-right">';
+        echo '                    <li class="dropdown">';
+        echo '                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">';
+        echo '                            <span class="caret"></span>';
+        echo '                            <span class="glyphicon glyphicon-user"></span> ';
+                                          echo $_SESSION['nombres'].' '.$_SESSION['apellidos'];
+        echo '                        </a>';
+        echo '                        <ul class="dropdown-menu">';
+        echo '                            <li><a href="#"><span class="glyphicon glyphicon-info-sign"></span> Ver información personal</a></li>';
+        echo '                            <li class="divider"></li>';
+        echo '                            <li><a href="logout.php?rol=0"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>';
+        echo '                        </ul>';
+        echo '                    </li>';
+        echo '                </ul>';
+        echo '            </div>';
+        echo '        </nav>';
     }
     function navbarCoordinadores()
     {
-        echo '<nav class="navbar navbar-default" role="navigation">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                            <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-                        </button><a class="navbar-brand" href="default.php">COOrd</a>
-                    </div>
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav">
-                            <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="defaultdevice.php?ic=0">Ver lista de diademas</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="defaultdevice.php?ic=1">Crear diadema</a></li>
-                                    <li><a href="cambios.php">Solicitud de cambio</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <form class="navbar-form navbar-left" role="search">
-                            <div class="form-group">
-                                <input type="text" class="form-control">
-                            </div>
-                            <button type="submit" class="btn btn-default">
-                                Buscar diadema
-                            </button>
-                        </form>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                    <span class="caret"></span>
-                                    <span class="glyphicon glyphicon-user"></span> ';
-        
-                                        echo $_SESSION['nombres'].' '.$_SESSION['apellidos'];
-                                echo '
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#"><span class="glyphicon glyphicon-info-sign"></span> Ver información personal</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="logout.php?rol=0"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>';
+        echo '<nav class="navbar navbar-default" role="navigation">';
+        echo '    <div class="navbar-header">';
+        echo '        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">';
+        echo '                    <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>';
+        echo '                </button><a class="navbar-brand" href="default.php">COOrd</a>';
+        echo '            </div>';
+        echo '            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">';
+        echo '                <ul class="nav navbar-nav">';
+        echo '                    <li class="dropdown">';
+        echo '                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>';
+        echo '                        <ul class="dropdown-menu">';
+        echo '                            <li><a href="defaultdevice.php?ic=0">Ver lista de diademas</a></li>';
+        echo '                            <li class="divider"></li>';
+        echo '                            <li><a href="defaultdevice.php?ic=1">Crear diadema</a></li>';
+        echo '                            <li><a href="cambios.php">Solicitud de cambio</a></li>';
+        echo '                        </ul>';
+        echo '                    </li>';
+        echo '                </ul>';
+        echo '                <form class="navbar-form navbar-left" role="search">';
+        echo '                    <div class="form-group">';
+        echo '                        <input type="text" class="form-control">';
+        echo '                    </div>';
+        echo '                    <button type="submit" class="btn btn-default">';
+        echo '                        Buscar diadema';
+        echo '                    </button>';
+        echo '                </form>';
+        echo '                <ul class="nav navbar-nav navbar-right">';
+        echo '                    <li class="dropdown">';
+        echo '                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">';
+        echo '                            <span class="caret"></span>';
+        echo '                            <span class="glyphicon glyphicon-user"></span> ';
+        echo ''                               .$_SESSION['nombres'].' '.$_SESSION['apellidos'];
+        echo '                        </a>';
+        echo '                        <ul class="dropdown-menu">';
+        echo '                            <li><a href="#"><span class="glyphicon glyphicon-info-sign"></span> Ver información personal</a></li>';
+        echo '                            <li class="divider"></li>';
+        echo '                            <li><a href="logout.php?rol=0"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>';
+        echo '                        </ul>';
+        echo '                    </li>';
+        echo '                </ul>';
+        echo '            </div>';
+        echo '        </nav>';
     }
     function crearCoordinadores()
     {
@@ -473,67 +483,145 @@
     }
     function crearDiadema()
     {
-        echo '<form class="form-horizontal" role="form" action="crear_diadema.php" method="post">';
-        //echo '<div class="form-group">';
         $index = 0;
-        echo '
-                                    <div align="center">
-                                    <p>&nbsp;</p>
-        
-                                                        <!--Formulario-->
-                                        <div class="form-group">
-                                            <label for="serial" class="col-md-4 control-label">Serial:</label>
-                                            <div class="col-md-6">
-                                                <input type="text" class="form-control" id="serial" name="serial" placeholder="Si no tiene serial, digite 00" required autofocus>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="nombres" class="col-md-4 control-label">Nombre(s) y apellidos o Dirección IP: </label>
-                                            <div class="col-md-6">
-                                                <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Nombres o dirección IP" required>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="marca" class="col-md-4 control-label">Marca:</label>
-                                            <div class="col-md-4">
-                                                <select id="marca" name="marca" class="selectpicker" data-live-search="true" title="Seleccione una marca" width="200px" required>
-                                                    <option value="Jabra">Jabra</option>
-                                                    <option value="Plantronics">Plantronics</option>
-                                                    <option value="China">China</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="serialnumber" class="col-sm-4 control-label">S/N: </label>
-                                            <div class="col-md-6">
-                                                <input type="text" class="form-control bfh-number" name="serialnumber" id="serialnumber" disabled required>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-10" align="right">
-                                                <fieldset>
-                                                    <button type="submit" class="btn btn-success" id="agregar" name="agregar" style="padding: 15px;">Agregar</button>
-                                                    ';
-                                                    if(isset($_GET['err']))
-                                                    {
-                                                        if($_GET['err'] == 1)
-                                                        {
-                                                        echo    '<label for="agregar" class="alert alert-danger col-md-4 col-md-offset-5 text-center">
-                                                        <strong>Error: Serial duplicado</strong>
-                                                    </label>';
-                                                        }
-                                                    }
-        echo '
-                                                </fieldset>
-                                            </div>
-                                    </form>
-                                    <script>
-                                        $("#marca").on("changed.bs.select", function (e) {
-                                            var val = $("#marca").val();
-                                            if(val == "Jabra") $( "#serialnumber" ).prop( "disabled", false );
-                                            else $( "#serialnumber" ).prop( "disabled", true );
-                                        });
-                                    </script>
-        ';
+        echo '<form class="form-horizontal" role="form" action="crear_diadema.php" method="post">' . "\xA";
+        echo '  <div align="center">' . "\xA";
+        echo '                    <!--Formulario-->';
+        echo '    <div class="form-group">' . "\xA";
+        echo '      <label for="serial" class="col-md-4 control-label">Serial:</label>' . "\xA";
+        echo '        <div class="col-md-6">' . "\xA";
+        echo '          <input type="text" class="form-control" rel="serial" id="serial" name="serial" data-toggle="tooltip" autocomplete="off" placeholder="Si no tiene serial, digite 00" required autofocus>' . "\xA";
+        echo '        </div>' . "\xA";
+        echo '    </div>' . "\xA";
+        echo '    <div class="form-group">' . "\xA";
+        echo '      <label for="nombres" class="col-md-4 control-label">Nombre(s) y apellidos o Dirección IP: </label>';
+        echo '        <div class="col-md-6">' . "\xA";
+        echo '          <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Nombres o dirección IP" required autocomplete="off">' . "\xA";
+        echo '        </div>' . "\xA";
+        echo '    </div>' . "\xA";
+        echo '    <div class="form-group">' . "\xA";
+        echo '      <label for="marca" class="col-md-4 control-label">Marca:</label>' . "\xA";
+        echo '        <div class="col-md-4">' . "\xA";
+        echo '          <select id="marca" name="marca" class="selectpicker" data-live-search="true" title="Seleccione una marca" width="200px" required>' . "\xA";
+        echo '            <option value="Jabra">Jabra</option>' . "\xA";
+        echo '            <option value="Plantronics">Plantronics</option>' . "\xA";
+        echo '            <option value="China">China</option>' . "\xA";
+        echo '          </select>' . "\xA";
+        echo '        </div>' . "\xA";
+        echo '    </div>' . "\xA";
+        echo '    <div class="form-group">' . "\xA";
+        echo '      <label for="serialnumber" class="col-sm-4 control-label">S/N: </label>' . "\xA";
+        echo '        <div class="col-md-6">' . "\xA";
+        echo '          <input type="text" class="form-control bfh-number" name="serialnumber" id="serialnumber" autocomplete="off" disabled required>' . "\xA";
+        echo '        </div>' . "\xA";
+        echo '    </div>' . "\xA";
+        echo '    <div class="form-group">' . "\xA";
+        echo '      <div class="col-md-10" align="right">' . "\xA";
+        echo '        <fieldset>' . "\xA";
+        $padding = 10;
+        if(isset($_GET['ag']))
+        {
+            $padding = 25;
+            if($_GET['ag'] == 0)
+            {
+                echo '        <label for="agregar" class="alert alert-danger col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
+                echo '          <strong>Error: Serial '.$_GET["sd"].' duplicado</strong>' . "\xA";
+                echo '        </label>' . "\xA";
+            }
+            else if($_GET['ag'] == 1)
+            {
+                echo '        <label for="agregar" class="alert alert-success col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
+                echo '          <strong>Diadema '.$_GET["sd"].' agregada correctamente</strong>' . "\xA";
+                echo '        </label>' . "\xA";
+            }
+        }
+        echo '            <button type="submit" class="btn btn-success" id="agregar" name="agregar" style="padding: '.$padding.'px;">Agregar</button>' . "\xA";
+        echo '              </fieldset>' . "\xA";
+        echo '            </div>' . "\xA";
+        echo '         </form>' . "\xA";
+        echo '         <script>' . "\xA";
+        echo '             $("#marca").on("changed.bs.select", function (e) {' . "\xA";
+        echo '                 var val = $("#marca").val();' . "\xA";
+        echo '                 if(val == "Jabra") $( "#serialnumber" ).prop( "disabled", false );' . "\xA";
+        echo '                 else $( "#serialnumber" ).prop( "disabled", true );' . "\xA";
+        echo '             });' . "\xA";
+        echo '         </script>' . "\xA";
+    }
+    function verDiadema()
+    {
+        $index = 0;
+        $collection = fMongoDB();
+        $res = array();
+        $cursor = $collection->find(array('resumen.coordinador_id' => $_SESSION['id']));
+        foreach ($cursor as $document)
+            {   
+                $temp = array($document["_id"], $document["Marca"], $document["serial"], $document["resumen"]);
+                array_push($res, $temp);
+            }
+
+        for($i = 0; $i<count($res); $i++)
+        {
+            $serial = $res[$i][0];
+            $marca = $res[$i][1];
+            $sn = $res[$i][2];
+            $id = $res[$i][3][0]['_id'];
+            $estado = $res[$i][3][0]['estado'];
+            $agente = $res[$i][3][0]['nombresAg'];
+            
+            $resumenTemp = end($res[$i][3]);
+            $coordinador = $resumenTemp['coordinador_id'];
+            $estado = $resumenTemp['estado'];
+            
+            $fecha = $resumenTemp['fechaMov'];
+            
+            if($coordinador == $_SESSION['id'] && $estado == "1")
+            {
+                echo '<form class="form-horizontal" role="form">' . "\xA";
+                echo '  <div class="form-group">' . "\xA";
+                echo '      <label for="serial" class="col-md-4 control-label">Serial:</label>' . "\xA";
+                echo '      <div class="col-md-6">' . "\xA";
+                echo '          <input type="text" class="form-control" rel="serial" id="serial" name="serial" value="'.$serial.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                echo '      </div>' . "\xA";
+                echo '      <label for="serial" class="col-md-4 control-label">Agente o IP del equipo:</label>' . "\xA";
+                echo '      <div class="col-md-6">' . "\xA";
+                echo '          <input type="text" class="form-control" rel="serial" id="serial" name="nombreag" value="'.$agente.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                echo '      </div>' . "\xA";
+                echo '      <label for="serial" class="col-md-4 control-label">Marca:</label>' . "\xA";
+                echo '      <div class="col-md-6">' . "\xA";
+                echo '          <input type="text" class="form-control" rel="serial" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                echo '      </div>' . "\xA";
+                if($res[$i][2] != NULL)
+                {
+                    echo '      <label for="serial" class="col-md-4 control-label">S/N:</label>' . "\xA";
+                    echo '      <div class="col-md-6">' . "\xA";
+                    echo '          <input type="text" class="form-control" rel="sn" id="sn" name="sn" value="'.$sn.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                    echo '      </div>' . "\xA";
+                }
+                echo '      <label for="serial" class="col-md-4 control-label">Fecha de ingreso:</label>' . "\xA";
+                echo '      <div class="col-md-6">' . "\xA";
+                echo '          <input type="text" class="form-control" rel="serial" id="ingreso" name="ingreso" value="'.$fecha.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                echo '      </div>' . "\xA";
+                echo '      </div>' . "\xA";
+            }
+        }
+        echo '  </div>' . "\xA";
+        echo '      </div>' . "\xA";
+        echo '</form>' . "\xA";
     }
 ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

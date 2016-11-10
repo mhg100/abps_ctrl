@@ -12,12 +12,30 @@
                     navbarCoordinadores();
                 ?>
                 <div class="jumbotron">
-                    <h2 align="center">Creación de dispositivo</h2>
+                    <h2 align="center">
+                        <?php
+                            if($_GET['ic']==0)
+                            {
+                                echo "lista de dispositivos<br><br>";
+                            }
+                            else if($_GET['ic']==1)
+                            {
+                                echo "Creación de dispositivo<br><br>";
+                            }
+                        ?>
+                    </h2>
                     <div class="jumbotron" style="background-color: #F8F8F8; outline: 1px solid #E7E7E7;">
                     <div class="row text-center">
                         <div class="col-md-8 col-lg-offset-2" style="outline: 1px solid #E7E7E7;">
                             <div class="row">
-                                    <?php crearDiadema(); ?>
+                                    <?php
+                                        if($_GET['ic'] == 1){
+                                            crearDiadema();
+                                        }
+                                        else if($_GET['ic'] == 0){
+                                            verDiadema();
+                                        }
+                                    ?>
                             <p>&nbsp;</p>
                                 </div>
                             </div>
@@ -25,6 +43,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
         <div class="row">
             <div class="col-md-4">
