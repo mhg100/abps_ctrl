@@ -226,6 +226,7 @@
         echo '                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>';
         echo '                        <ul class="dropdown-menu">';
         echo '                            <li><a href="device.php?ic=0">Ver todas las diademas</a></li>';
+        echo '                            <li class="divider"></li>';
         echo '                            <li><a href="device.php?ic=0">Ver diademas por coordinador</a></li>';
         echo '                            <li><a href="device.php?ic=0">Ver diademas por campaña</a></li>';
         echo '                            <li><a href="cambios.php">Realizar cambio</a></li>';
@@ -240,6 +241,15 @@
         echo '                            <li class="divider"></li>';
         echo '                            <li><a href="default-opman.php?ic=1">Crear</a></li>';
         echo '                            <li><a href="default-opman.php?ic=2">Modificar</a></li>';
+        echo '                        </ul>';
+        echo '                    </li>';
+        echo '                    <li class="dropdown">';
+        echo '                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Campañas<span class="caret"></span></a>';
+        echo '                        <ul class="dropdown-menu">';
+        echo '                            <li><a href="#">Ver campañas</a></li>';
+        echo '                            <li class="divider"></li>';
+        echo '                            <li><a href="#">Crear</a></li>';
+        echo '                            <li><a href="#">Modificar</a></li>';
         echo '                        </ul>';
         echo '                    </li>';
         echo '                </ul>';
