@@ -2,6 +2,7 @@
     include 'php/php_func.php';
     session_start();
     fTimeStamp();
+    comprobarAdmin();
     echo initHTML($_SESSION['rol']);
 ?>
 <body>

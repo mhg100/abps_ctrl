@@ -2,6 +2,7 @@
     include 'php/php_func.php';
     session_start();
     fTimeStamp();
+    comprobarAdmin();
     echo initHTML($_SESSION['rol']);
 ?>
 <body>
@@ -9,18 +10,18 @@
         <div class="row">
             <div class="col-md-12">
                 <?php
-                    navbarCoordinadores();
+                    navbar();
                 ?>
                 <div class="jumbotron">
                     <h2 align="center">
                         <?php
                             if($_GET['ic']==0)
                             {
-                                echo "lista de dispositivos<br><br>";
+                                echo "Lista de campañas<br><br>";
                             }
                             else if($_GET['ic']==1)
                             {
-                                echo "Creación de dispositivo<br><br>";
+                                echo "Creación de campañas<br><br>";
                             }
                         ?>
                     </h2>
@@ -28,15 +29,16 @@
                     <div class="row text-center">
                         <div class="col-md-8 col-lg-offset-2" style="outline: 1px solid #E7E7E7;">
                             <div class="row">
-                                    <?php
-                                        if($_GET['ic'] == 1){
-                                            crearDiadema();
-                                        }
-                                        else if($_GET['ic'] == 0){
-                                            verDiadema();
-                                        }
-                                    ?>
-                            <p>&nbsp;</p>
+                                <?php
+                                    if($_GET['ic'] == 1)
+                                    {
+                                        crearCamp();
+                                    }
+                                    else if($_GET['ic'] == 0)
+                                    {
+                                        verCamp();
+                                    }
+                                ?>
                                 </div>
                             </div>
                         </div>

@@ -6,3 +6,8 @@
     text-align: center;
     margin: auto;
 }
+.back-tooltip + .tooltip > .tooltip-inner {
+    /*background-color: #F8F8F8;*/
+    /*background-color: #449D44;*/
+    /*background-color: #66AFE9;*/
+}

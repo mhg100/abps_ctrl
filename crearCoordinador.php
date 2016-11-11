@@ -1,6 +1,9 @@
 <?php
 
     include 'php/php_func.php';
+    fTimeStamp();
+    comprobarAdmin();
+
     $nombre    = $_POST['nombres'];
     $apellido  = $_POST['apellidos'];
     $cedula    = $_POST['cedula'];

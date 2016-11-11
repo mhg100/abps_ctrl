@@ -1,10 +1,8 @@
 <?php
-
-include 'php/php_func.php';
-session_start();
-fTimeStamp();
-echo initHTML($_SESSION['rol']);
-
+    include 'php/php_func.php';
+    session_start();
+    fTimeStamp();
+    echo initHTML($_SESSION['rol']);
 ?>
 
 <body>
