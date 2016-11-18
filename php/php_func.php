@@ -8,7 +8,7 @@
         $db_psw = '10ceroun0';
         $db_name = 'abps_control';
 
-        $connection_options = array('Database'=>''.$db_name.'', 'UID'=>''.$db_usr.'', 'PWD'=>''.$db_psw.'');
+        $connection_options = array('Database'=>''.$db_name.'', 'UID'=>''.$db_usr.'', 'PWD'=>''.$db_psw.'', 'CharacterSet' => 'UTF-8');
         $conn = sqlsrv_connect($db_srv, $connection_options);
         if(!is_resource($conn)){
             session_start();
@@ -332,58 +332,54 @@
         $sql = "select nombre_campaign, id_campaign from campaigns order by nombre_campaign asc";
         $stmt = sqlsrv_query($conn, $sql);
         //$stmt = sqlsrv_query($conexion, $sql, array(), array( "Scrollable" => 'static'));
-        echo '
-                                    <div class="col-md-10 text-left col-md-offset-2">
-                                    <p>&nbsp;</p>
-        
-                                                        <!--Formulario-->
-                                        <div class="form-group">
-                                            <label for="nombres" class="col-sm-2 control-label">Nombre(s):</label>
-                                            <div class="col-md-8">
-                                                <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Nombres" required autofocus autocomplete="off">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="apellidos" class="col-sm-2 control-label">Apellidos: </label>
-                                            <div class="col-md-8">
-                                                <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="Apellidos" required autocomplete="off">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="cedula" class="col-sm-2 control-label">Cédula: </label>
-                                            <div class="col-md-8">
-                                                <input type="text" class="form-control" id="cedula" name="cedula" placeholder="Cédula" required autocomplete="off">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="campa" class="col-sm-2 control-label">Campaña:</label>
-                                            <div class="col-md-4">
-                                                <select id="selectorCampaign" name="selectorCampaign" class="selectpicker" data-live-search="true" title="Seleccione una campaña" required autocomplete="off">
-                                                    ';
-                                                    while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC))
-                                                    {
-                                                        echo '<option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>
-                                                        ';
-                                                    }
-                                                    sqlsrv_free_stmt($stmt);
-                                          echo '</select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="cant_agentes" class="col-sm-2 control-label">Cantidad de agentes: </label>
-                                            <div class="col-md-8">
-                                                <input type="text" class="form-control bfh-number" name="cantagentes" id="cantagentes" autocomplete="off">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-sm-offset-2 col-sm-10">
-                                                <button type="submit" class="btn btn-default" id="cant_agentes" name="cant_agentes">
-                                                    Agregar
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-        ';
+        echo '                            <div class="col-md-10 text-left col-md-offset-2">';
+        echo '                            <p>&nbsp;</p>';
+        echo '                                                <!--Formulario-->';
+        echo '                                <div class="form-group">';
+        echo '                                    <label for="nombres" class="col-sm-2 control-label">Nombre(s):</label>';
+        echo '                                    <div class="col-md-8">';
+        echo '                                        <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Nombres" required autofocus autocomplete="off">';
+        echo '                                    </div>';
+        echo '                                </div>';
+        echo '                                <div class="form-group">';
+        echo '                                    <label for="apellidos" class="col-sm-2 control-label">Apellidos: </label>';
+        echo '                                    <div class="col-md-8">';
+        echo '                                        <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="Apellidos" required autocomplete="off">';
+        echo '                                    </div>';
+        echo '                                </div>';
+        echo '                                <div class="form-group">';
+        echo '                                    <label for="cedula" class="col-sm-2 control-label">Cédula: </label>';
+        echo '                                    <div class="col-md-8">';
+        echo '                                        <input type="text" class="form-control" id="cedula" name="cedula" placeholder="Cédula" required autocomplete="off">';
+        echo '                                    </div>';
+        echo '                                </div>';
+        echo '                                <div class="form-group">';
+        echo '                                    <label for="campa" class="col-sm-2 control-label">Campaña:</label>';
+        echo '                                    <div class="col-md-4">';
+        echo '                                        <select id="selectorCampaign" name="selectorCampaign" class="selectpicker" data-live-search="true" title="Seleccione una campaña" required autocomplete="off">';
+                                                            while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC))
+                                                            {
+                                                                echo '<option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>';
+                                                            }
+                                                            sqlsrv_free_stmt($stmt);
+        echo '                                        </select>';
+        echo '                                    </div>';
+        echo '                                </div>';
+        echo '                                <div class="form-group">';
+        echo '                                    <label for="cant_agentes" class="col-sm-2 control-label">Cantidad de agentes: </label>';
+        echo '                                    <div class="col-md-8">';
+        echo '                                        <input type="text" class="form-control bfh-number" name="cantagentes" id="cantagentes" autocomplete="off">';
+        echo '                                    </div>';
+        echo '                                </div>';
+        echo '                                <div class="form-group">';
+        echo '                                    <div class="col-sm-offset-2 col-sm-10">';
+        echo '                                        <button type="submit" class="btn btn-default" id="cant_agentes" name="cant_agentes">';
+        echo '                                            Agregar';
+        echo '                                        </button>';
+        echo '                                    </div>';
+        echo '                                </div>';
+        echo '                            </form>';
+        echo '';
     }
     function verCoordinadores($edit, $camp)
     {

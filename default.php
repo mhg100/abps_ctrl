@@ -1,5 +1,6 @@
 <?php
 include 'php/php_func.php';
+header('Content-Type: text/html; charset=UTF-8');
 session_start();
 fTimeStamp();
 echo initHTML($_SESSION['rol']);
