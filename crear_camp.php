@@ -25,4 +25,4 @@
     {
         header("refresh:10; defaultcamp.php?ag=1");
     }
-?>
+?> 

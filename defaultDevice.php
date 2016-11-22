@@ -37,13 +37,10 @@
                                         }
                                     ?>
                             <p>&nbsp;</p>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
         <div class="row">
             <div class="col-md-4">
@@ -82,7 +79,6 @@
                 <a class="btn" href="cambios.php">Ir a la opción »</a>
             </div>
         </div>
-    </div>
     <script>
         $(document).ready(function(){
             $('[data-toggle="tooltip"]').tooltip({
