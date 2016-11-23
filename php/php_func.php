@@ -561,7 +561,14 @@
         $index = 0;
         $collection = fMongoDB();
         $res = array();
-        $cursor = $collection->find(array('resumen.coordinador_id' => $_SESSION['id']));
+        if(!$_SESSION['rol'] == 0)
+        {
+            $cursor = $collection->find(array('resumen.coordinador_id' => $_SESSION['id']));
+        }
+        else
+        {
+            $cursor = $collection->find();
+        }
         foreach ($cursor as $document)
             {   
                 $temp = array($document["_id"], $document["Marca"], $document["serial"], $document["resumen"]);
@@ -576,6 +583,8 @@
             $id = $res[$i][3][0]['_id'];
             $estado = $res[$i][3][0]['estado'];
             $agente = $res[$i][3][0]['nombresAg'];
+            $coord = $res[$i][3][0]['coordinador_id'];
+            $campa = $res[$i][3][0]['campaign'];
             
             $resumenTemp = end($res[$i][3]);
             $coordinador = $resumenTemp['coordinador_id'];
@@ -583,34 +592,76 @@
             
             $fecha = $resumenTemp['fechaMov'];
             
-            if($coordinador == $_SESSION['id'] && $estado == "1")
+            if($_SESSION['rol'] == 1)
             {
-                echo '<form class="form-horizontal" role="form">' . "\xA";
-                echo '  <div class="form-group">' . "\xA";
-                echo '      <label for="serial" class="col-md-4 control-label">Serial:</label>' . "\xA";
-                echo '      <div class="col-md-6">' . "\xA";
-                echo '          <input type="text" class="form-control" rel="serial" id="serial" name="serial" value="'.$serial.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                echo '      </div>' . "\xA";
-                echo '      <label for="serial" class="col-md-4 control-label">Agente o IP del equipo:</label>' . "\xA";
-                echo '      <div class="col-md-6">' . "\xA";
-                echo '          <input type="text" class="form-control" rel="serial" id="serial" name="nombreag" value="'.$agente.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                echo '      </div>' . "\xA";
-                echo '      <label for="serial" class="col-md-4 control-label">Marca:</label>' . "\xA";
-                echo '      <div class="col-md-6">' . "\xA";
-                echo '          <input type="text" class="form-control" rel="serial" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                echo '      </div>' . "\xA";
-                if($res[$i][2] != NULL)
+                if($coordinador == $_SESSION['id'] && $estado == "1")
                 {
-                    echo '      <label for="serial" class="col-md-4 control-label">S/N:</label>' . "\xA";
+                    echo '<form class="form-horizontal" role="form">' . "\xA";
+                    echo '  <div class="form-group">' . "\xA";
+                    echo '      <label for="serial" class="col-md-4 control-label">Serial:</label>' . "\xA";
                     echo '      <div class="col-md-6">' . "\xA";
-                    echo '          <input type="text" class="form-control" rel="sn" id="sn" name="sn" value="'.$sn.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                    echo '          <input type="text" class="form-control" rel="serial" id="serial" name="serial" value="'.$serial.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                    echo '      </div>' . "\xA";
+                    echo '      <label for="serial" class="col-md-4 control-label">Agente o IP del equipo:</label>' . "\xA";
+                    echo '      <div class="col-md-6">' . "\xA";
+                    echo '          <input type="text" class="form-control" rel="serial" id="serial" name="nombreag" value="'.$agente.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                    echo '      </div>' . "\xA";
+                    echo '      <label for="serial" class="col-md-4 control-label">Marca:</label>' . "\xA";
+                    echo '      <div class="col-md-6">' . "\xA";
+                    echo '          <input type="text" class="form-control" rel="serial" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                    echo '      </div>' . "\xA";
+                    if($res[$i][2] != NULL)
+                    {
+                        echo '      <label for="serial" class="col-md-4 control-label">S/N:</label>' . "\xA";
+                        echo '      <div class="col-md-6">' . "\xA";
+                        echo '          <input type="text" class="form-control" rel="sn" id="sn" name="sn" value="'.$sn.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                        echo '      </div>' . "\xA";
+                    }
+                    echo '      <label for="serial" class="col-md-4 control-label">Fecha de ingreso:</label>' . "\xA";
+                    echo '      <div class="col-md-6">' . "\xA";
+                    echo '          <input type="text" class="form-control" rel="serial" id="ingreso" name="ingreso" value="'.$fecha.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                    echo '      </div>' . "\xA";
                     echo '      </div>' . "\xA";
                 }
-                echo '      <label for="serial" class="col-md-4 control-label">Fecha de ingreso:</label>' . "\xA";
-                echo '      <div class="col-md-6">' . "\xA";
-                echo '          <input type="text" class="form-control" rel="serial" id="ingreso" name="ingreso" value="'.$fecha.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                echo '      </div>' . "\xA";
-                echo '      </div>' . "\xA";
+            }else
+            {
+                if($estado == "1")
+                {
+                    echo '<form class="form-horizontal" role="form">' . "\xA";
+                    echo '  <div class="form-group">' . "\xA";
+                    echo '      <label for="serial" class="col-md-4 control-label">Serial:</label>' . "\xA";
+                    echo '      <div class="col-md-6">' . "\xA";
+                    echo '          <input type="text" class="form-control" rel="serial" id="serial" name="serial" value="'.$serial.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                    echo '      </div>' . "\xA";
+                    echo '      <label for="serial" class="col-md-4 control-label">Agente o IP del equipo:</label>' . "\xA";
+                    echo '      <div class="col-md-6">' . "\xA";
+                    echo '          <input type="text" class="form-control" rel="serial" id="serial" name="nombreag" value="'.$agente.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                    echo '      </div>' . "\xA";
+                    echo '      <label for="serial" class="col-md-4 control-label">Marca:</label>' . "\xA";
+                    echo '      <div class="col-md-6">' . "\xA";
+                    echo '          <input type="text" class="form-control" rel="serial" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                    echo '      </div>' . "\xA";
+                    echo '      <label for="serial" class="col-md-4 control-label">Campaña:</label>' . "\xA";
+                    echo '      <div class="col-md-6">' . "\xA";
+                    echo '          <input type="text" class="form-control" rel="serial" id="campa" name="campa" value="'.$campa.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                    echo '      </div>' . "\xA";
+                    echo '      <label for="serial" class="col-md-4 control-label">Coordinador:</label>' . "\xA";
+                    echo '      <div class="col-md-6">' . "\xA";
+                    echo '          <input type="text" class="form-control" rel="serial" id="coordinador" name="coordinador" value="'.$coord.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                    echo '      </div>' . "\xA";
+                    if($res[$i][2] != NULL)
+                    {
+                        echo '      <label for="serial" class="col-md-4 control-label">S/N:</label>' . "\xA";
+                        echo '      <div class="col-md-6">' . "\xA";
+                        echo '          <input type="text" class="form-control" rel="sn" id="sn" name="sn" value="'.$sn.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                        echo '      </div>' . "\xA";
+                    }
+                    echo '      <label for="serial" class="col-md-4 control-label">Fecha de ingreso:</label>' . "\xA";
+                    echo '      <div class="col-md-6">' . "\xA";
+                    echo '          <input type="text" class="form-control" rel="serial" id="ingreso" name="ingreso" value="'.$fecha.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                    echo '      </div>' . "\xA";
+                    echo '      </div>' . "\xA";
+                }
             }
         }
         echo '  </div>' . "\xA";

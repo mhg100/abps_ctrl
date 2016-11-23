@@ -3,6 +3,7 @@
     session_start();
     fTimeStamp();
     echo initHTML($_SESSION['rol']);
+    comprobarAdmin();
 ?>
 <body>
     <div class="container-fluid">
