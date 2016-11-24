@@ -229,7 +229,7 @@ function navbar()
     echo '                            <li><a href="device.php?ic=1">Crear diadema</a></li>';
     echo '                            <li class="divider"></li>';
     echo '                            <li><a href="device.php?ic=0">Ver diademas por coordinador</a></li>';
-    echo '                            <li><a href="device.php?ic=0">Ver diademas por campaña</a></li>';
+    echo '                            <li><a href="device.php?ic=2">Ver diademas por campaña</a></li>';
     echo '                            <li><a href="cambios.php">Realizar cambio</a></li>';
     echo '                        </ul>';
     echo '                        ';
@@ -401,9 +401,9 @@ function verCoordinadores($edit, $camp)
     echo '                    <option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>';
                               }
                               sqlsrv_free_stmt($stmt);
-    echo '          </select>';
-    echo '      </div>';
-    echo '  </div>';
+    echo '                </select>';
+    echo '            </div>';
+    echo '        </div>';
 
     $index = 0;
 
@@ -851,7 +851,36 @@ function getListaCoordinadores()
 }
 function optVerDiademaPorCoordiandor()
 {
-    
+    $conn = fSesion();
+    $sql1 = "select id_coordinador as id, nombres_coordinador as nombres, apellidos_coordinador as apellidos, cantidad_agentes_coordinador as cantagentes, campaign_coordinador as idcampa from coordinadores";
+    $sql2 = "select nombre_campaign, id_campaign from campaigns order by nombre_campaign asc";
+    $stmt2 = sqlsrv_query($conn, $sql2);
+    $inject = "' or ''='";
+
+    echo '      <form class="form-horizontal" role="form">';
+    echo '          <div class="form-group">';
+    echo '            <label for="listarcampaign" class="col-sm-3 control-label">Listar por campaña:</label>';
+    echo '            <div class="col-md-3">';
+    echo '                <select id="selectorCampaign" name="selectorCampaign" class="selectpicker" data-live-search="true" title="Seleccione una campaña" required autocomplete="off">';
+    echo '                    <option value="'.$inject.'">Todas las campañas</option>';
+                              while($row = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC))
+                              {
+    echo '                    <option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>';
+                              }
+                              sqlsrv_free_stmt($stmt);
+    echo '                </select>';
+    echo '            </div>';
+    echo '        </div>';
+    echo '<script>';
+    echo '    $("#selectorCampaign").on("changed.bs.select", function (e) {';
+    echo '        var val = $("#selectorCampaign").val();';
+    echo '        if(val == "Todas las campañas")';
+    echo '        {';
+    echo '            window.location.href = "device.php?ic=0";';
+    echo '        }';
+    echo '        window.location.href = "device?ic=0&camplist="+val;';
+    echo '    });';
+    echo '</script>';
 }
 function optVerDiademaPorCamp()
 {
