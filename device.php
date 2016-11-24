@@ -1,21 +1,23 @@
 <?php
-    include 'php/php_func.php';
-    session_start();
-    fTimeStamp();
-    echo initHTML($_SESSION['rol']);
-    comprobarAdmin();
+
+include 'php/php_func.php';
+session_start();
+fTimeStamp();
+echo initHTML($_SESSION['rol']);
+comprobarAdmin();
+
 ?>
 <body>
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
                 <?php
-                    navbarCoordinadores();
+                    navbar();
                 ?>
                 <div class="jumbotron">
                     <h2 align="center">
                         <?php
-                            if($_GET['ic']==0)
+                            if($_GET['ic']==0 || !isset($_GET['ic']))
                             {
                                 echo "lista de dispositivos<br><br>";
                             }
@@ -29,14 +31,31 @@
                     <div class="row text-center">
                         <div class="col-md-8 col-lg-offset-2" style="outline: 1px solid #E7E7E7;">
                             <div class="row">
-                                    <?php
-                                        verDiadema();
-                                    ?>
+                                <?php
+                                if($_GET['ic'] == 0)
+                                {
+                                    verDiadema();
+                                }
+                                else if($_GET['ic'] == 1)
+                                {
+                                    adminCrearDiadema();
+                                }
+                                else if($_GET['ic'] == 2)
+                                {
+                                    optVerDiademaPorCoordiandor();
+                                }
+                                else if($_GET['ic'] == 3)
+                                {
+                                    optVerDiademaPorCamp();
+                                }
+                                ?>
                             <p>&nbsp;</p>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        </div>
         </div>
         <div class="row">
             <div class="col-md-4">

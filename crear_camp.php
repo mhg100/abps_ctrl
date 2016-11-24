@@ -1,6 +1,7 @@
 <?php
 
     include 'php/php_func.php';
+    session_start();
     fTimeStamp();
     comprobarAdmin();
     $id = $_POST['costos'];
@@ -19,10 +20,10 @@
     $stmt = sqlsrv_query($conn, $sql);
     if(!$stmt)
     {
-        header("refresh:10; defaultcamp.php?ag=0");
+        header("Location: defaultcamp.php?ic=1&ag=0");
     }
     else
     {
-        header("refresh:10; defaultcamp.php?ag=1");
+        header("Location: defaultcamp.php?ic=1&ag=1");
     }
 ?> 

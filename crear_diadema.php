@@ -1,4 +1,4 @@
-<?php
+ <?php
 
     include 'php/php_func.php';
 /*
@@ -47,6 +47,8 @@ resumen: [
 ]
 }
 */
+if(!isset($_GET['ic']))
+{
     $collection = fMongoDB();
     session_start();
     $infoDiadema = array(
@@ -68,34 +70,15 @@ resumen: [
     var_dump($diadema);
     echo '</pre>';
     echo '<pre>id coordinador: '.$_SESSION['id'].'</pre>';
+}
 
-    try {
-        $collection->insert($diadema);
-        header( "refresh:0; defaultdevice.php?ic=1&ag=1&sd=".$_POST['serial']);
-    }
-    catch (MongoCursorException $e) {
-        echo "error message: ".$e->getMessage()."\n";
-        echo "error code: ".$e->getCode()."\n";
-        header( "refresh:0; defaultdevice.php?ic=1&ag=0&sd=".$_POST['serial']);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+try {
+    $collection->insert($diadema);
+    header( "refresh:0; defaultdevice.php?ic=1&ag=1&sd=".$_POST['serial']);
+}
+catch (MongoCursorException $e) {
+    echo "error message: ".$e->getMessage()."\n";
+    echo "error code: ".$e->getCode()."\n";
+    header( "refresh:0; defaultdevice.php?ic=1&ag=0&sd=".$_POST['serial']);
+}
 ?>
