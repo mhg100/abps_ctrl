@@ -42,11 +42,11 @@ comprobarAdmin();
                                 }
                                 else if($_GET['ic'] == 2)
                                 {
-                                    optVerDiademaPorCoordiandor();
+                                    optVerDiademaPorCamp();
                                 }
                                 else if($_GET['ic'] == 3)
                                 {
-                                    optVerDiademaPorCamp();
+                                    optVerDiademaPorCoordinador();
                                 }
                                 ?>
                             <p>&nbsp;</p>

@@ -227,9 +227,6 @@ function navbar()
     echo '                        <ul class="dropdown-menu">';
     echo '                            <li><a href="device.php?ic=0">Ver todas las diademas</a></li>';
     echo '                            <li><a href="device.php?ic=1">Crear diadema</a></li>';
-    echo '                            <li class="divider"></li>';
-    echo '                            <li><a href="device.php?ic=0">Ver diademas por coordinador</a></li>';
-    echo '                            <li><a href="device.php?ic=2">Ver diademas por campaña</a></li>';
     echo '                            <li><a href="cambios.php">Realizar cambio</a></li>';
     echo '                        </ul>';
     echo '                        ';
@@ -562,6 +559,8 @@ function verDiadema()
     $index = 0;
     $collection = fMongoDB();
     $res = array();
+    $campaigns = array();
+    
     if(!$_SESSION['rol'] == 0)
     {
         $cursor = $collection->find(array('resumen.coordinador_id' => $_SESSION['id']));
@@ -569,12 +568,51 @@ function verDiadema()
     else
     {
         $cursor = $collection->find();
+        
+        $conn = fSesion();
+        $sql1 = "select id_coordinador as id, nombres_coordinador as nombres, apellidos_coordinador as apellidos, cantidad_agentes_coordinador as cantagentes, campaign_coordinador as idcampa from coordinadores";
+        $sql2 = "select nombre_campaign, id_campaign from campaigns order by nombre_campaign asc";
+        $stmt2 = sqlsrv_query($conn, $sql2);
+        echo '      <form class="form-horizontal" role="form">';
+        echo '          <div class="form-group">';
+        echo '            <label for="listarcampaign" class="col-md-4 control-label">Listar por campaña:</label>';
+        echo '            <div class="col-md-4">';
+        echo '                <select data-size="7" id="selectorCampaign" name="selectorCampaign" class="selectpicker form-control" data-live-search="true" title="Seleccione una campaña" required autocomplete="off" data-width="355px">';
+        echo '                    <option value="Todas las campañas">Todas las campañas</option>';
+                                  while($row = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC))
+                                  {
+                                      $campaigns[$row['id_campaign']] = $row['nombre_campaign'];
+        echo '                    <option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>';
+                                  }
+                                  sqlsrv_free_stmt($stmt);
+        echo '                </select>';
+        echo '            </div>';
+        echo '        </div>';
+        echo '<script>';
+        echo '    $("#selectorCampaign").on("changed.bs.select", function (e) {';
+        echo '        var val = $("#selectorCampaign").val();';
+        echo '        if(val == "Todas las campañas")';
+        echo '        {';
+        echo '            window.location.href = "device.php?ic=0";';
+        echo '        }';
+        echo '        else';
+        echo '        {';
+        echo '            window.location.href = "device.php?ic=0&camplist="+val;';
+        echo '        }';
+        echo '    });';
+        echo '</script>';
     }
+    
+    if(isset($_GET['camplist']))
+    {
+        echo '  <h4>'.$campaigns[$_GET['camplist']].'</h4>';
+    }
+    
     foreach ($cursor as $document)
-        {   
-            $temp = array($document["_id"], $document["Marca"], $document["serial"], $document["resumen"]);
-            array_push($res, $temp);
-        }
+    {   
+        $temp = array($document["_id"], $document["Marca"], $document["serial"], $document["resumen"]);
+        array_push($res, $temp);
+    }
 
     for($i = 0; $i<count($res); $i++)
     {
@@ -590,7 +628,7 @@ function verDiadema()
         $coordinador = $resumenTemp['coordinador_id'];
         $estado = $resumenTemp['estado'];
         $fecha = $resumenTemp['fechaMov'];
-
+        
         if($_SESSION['rol'] == 1)
         {
             if($coordinador == $_SESSION['id'] && $estado == "1")
@@ -622,9 +660,53 @@ function verDiadema()
                 echo '      </div>' . "\xA";
                 echo '      </div>' . "\xA";
             }
-        }else
+        }
+        else
         {
-            if($estado == "1")
+            if(isset($_GET['camplist']))
+            {
+                if($_GET['camplist'] == $campa)
+                {
+                    if($estado == "1")
+                    {
+                        echo '<form class="form-horizontal" role="form">' . "\xA";
+                        echo '  <div class="form-group">' . "\xA";
+                        echo '      <label for="serial" class="col-md-4 control-label">Serial:</label>' . "\xA";
+                        echo '      <div class="col-md-6">' . "\xA";
+                        echo '          <input type="text" class="form-control" rel="serial" id="serial" name="serial" value="'.$serial.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                        echo '      </div>' . "\xA";
+                        echo '      <label for="serial" class="col-md-4 control-label">Agente o IP del equipo:</label>' . "\xA";
+                        echo '      <div class="col-md-6">' . "\xA";
+                        echo '          <input type="text" class="form-control" rel="serial" id="serial" name="nombreag" value="'.$agente.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                        echo '      </div>' . "\xA";
+                        echo '      <label for="serial" class="col-md-4 control-label">Marca:</label>' . "\xA";
+                        echo '      <div class="col-md-6">' . "\xA";
+                        echo '          <input type="text" class="form-control" rel="serial" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                        echo '      </div>' . "\xA";
+                        echo '      <label for="serial" class="col-md-4 control-label">Campaña:</label>' . "\xA";
+                        echo '      <div class="col-md-6">' . "\xA";
+                        echo '          <input type="text" class="form-control" rel="serial" id="campa" name="campa" value="'.$campaigns[$campa].'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                        echo '      </div>' . "\xA";
+                        echo '      <label for="serial" class="col-md-4 control-label">Coordinador:</label>' . "\xA";
+                        echo '      <div class="col-md-6">' . "\xA";
+                        echo '          <input type="text" class="form-control" rel="serial" id="coordinador" name="coordinador" value="'.$coord.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                        echo '      </div>' . "\xA";
+                        if($res[$i][2] != NULL)
+                        {
+                            echo '      <label for="serial" class="col-md-4 control-label">S/N:</label>' . "\xA";
+                            echo '      <div class="col-md-6">' . "\xA";
+                            echo '          <input type="text" class="form-control" rel="sn" id="sn" name="sn" value="'.$sn.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                            echo '      </div>' . "\xA";
+                        }
+                        echo '      <label for="serial" class="col-md-4 control-label">Fecha de ingreso:</label>' . "\xA";
+                        echo '      <div class="col-md-6">' . "\xA";
+                        echo '          <input type="text" class="form-control" rel="serial" id="ingreso" name="ingreso" value="'.$fecha.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                        echo '      </div>' . "\xA";
+                        echo '      </div>' . "\xA";
+                    }
+                }
+            }
+            else
             {
                 echo '<form class="form-horizontal" role="form">' . "\xA";
                 echo '  <div class="form-group">' . "\xA";
@@ -642,7 +724,7 @@ function verDiadema()
                 echo '      </div>' . "\xA";
                 echo '      <label for="serial" class="col-md-4 control-label">Campaña:</label>' . "\xA";
                 echo '      <div class="col-md-6">' . "\xA";
-                echo '          <input type="text" class="form-control" rel="serial" id="campa" name="campa" value="'.$campa.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                echo '          <input type="text" class="form-control" rel="serial" id="campa" name="campa" value="'.$campaigns[$campa].'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
                 echo '      </div>' . "\xA";
                 echo '      <label for="serial" class="col-md-4 control-label">Coordinador:</label>' . "\xA";
                 echo '      <div class="col-md-6">' . "\xA";
@@ -849,7 +931,7 @@ function getListaCoordinadores()
     }
     return $coordinadores;
 }
-function optVerDiademaPorCoordiandor()
+function optVerDiademaPorCamp()
 {
     $conn = fSesion();
     $sql1 = "select id_coordinador as id, nombres_coordinador as nombres, apellidos_coordinador as apellidos, cantidad_agentes_coordinador as cantagentes, campaign_coordinador as idcampa from coordinadores";
@@ -878,28 +960,7 @@ function optVerDiademaPorCoordiandor()
     echo '        {';
     echo '            window.location.href = "device.php?ic=0";';
     echo '        }';
-    echo '        window.location.href = "device?ic=0&camplist="+val;';
+    echo '        window.location.href = "device.php?ic=0&camplist="+val;';
     echo '    });';
     echo '</script>';
 }
-function optVerDiademaPorCamp()
-{
-    
-}
-?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
