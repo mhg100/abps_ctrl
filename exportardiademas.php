@@ -1,5 +1,7 @@
 <?php
 namespace abps;
+include 'php/php_func.php';
+
 function cleanData(&$cadena)
 {
     $cadena = preg_replace("/\t/", "\\t", $cadena);
@@ -7,14 +9,12 @@ function cleanData(&$cadena)
     if(strstr($cadena, '"')) $cadena = '"' . str_replace('"', '""', $cadena) . '"';
 }
 
-include 'php/php_func.php';
-
 $archivo = "reporte_diademas".date('dmY').".xls";
 
 header("Content-Disposition: attachment; filename=\"$archivo\"");
 header("Content-Type: application/vnd.ms-excel");
 header("Content-Type: text/plain");
-header('Content-Type: text/html; charset=UTF-8');
+header('Content-Type: text/html; charset=ISO-8859-1');
 
 $collection = fMongoDB();
 $cursor = $collection->find();
