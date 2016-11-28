@@ -225,10 +225,10 @@ function navbar()
     echo '                    <li class="dropdown">';
     echo '                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>';
     echo '                        <ul class="dropdown-menu">';
-    echo '                            <li><a href="device.php?ic=0">Ver todas las diademas</a></li>';
+    echo '                            <li><a href="device.php">Ver todas las diademas</a></li>';
     echo '                            <li><a href="device.php?ic=1">Crear diadema</a></li>';
     echo '                            <li><a href="exportardiademas.php">Exportar diademas</a></li>';
-    echo '                            <li><a href="cambios.php">Realizar cambio</a></li>';
+    echo '                            <li><a href="device.php?ic=2">Realizar cambio</a></li>';
     echo '                        </ul>';
     echo '                        ';
     echo '                        ';
@@ -627,6 +627,8 @@ function verDiadema()
         $campa = $res[$i][3][0]['campaign'];
         $resumenTemp = end($res[$i][3]);
         $coordinador = $resumenTemp['coordinador_id'];
+        $coordinadores = getListaCoordinadores();
+        $coord = $coordinadores[$coord]['nombre'];
         $estado = $resumenTemp['estado'];
         $fecha = $resumenTemp['fechaMov'];
         
@@ -640,17 +642,17 @@ function verDiadema()
                 echo '      <div class="col-md-6">' . "\xA";
                 echo '          <input type="text" class="form-control" rel="serial" id="serial" name="serial" value="'.$serial.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
                 echo '      </div>' . "\xA";
-                echo '      <label for="serial" class="col-md-4 control-label">Agente o IP del equipo:</label>' . "\xA";
+                echo '      <label for="nombreag" class="col-md-4 control-label">Agente o IP del equipo:</label>' . "\xA";
                 echo '      <div class="col-md-6">' . "\xA";
-                echo '          <input type="text" class="form-control" rel="serial" id="serial" name="nombreag" value="'.$agente.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                echo '          <input type="text" class="form-control" rel="nombreag" id="nombreag" name="nombreag" value="'.$agente.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
                 echo '      </div>' . "\xA";
-                echo '      <label for="serial" class="col-md-4 control-label">Marca:</label>' . "\xA";
+                echo '      <label for="marca" class="col-md-4 control-label">Marca:</label>' . "\xA";
                 echo '      <div class="col-md-6">' . "\xA";
-                echo '          <input type="text" class="form-control" rel="serial" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                echo '          <input type="text" class="form-control" rel="marca" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
                 echo '      </div>' . "\xA";
                 if($res[$i][2] != NULL)
                 {
-                    echo '      <label for="serial" class="col-md-4 control-label">S/N:</label>' . "\xA";
+                    echo '      <label for="sn" class="col-md-4 control-label">S/N:</label>' . "\xA";
                     echo '      <div class="col-md-6">' . "\xA";
                     echo '          <input type="text" class="form-control" rel="sn" id="sn" name="sn" value="'.$sn.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
                     echo '      </div>' . "\xA";
@@ -684,9 +686,9 @@ function verDiadema()
                         echo '      <div class="col-md-6">' . "\xA";
                         echo '          <input type="text" class="form-control" rel="serial" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
                         echo '      </div>' . "\xA";
-                        echo '      <label for="serial" class="col-md-4 control-label">Campaña:</label>' . "\xA";
+                        echo '      <label for="campa" class="col-md-4 control-label">Campaña:</label>' . "\xA";
                         echo '      <div class="col-md-6">' . "\xA";
-                        echo '          <input type="text" class="form-control" rel="serial" id="campa" name="campa" value="'.$campaigns[$campa].'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                        echo '          <input type="text" class="form-control" rel="campa" id="camap" name="campa" value="'.$campaigns[$campa].'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
                         echo '      </div>' . "\xA";
                         echo '      <label for="serial" class="col-md-4 control-label">Coordinador:</label>' . "\xA";
                         echo '      <div class="col-md-6">' . "\xA";
@@ -715,32 +717,32 @@ function verDiadema()
                 echo '      <div class="col-md-6">' . "\xA";
                 echo '          <input type="text" class="form-control" rel="serial" id="serial" name="serial" value="'.$serial.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
                 echo '      </div>' . "\xA";
-                echo '      <label for="serial" class="col-md-4 control-label">Agente o IP del equipo:</label>' . "\xA";
+                echo '      <label for="nombreag" class="col-md-4 control-label">Agente o IP del equipo:</label>' . "\xA";
                 echo '      <div class="col-md-6">' . "\xA";
-                echo '          <input type="text" class="form-control" rel="serial" id="serial" name="nombreag" value="'.$agente.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                echo '          <input type="text" class="form-control" rel="nombreag" id="nombreag" name="nombreag" value="'.$agente.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
                 echo '      </div>' . "\xA";
-                echo '      <label for="serial" class="col-md-4 control-label">Marca:</label>' . "\xA";
+                echo '      <label for="marca" class="col-md-4 control-label">Marca:</label>' . "\xA";
                 echo '      <div class="col-md-6">' . "\xA";
-                echo '          <input type="text" class="form-control" rel="serial" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                echo '          <input type="text" class="form-control" rel="marca" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
                 echo '      </div>' . "\xA";
-                echo '      <label for="serial" class="col-md-4 control-label">Campaña:</label>' . "\xA";
+                echo '      <label for="campa" class="col-md-4 control-label">Campaña:</label>' . "\xA";
                 echo '      <div class="col-md-6">' . "\xA";
-                echo '          <input type="text" class="form-control" rel="serial" id="campa" name="campa" value="'.$campaigns[$campa].'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                echo '          <input type="text" class="form-control" rel="campa" id="campa" name="campa" value="'.$campaigns[$campa].'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
                 echo '      </div>' . "\xA";
-                echo '      <label for="serial" class="col-md-4 control-label">Coordinador:</label>' . "\xA";
+                echo '      <label for="coordinador" class="col-md-4 control-label">Coordinador:</label>' . "\xA";
                 echo '      <div class="col-md-6">' . "\xA";
-                echo '          <input type="text" class="form-control" rel="serial" id="coordinador" name="coordinador" value="'.$coord.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                echo '          <input type="text" class="form-control" rel="coordinador" id="coordinador" name="coordinador" value="'.$coord.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
                 echo '      </div>' . "\xA";
                 if($res[$i][2] != NULL)
                 {
-                    echo '      <label for="serial" class="col-md-4 control-label">S/N:</label>' . "\xA";
+                    echo '      <label for="sn" class="col-md-4 control-label">S/N:</label>' . "\xA";
                     echo '      <div class="col-md-6">' . "\xA";
                     echo '          <input type="text" class="form-control" rel="sn" id="sn" name="sn" value="'.$sn.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
                     echo '      </div>' . "\xA";
                 }
-                echo '      <label for="serial" class="col-md-4 control-label">Fecha de ingreso:</label>' . "\xA";
+                echo '      <label for="ingreso" class="col-md-4 control-label">Fecha de ingreso:</label>' . "\xA";
                 echo '      <div class="col-md-6">' . "\xA";
-                echo '          <input type="text" class="form-control" rel="serial" id="ingreso" name="ingreso" value="'.$fecha.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                echo '          <input type="text" class="form-control" rel="ingreso" id="ingreso" name="ingreso" value="'.$fecha.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
                 echo '      </div>' . "\xA";
                 echo '      </div>' . "\xA";
             }
@@ -928,3 +930,100 @@ function getListaCoordinadores()
 
     return $coordinadores;
 }
+function cambioDiadema()
+{
+    $diadema = "'img/diadema1.jpg' width='150px' height='150px'";
+    $jabra = "'img/jabrasn.jpg' width='150px' height='100px'";
+    $padding = 10;
+    $index = 0;
+    echo '<form class="form-horizontal" role="form" action="crear_diadema.php" method="post">' . "\xA";
+    echo '  <div align="center">' . "\xA";
+    echo '                    <!--Formulario-->';
+    echo '    <div class="form-group">' . "\xA";
+    echo '      <label for="seriasaliente" class="col-md-4 control-label">Serial:</label>' . "\xA";
+    echo '        <div class="col-md-6">' . "\xA";
+    echo '          <select id="marca" name="marca" class="selectpicker" data-live-search="true" title="Seleccione una diadema" data-width="355px" required>' . "\xA";
+    echo '            <option value="">ABPS001</option>' . "\xA";
+    echo '            <option value="">ABPS002</option>' . "\xA";
+    echo '            <option value="">ABPS003</option>' . "\xA";
+    echo '          </select>' . "\xA";
+    echo '        </div>' . "\xA";
+    echo '    </div>' . "\xA";
+    echo '    <div class="form-group">' . "\xA";
+    echo '      <label for="nombres" class="col-md-4 control-label">Nombre(s) y apellidos o Dirección IP: </label>';
+    echo '        <div class="col-md-6">' . "\xA";
+    echo '          <input type="text" data-toggle="tooltip"" class="form-control back-tooltip" id="nombres" name="nombres" placeholder="Nombres o dirección IP" required autocomplete="off">' . "\xA";
+    echo '        </div>' . "\xA";
+    echo '    </div>' . "\xA";
+    echo '    <div class="form-group">' . "\xA";
+    echo '      <label for="marca" class="col-md-4 control-label">Marca:</label>' . "\xA";
+    echo '        <div class="col-md-4">' . "\xA";
+    echo '          <select id="marca" name="marca" class="selectpicker" data-live-search="true" title="Seleccione una marca" data-width="355px" required>' . "\xA";
+    echo '            <option value="Jabra">Jabra</option>' . "\xA";
+    echo '            <option value="Plantronics">Plantronics</option>' . "\xA";
+    echo '            <option value="China">China</option>' . "\xA";
+    echo '          </select>' . "\xA";
+    echo '        </div>' . "\xA";
+    echo '    </div>' . "\xA";
+    echo '    <div class="form-group">' . "\xA";
+    echo '      <label for="serialnumber" class="col-sm-4 control-label">S/N: </label>' . "\xA";
+    echo '        <div class="col-md-6">' . "\xA";
+    echo '          <input type="text" data-toggle="tooltip" title="<br><img src='.$jabra.'><br><br>Si la diadema es marca Jabra, ubique el S/N e ingreselo.<br><br>" class="form-control bfh-number back-tooltip" name="serialnumber" id="serialnumber" autocomplete="off" disabled required>' . "\xA";
+    echo '        </div>' . "\xA";
+    echo '    </div>' . "\xA";
+    echo '    <div class="form-group">' . "\xA";
+    echo '      <div class="col-md-10" align="right">' . "\xA";
+    echo '        <fieldset>' . "\xA";
+    if(isset($_GET['ag']))
+    {
+        $padding = 25;
+        if($_GET['ag'] == 0)
+        {
+            echo '        <label for="agregar" class="alert alert-danger col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
+            echo '          <strong>Error: Serial '.$_GET["sd"].' duplicado</strong>' . "\xA";
+            echo '        </label>' . "\xA";
+        }
+        else if($_GET['ag'] == 1)
+        {
+            echo '        <label for="agregar" class="alert alert-success col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
+            echo '          <strong>Diadema '.$_GET["sd"].' agregada correctamente</strong>' . "\xA";
+            echo '        </label>' . "\xA";
+        }
+    }
+    echo '            <button type="submit" class="btn btn-success" id="agregar" name="agregar" style="padding: '.$padding.'px;">Agregar</button>' . "\xA";
+    echo '              </fieldset>' . "\xA";
+    echo '            </div>' . "\xA";
+    echo '         </form>' . "\xA";
+    echo '         <script>' . "\xA";
+    echo '             $("#marca").on("changed.bs.select", function (e) {' . "\xA";
+    echo '                 var val = $("#marca").val();' . "\xA";
+    echo '                 if(val == "Jabra") $( "#serialnumber" ).prop( "disabled", false );' . "\xA";
+    echo '                 else $( "#serialnumber" ).prop( "disabled", true );' . "\xA";
+    echo '             });' . "\xA";
+    echo '         </script>' . "\xA";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

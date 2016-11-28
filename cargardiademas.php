@@ -31,6 +31,7 @@ while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC))
         'Marca'=>$marca,
         'serial'=>$serial,
         'resumen'=>[array(
+            '_id'=>"001",
             'estado'=>"1",
             'nombresAg'=>$nombresAg,
             'coordinador_id'=>$coordinador_id,

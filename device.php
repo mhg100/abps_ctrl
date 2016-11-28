@@ -32,22 +32,9 @@ comprobarAdmin();
                         <div class="col-md-8 col-lg-offset-2" style="outline: 1px solid #E7E7E7;">
                             <div class="row">
                                 <?php
-                                if($_GET['ic'] == 0)
-                                {
-                                    verDiadema();
-                                }
-                                else if($_GET['ic'] == 1)
-                                {
-                                    adminCrearDiadema();
-                                }
-                                else if($_GET['ic'] == 2)
-                                {
-                                    optVerDiademaPorCamp();
-                                }
-                                else if($_GET['ic'] == 3)
-                                {
-                                    optVerDiademaPorCoordinador();
-                                }
+                                if(!isset($_GET['ic']) || $_GET['ic'] == 0) verDiadema();
+                                else if($_GET['ic'] == 1)                   adminCrearDiadema();
+                                else if($_GET['ic'] == 2)                   cambioDiadema();
                                 ?>
                             <p>&nbsp;</p>
                         </div>
