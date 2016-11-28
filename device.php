@@ -19,11 +19,15 @@ comprobarAdmin();
                         <?php
                             if($_GET['ic']==0 || !isset($_GET['ic']))
                             {
-                                echo "lista de dispositivos<br><br>";
+                                echo "Lista de dispositivos<br><br>";
                             }
                             else if($_GET['ic']==1)
                             {
                                 echo "Creación de dispositivo<br><br>";
+                            }
+                            else if($_GET['ic']==2)
+                            {
+                                echo "Cambios<br><br>";
                             }
                         ?>
                     </h2>
