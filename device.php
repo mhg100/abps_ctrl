@@ -14,39 +14,37 @@ comprobarAdmin();
                 <?php
                     navbar();
                 ?>
-                <div class="jumbotron">
+                <div class="jumbotron" style="position: relative;">
                     <h2 align="center">
                         <?php
-                            if($_GET['ic']==0 || !isset($_GET['ic']))
-                            {
-                                echo "Lista de dispositivos<br><br>";
-                            }
-                            else if($_GET['ic']==1)
-                            {
-                                echo "Creación de dispositivo<br><br>";
-                            }
-                            else if($_GET['ic']==2)
-                            {
-                                echo "Cambios<br><br>";
-                            }
+                            if($_GET['ic']==0 || !isset($_GET['ic']))       echo "Lista de dispositivos<br><br>";  
+                            else if($_GET['ic']==1)                         echo "Creación de dispositivo<br><br>";
+                            else if($_GET['ic']==2)                         echo "Cambios<br><br>";
                         ?>
                     </h2>
+                    <center>
+                        <a href="exportardiademas.php" class="text-success">
+                            Descargar en formato .xls
+                            <span class="glyphicon glyphicon-download-alt"></span>
+                        </a>
+                    </center>
+                    <div class="clearfix">&nbsp;</div>
                     <div class="jumbotron" style="background-color: #F8F8F8; outline: 1px solid #E7E7E7;">
-                    <div class="row text-center">
-                        <div class="col-md-8 col-lg-offset-2" style="outline: 1px solid #E7E7E7;">
-                            <div class="row">
-                                <?php
-                                if(!isset($_GET['ic']) || $_GET['ic'] == 0) verDiadema();
-                                else if($_GET['ic'] == 1)                   adminCrearDiadema();
-                                else if($_GET['ic'] == 2)                   cambioDiadema();
-                                ?>
-                            <p>&nbsp;</p>
+                        <div class="row text-center">
+                            <div class="col-md-8 col-lg-offset-2" style="outline: 1px solid #E7E7E7;">
+                                <div class="row">
+                                    <?php
+                                    if(!isset($_GET['ic']) || $_GET['ic'] == 0) verDiadema();
+                                    else if($_GET['ic'] == 1)                   adminCrearDiadema();
+                                    else if($_GET['ic'] == 2)                   cambioDiadema();
+                                    ?>
+                                <p>&nbsp;</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        </div>
         </div>
         <div class="row">
             <div class="col-md-4">
@@ -85,17 +83,18 @@ comprobarAdmin();
                 <a class="btn" href="cambios.php">Ir a la opción »</a>
             </div>
         </div>
-    <script>
-        $(document).ready(function(){
-            $('[data-toggle="tooltip"]').tooltip({
-                animation: true,
-                animated: 'fade',
-                placement: 'top',
-                html: true,
-                delay: {show: 1000, hide: 100}
+        <script>
+            $(document).ready(function(){
+                $('[data-toggle="tooltip"]').tooltip({
+                    animation: true,
+                    animated: 'fade',
+                    placement: 'top',
+                    html: true,
+                    delay: {show: 1000, hide: 100}
+                });
+                $('[data-toggle="tooltip"]').tooltip().off("focusin focusout");
             });
-            $('[data-toggle="tooltip"]').tooltip().off("focusin focusout");
-        });
-    </script>
+        </script>
+    </div>
 </body>
 </html>

@@ -18,22 +18,26 @@
                                 <div class="form-group">
                                     <label for="nombres" class="col-sm-2 control-label">Nombre(s):</label>
                                     <div class="col-md-8">
-                                        <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Nombres" required c autocomplete="off">
+                                        <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Nombres" required autocomplete="off" value="<?php echo $_SESSION['nombres']; ?>" <?php if(!isset($_GET["ic"]) || $_GET["ic"] != "1") echo "disabled"; ?> >
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="apellidos" class="col-sm-2 control-label">Apellidos: </label>
                                     <div class="col-md-8">
-                                        <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="Apellidos" required autocomplete="off">
+                                        <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="Apellidos" required autocomplete="off" value="<?php echo $_SESSION['apellidos']; ?>" <?php if(!isset($_GET["ic"]) || $_GET["ic"] != "1") echo "disabled"; ?> >
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                        <button type="submit" class="btn btn-default" id="cant_agentes" name="cant_agentes">
-                                            Modificar
-                                        </button>
-                                    </div>
-                                </div>
+                                <?php
+                                if(isset($_GET["ic"]) && $_GET["ic"] == 1){
+                                    echo '                                <div class="form-group">';
+                                    echo '                                    <div class="col-sm-offset-2 col-sm-10">';
+                                    echo '                                        <button type="submit" class="btn btn-default" id="cant_agentes" name="cant_agentes">';
+                                    echo '                                            Modificar';
+                                    echo '                                        </button>';
+                                    echo '                                    </div>';
+                                    echo '                                </div>';
+                                }
+                                ?>
                             </div>
                         </form>
                     </div>

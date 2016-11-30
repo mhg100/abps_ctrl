@@ -4,8 +4,8 @@ header('Content-Type: text/html; charset=UTF-8');
 session_start();
 fTimeStamp();
 echo initHTML($_SESSION['rol']);
-llamarPieChart(' ', 400, 250);
-llamarAreaChart('', 400, 250);
+llamarPieChart(400, 250);
+llamarAreaChart(400, 250);
 if($_SESSION['rol'] == 1)
 comprobarAdmin();
 ?>

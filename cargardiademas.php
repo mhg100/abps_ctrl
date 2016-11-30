@@ -12,7 +12,11 @@ $collection = fMongoDB();
 
 $inforgral = array();
 
-$sql = "select * from inventariodiademas order by campaign";
+$fecha = date('Ymd');
+
+$sql = "select * from inventariodiademas where fecha > '$fecha' order by campaign";
+
+echo $sql;
 $stmt = sqlsrv_query($conn, $sql);
 
 while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC))

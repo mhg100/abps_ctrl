@@ -5,7 +5,7 @@ include 'php/php_func.php';
 $collection = fMongoDB();
 $cursor = $collection->find();
 $coordinadores = getListaCoordinadores();
-$archivo = "reporte_diademas".date('dmY').".xls";
+$archivo = "reporte_diademas_".date('m_d_Y').".xls";
 $exportable = array();
 
 function cleanData(&$cadena)

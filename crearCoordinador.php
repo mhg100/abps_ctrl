@@ -4,8 +4,8 @@
     fTimeStamp();
     comprobarAdmin();
 
-    $nombre    = $_POST['nombres'];
-    $apellido  = $_POST['apellidos'];
+    $nombre    = ucwords($_POST['nombres']);
+    $apellido  = ucwords($_POST['apellidos']);
     $cedula    = $_POST['cedula'];
     $camp      = $_POST['selectorCampaign'];
     $cantagentes=$_POST['cantagentes'];

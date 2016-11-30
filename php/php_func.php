@@ -7,7 +7,6 @@ function fSesion()
     $db_usr = 'merhengo';
     $db_psw = '10ceroun0';
     $db_name = 'abps_control';
-
     $connection_options = array('Database'=>''.$db_name.'', 'UID'=>''.$db_usr.'', 'PWD'=>''.$db_psw.'', 'CharacterSet' => 'UTF-8');
     $conn = sqlsrv_connect($db_srv, $connection_options);
     if(!is_resource($conn)){
@@ -15,7 +14,6 @@ function fSesion()
         $_SESSION['ns'] = 3;
         header('Location: index.php'); var_dump(sqlsrv_errors(SQLSRV_ERR_ALL)); exit(0);
     }
-
     return $conn;
 }
 function fMongoDB()
@@ -48,48 +46,40 @@ function fTimeStamp()
 function initHTML($environment)
 {
     $tipoUsuario = '';
-
     if($environment == 0){
         $tipoUsuario = 'Administrador de coordinadores';
     }else if($environment == 1){
         $tipoUsuario = 'Coordinador';
     }
     //172.27.32.134 IP control
-    return '
-
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <title>'.$tipoUsuario.' - Inicio de sesión</title>
-        <meta http-equiv="Content-type" content="text/html; utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="css/bootstrap-select.css">
-        <link rel="stylesheet" type="text/css" href="css/bootstrap.custom.css">
-        <script type="text/javascript" src="js/charts.loader.js"></script>
-        <script src="js/jquery.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/bootstrap.custom.js"></script>
-        <script src="js/bootstrap-select.js"></script>
-    </head>
-
-    ';
+    return '<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>'.$tipoUsuario.' - Inicio de sesión</title>
+    <meta http-equiv="Content-type" content="text/html; utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="js/charts.loader.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.custom.js"></script>
+    <script type="text/javascript" src="js/bootstrap-select.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-select.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.custom.css">
+</head>'."\xA";
 }
-function llamarPieChart($datos, $width, $height)
+function llamarPieChart($width, $height)
 {
     $conn = fSesion();
     $sql_ObtenerNombres  = "select nombre_campaign as nombre from campaigns";
     $stmt_ObtenerNombres = sqlsrv_query($conn, $sql_ObtenerNombres);
-
     sqlsrv_free_stmt($stmt);
-
-    echo '<script type="text/javascript">';
-    echo "    google.charts.load('current', {'packages':['corechart']});";
-    echo "    google.charts.setOnLoadCallback(drawChart);";
-    echo "    function drawChart() {";
-    echo "        var data = google.visualization.arrayToDataTable([";
-    echo "            ['Campaña', '% de diademas'],";
-
+    echo '<script type="text/javascript">'."\xA";
+    echo "    google.charts.load('current', {'packages':['corechart']});\xA";
+    echo "    google.charts.setOnLoadCallback(drawChart);\xA";
+    echo "    function drawChart() {\xA";
+    echo "        var data = google.visualization.arrayToDataTable([\xA";
+    echo "            ['Campaña', '% de diademas'],\xA";
     while($campaigns = sqlsrv_fetch_array($stmt_ObtenerNombres, SQLSRV_FETCH_ASSOC))
     {
         $stmt_ObtenerCantCampaign = sqlsrv_query($conn, fetchCantCampaign($campaigns["nombre"]));
@@ -98,289 +88,313 @@ function llamarPieChart($datos, $width, $height)
             if($cant['total'] == NULL){
                 $cant['total'] = 0;
             }
-            echo "
-                      ['".$campaigns["nombre"]."', " .$cant['total']."],\r";
+            echo "            ['".$campaigns["nombre"]."', " .$cant['total']."],\xA";
         }
     }
     sqlsrv_free_stmt($stmt_ObtenerNombres);
     sqlsrv_free_stmt($stmt_ObtenerCantCampaign);
-
-    echo             "\r\n                          ['',                   '']
-                    ]);
-
-                    var options = {
-                        title: '',
-                        width: ".$width.",
-                        height: ".$height.",
-                        backgroundColor: { fill:'transparent' },
-                        is3D: false
-                    };
-                    var chart = new google.visualization.PieChart(document.getElementById('tortaOperaciones'));
-                    chart.draw(data, options);
-                }
-    </script>
-            ";
-
+    echo "            ['', '']\xA";
+    echo "         ]);\xA";
+    echo "         var options = {\xA";
+    echo "             title: '',\xA";
+    echo "             width: ".$width.",\xA";
+    echo "             height: ".$height.",\xA";
+    echo "             backgroundColor: { fill:'transparent' },\xA";
+    echo "             is3D: false\xA";
+    echo "         };\xA";
+    echo "         var chart = new google.visualization.PieChart(document.getElementById('tortaOperaciones'));\xA";
+    echo "         chart.draw(data, options);\xA";
+    echo "     }\xA";
+    echo "</script>\xA";
 }
-function llamarAreaChart($datos, $width, $height)
+function llamarAreaChart($width, $height)
 {
-    echo    '<script type="text/javascript">';
-    echo        "google.charts.load('current', {'packages':['corechart']});
-                google.charts.setOnLoadCallback(drawChart);
-
-                function drawChart() {
-                    var data = google.visualization.arrayToDataTable([
-                        ['Year', 'Sales', 'Expenses'],
-                        ['2013',  1000,      400],
-                        ['2014',  1170,      460],
-                        ['2015',  660,      1120],
-                        ['2016',  1030,      540]
-                    ]);
-                    var options = {
-                        title: '',
-                        hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
-                        vAxis: {minValue: 0},
-                        width: ".$width.",
-                        height: ".$height.",
-                        backgroundColor: { fill: 'transparent' },
-                        is3D: false
-                    };
-                    var chart = new google.visualization.AreaChart(document.getElementById('movimientos'));
-                    chart.draw(data, options);
-                }
-            </script>";
+    echo '<script type="text/javascript">\n';
+    echo "    google.charts.load('current', {'packages':['corechart']});\xA";
+    echo "    google.charts.setOnLoadCallback(drawChart);\xA";
+    echo "    function drawChart() {\xA";
+    echo "        var data = google.visualization.arrayToDataTable([\xA";
+    echo "            ['Mes',         'Salida',       'Entrada'],\xA";
+    echo "            ['Agosto',      1030,                 540],\xA";
+    echo "            ['Septiembre',  1000,                 400],\xA";
+    echo "            ['Octubre',     1170,                 460],\xA";
+    echo "            ['Noviembre',   660,                 1120],\xA";
+    echo "        ]);\xA";
+    echo "        var options = {\xA";
+    echo "            title: '',\xA";
+    echo "            hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},\xA";
+    echo "            vAxis: {minValue: 0},\xA";
+    echo "            width: ".$width.",\xA";
+    echo "            height: ".$height.",\xA";
+    echo "            backgroundColor: { fill: 'transparent' },\xA";
+    echo "            is3D: false\xA";
+    echo "        };\xA";
+    echo "        var chart = new google.visualization.AreaChart(document.getElementById('movimientos'));\xA";
+    echo "        chart.draw(data, options);\xA";
+    echo "    }\xA";
+    echo "</script>\xA";
 }
 function validaEstadoLogin()
 {
-
     if(isset($_SESSION['ns']))
     {
         if($_SESSION['ns'] == 1)
         {
             unset($_SESSION['ns']);
-            echo '
-<label class="alert alert-danger col-md-4 col-md-offset-6 text-center">
-    <strong>Usuario o clave incorrectos</strong>
-</label>
-            ';
+            echo '       <label class="alert alert-danger col-md-4 col-md-offset-6 text-center">'."\xA";
+            echo '                                  <strong>Usuario o clave incorrectos</strong>'."\xA";
+            echo '                              </label>'."\xA";
         }
         else if($_SESSION['ns'] == 0)
         {
-            if($_SESSION['rol'] == 0) header('location: default.php');
-            else if($_SESSION['rol'] == 1) header('location: defaultcoord.php');
-
-            /*
-            echo '
-<label class="alert alert-success col-md-8">
-    <strong>logueado</strong>
-</label>
-    ';*/
+            if($_SESSION['rol'] == 0)       header('location: default.php');
+            else if($_SESSION['rol'] == 1)  header('location: defaultcoord.php');
         }
         else if($_SESSION['ns'] == 3)
         {
-            echo '
-<label class="alert alert-danger col-md-4 col-md-offset-6 text-center">
-    <strong>Error al iniciar sesion (codigo 0x8160)</strong>
-</label>
-            ';
+            echo '       <label class="alert alert-danger col-md-4 col-md-offset-6 text-center">'."\xA";
+            echo '                                  <strong>Error al iniciar sesion (codigo 0x8160)</strong>'."\xA";
+            echo '                              </label>';
         }
         else echo '';
     }
     else if($_GET['ns'] == 2)
     {
-        echo '
-<label class="alert alert-warning col-md-4 col-md-offset-6 text-center">
-    <strong>Sesión cerrada por inactividad</strong>
-</label>
-
-        ';
+        echo '       <label class="alert alert-warning col-md-4 col-md-offset-6 text-center">'."\xA";
+        echo '                                  <strong>Sesión cerrada por inactividad</strong>'."\xA";
+        echo '                              </label>'."\xA";
         }
     else if($_GET['ns'] == 4)
     {
-        echo '
-    <label class="alert alert-warning col-md-4 col-md-offset-6 text-center">
-        <strong>Sesión finalizada</strong>
-    </label>
-        ';
+        echo '       <label class="alert alert-warning col-md-4 col-md-offset-6 text-center">';
+        echo '                                  <strong>Sesión finalizada</strong>';
+        echo '                              </label>';
     }
     else if($_GET['ns'] == 5)
     {
-        echo '
-    <label class="alert alert-warning col-md-4 col-md-offset-6 text-center">
-        <strong>Sesión no iniciada</strong>
-    </label>
-        ';
+        echo '       <label class="alert alert-warning col-md-4 col-md-offset-6 text-center">';
+        echo '                                  <strong>Sesión no iniciada</strong>';
+        echo '                              </label>';
     }
 }
 function navbar()
 {
-    echo '<nav class="navbar navbar-default nav-center" role="navigation">';
-    echo '            <div class="navbar-header">';
-    echo '                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">';
-    echo '                    <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>';
-    echo '                </button><a class="navbar-brand" href="default.php">ADMin</a>';
-    echo '            </div>';
-    echo '            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">';
-    echo '                <ul class="nav navbar-nav">';
-    echo '                    <li class="dropdown">';
-    echo '                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>';
-    echo '                        <ul class="dropdown-menu">';
-    echo '                            <li><a href="device.php">Ver todas las diademas</a></li>';
-    echo '                            <li><a href="exportardiademas.php">Exportar diademas</a></li>';
-    echo '                            <li role="separator" class="divider"></li>';
-    echo '                            <li><a href="device.php?ic=1">Crear diadema</a></li>';
-    echo '                            <li><a href="device.php?ic=2">Realizar cambio</a></li>';
-    echo '                            <li><a href="device.php?ic=2">Envío a mantenimiento</a></li>';
-    echo '                        </ul>';
-    echo '                        ';
-    echo '                        ';
-    echo '                    </li>';
-    echo '                    <li class="dropdown">';
-    echo '                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Coordinadores<span class="caret"></span></a>';
-    echo '                        <ul class="dropdown-menu">';
-    echo '                            <li><a href="default-opman.php?ic=0">Ver coordinadores</a></li>';
-    echo '                            <li class="divider"></li>';
-    echo '                            <li><a href="default-opman.php?ic=1">Crear</a></li>';
-    echo '                            <li><a href="default-opman.php?ic=2">Modificar</a></li>';
-    echo '                        </ul>';
-    echo '                    </li>';
-    echo '                    <li class="dropdown">';
-    echo '                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Campañas<span class="caret"></span></a>';
-    echo '                        <ul class="dropdown-menu">';
-    echo '                            <li><a href="defaultcamp.php?ic=0">Ver campañas</a></li>';
-    echo '                            <li class="divider"></li>';
-    echo '                            <li><a href="defaultcamp.php?ic=1">Crear</a></li>';
-    echo '                            <li><a href="defaultcamp.php?ic=3">Modificar</a></li>';
-    echo '                        </ul>';
-    echo '                    </li>';
-    echo '                </ul>';
-    echo '                <form class="navbar-form navbar-left" role="search">';
-    echo '                    <div class="form-group">';
-    echo '                        <input type="text" class="form-control">';
-    echo '                    </div>';
-    echo '                    <button type="submit" class="btn btn-default">';
-    echo '                        Buscar coordinador';
-    echo '                    </button>';
-    echo '                </form>';
-    echo '                <ul class="nav navbar-nav navbar-right">';
-    echo '                    <li class="dropdown">';
-    echo '                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">';
-    echo '                            <span class="caret"></span>';
-    echo '                            <span class="glyphicon glyphicon-user"></span> ';
-                                      echo $_SESSION['nombres'].' '.$_SESSION['apellidos'];
-    echo '                        </a>';
-    echo '                        <ul class="dropdown-menu">';
-    echo '                            <li><a href="#"><span class="glyphicon glyphicon-info-sign"></span> Ver información personal</a></li>';
-    echo '                            <li class="divider"></li>';
-    echo '                            <li><a href="logout.php?rol=0"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>';
-    echo '                        </ul>';
-    echo '                    </li>';
-    echo '                </ul>';
-    echo '            </div>';
-    echo '        </nav>';
+    echo '<nav class="navbar navbar-default nav-center" role="navigation">'."\xA";
+    echo '                    <div class="navbar-header">'."\xA";
+    echo '                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">'."\xA";
+    echo '                            <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>'."\xA";
+    echo '                        </button><a class="navbar-brand" href="default.php">ADMin</a>'."\xA";
+    echo '                    </div>'."\xA";
+    echo '                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">'."\xA";
+    echo '                        <ul class="nav navbar-nav">'."\xA";
+    echo '                            <li class="dropdown">'."\xA";
+    echo '                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>'."\xA";
+    echo '                                <ul class="dropdown-menu">'."\xA";
+    echo '                                    <li><a href="device.php">Ver todas las diademas</a></li>'."\xA";
+    echo '                                    <li role="separator" class="divider"></li>'."\xA";
+    echo '                                    <li><a href="device.php?ic=1">Crear diadema</a></li>'."\xA";
+    echo '                                    <li><a href="device.php?ic=2">Realizar cambio</a></li>'."\xA";
+    echo '                                    <li><a href="device.php?ic=2">Envío a mantenimiento</a></li>'."\xA";
+    echo '                                </ul>'."\xA";
+    echo '                            </li>'."\xA";
+    echo '                            <li class="dropdown">'."\xA";
+    echo '                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Coordinadores<span class="caret"></span></a>'."\xA";
+    echo '                                <ul class="dropdown-menu">'."\xA";
+    echo '                                    <li><a href="default-opman.php?ic=0">Ver coordinadores</a></li>'."\xA";
+    echo '                                    <li class="divider"></li>'."\xA";
+    echo '                                    <li><a href="default-opman.php?ic=1">Crear</a></li>'."\xA";
+    echo '                                    <li><a href="default-opman.php?ic=2">Modificar</a></li>'."\xA";
+    echo '                                </ul>'."\xA";
+    echo '                            </li>'."\xA";
+    echo '                            <li class="dropdown">'."\xA";
+    echo '                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Campañas<span class="caret"></span></a>'."\xA";
+    echo '                                <ul class="dropdown-menu">'."\xA";
+    echo '                                    <li><a href="defaultcamp.php?ic=0">Ver campañas</a></li>'."\xA";
+    echo '                                    <li class="divider"></li>'."\xA";
+    echo '                                    <li><a href="defaultcamp.php?ic=1">Crear</a></li>'."\xA";
+    echo '                                    <li><a href="defaultcamp.php?ic=3">Modificar</a></li>'."\xA";
+    echo '                                </ul>'."\xA";
+    echo '                            </li>'."\xA";
+    echo '                        </ul>'."\xA";
+    echo '                        <form class="navbar-form navbar-left" role="search">'."\xA";
+    echo '                            <div class="form-group">'."\xA";
+    echo '                                <input type="text" class="form-control">'."\xA";
+    echo '                            </div>'."\xA";
+    echo '                            <button type="submit" class="btn btn-default">'."\xA";
+    echo '                                Buscar coordinador'."\xA";
+    echo '                            </button>'."\xA";
+    echo '                        </form>'."\xA";
+    echo '                        <ul class="nav navbar-nav navbar-right">'."\xA";
+    echo '                            <li class="dropdown">'."\xA";
+    echo '                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">'."\xA";
+    echo '                                    <span class="caret"></span>'."\xA";
+    echo '                                    <span class="glyphicon glyphicon-user"></span> '.$_SESSION['nombres'].' '.$_SESSION['apellidos']."\xA";
+    echo '                                </a>'."\xA";
+    echo '                                <ul class="dropdown-menu">'."\xA";
+    echo '                                    <li><a href="infopersonal.php"><span class="glyphicon glyphicon-info-sign"></span> Ver información personal</a></li>'."\xA";
+    echo '                                    <li class="divider"></li>'."\xA";
+    echo '                                    <li><a href="logout.php?rol=0"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>'."\xA";
+    echo '                                </ul>'."\xA";
+    echo '                            </li>'."\xA";
+    echo '                        </ul>'."\xA";
+    echo '                    </div>'."\xA";
+    echo '                </nav>'."\xA";
 }
 function navbarCoordinadores()
 {
-    echo '<nav class="navbar navbar-default" role="navigation">';
-    echo '    <div class="navbar-header">';
-    echo '        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">';
-    echo '                    <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>';
-    echo '                </button><a class="navbar-brand" href="default.php">COOrd</a>';
-    echo '            </div>';
-    echo '            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">';
-    echo '                <ul class="nav navbar-nav">';
-    echo '                    <li class="dropdown">';
-    echo '                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>';
-    echo '                        <ul class="dropdown-menu">';
-    echo '                            <li><a href="defaultdevice.php?ic=0">Ver lista de diademas</a></li>';
-    echo '                            <li class="divider"></li>';
-    echo '                            <li><a href="defaultdevice.php?ic=1">Crear diadema</a></li>';
-    echo '                            <li><a href="cambios.php">Solicitud de cambio</a></li>';
-    echo '                        </ul>';
-    echo '                    </li>';
-    echo '                </ul>';
-    echo '                <form class="navbar-form navbar-left" role="search">';
-    echo '                    <div class="form-group">';
-    echo '                        <input type="text" class="form-control">';
-    echo '                    </div>';
-    echo '                    <button type="submit" class="btn btn-default">';
-    echo '                        Buscar diadema';
-    echo '                    </button>';
-    echo '                </form>';
-    echo '                <ul class="nav navbar-nav navbar-right">';
-    echo '                    <li class="dropdown">';
-    echo '                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">';
-    echo '                            <span class="caret"></span>';
-    echo '                            <span class="glyphicon glyphicon-user"></span> ';
-    echo ''                               .$_SESSION['nombres'].' '.$_SESSION['apellidos'];
-    echo '                        </a>';
-    echo '                        <ul class="dropdown-menu">';
-    echo '                            <li><a href="#"><span class="glyphicon glyphicon-info-sign"></span> Ver información personal</a></li>';
-    echo '                            <li class="divider"></li>';
-    echo '                            <li><a href="logout.php?rol=0"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>';
-    echo '                        </ul>';
-    echo '                    </li>';
-    echo '                </ul>';
-    echo '            </div>';
-    echo '        </nav>';
+    echo '<nav class="navbar navbar-default" role="navigation">'."\xA";
+    echo '                    <div class="navbar-header">'."\xA";
+    echo '                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">'."\xA";
+    echo '                            <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>'."\xA";
+    echo '                        </button><a class="navbar-brand" href="default.php">COOrd</a>'."\xA";
+    echo '                    </div>'."\xA";
+    echo '                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">'."\xA";
+    echo '                        <ul class="nav navbar-nav">'."\xA";
+    echo '                            <li class="dropdown">'."\xA";
+    echo '                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>'."\xA";
+    echo '                                <ul class="dropdown-menu">'."\xA";
+    echo '                                    <li><a href="defaultdevice.php?ic=0">Ver lista de diademas</a></li>'."\xA";
+    echo '                                    <li class="divider"></li>'."\xA";
+    echo '                                    <li><a href="defaultdevice.php?ic=1">Crear diadema</a></li>'."\xA";
+    echo '                                    <li><a href="cambios.php">Solicitud de cambio</a></li>'."\xA";
+    echo '                                </ul>'."\xA";
+    echo '                            </li>'."\xA";
+    echo '                        </ul>'."\xA";
+    echo '                        <form class="navbar-form navbar-left" role="search">'."\xA";
+    echo '                            <div class="form-group">'."\xA";
+    echo '                                <input type="text" class="form-control">'."\xA";
+    echo '                            </div>'."\xA";
+    echo '                            <button type="submit" class="btn btn-default">'."\xA";
+    echo '                                Buscar diadema'."\xA";
+    echo '                            </button>'."\xA";
+    echo '                        </form>'."\xA";
+    echo '                        <ul class="nav navbar-nav navbar-right">'."\xA";
+    echo '                            <li class="dropdown">'."\xA";
+    echo '                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">'."\xA";
+    echo '                                    <span class="caret"></span>'."\xA";
+    echo '                                    <span class="glyphicon glyphicon-user"></span>'.$_SESSION['nombres'].' '.$_SESSION['apellidos']."\xA";
+    echo '                                </a>'."\xA";
+    echo '                                <ul class="dropdown-menu">'."\xA";
+    echo '                                    <li><a href="#"><span class="glyphicon glyphicon-info-sign"></span> Ver información personal</a></li>'."\xA";
+    echo '                                    <li class="divider"></li>'."\xA";
+    echo '                                    <li><a href="logout.php?rol=0"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>'."\xA";
+    echo '                                </ul>'."\xA";
+    echo '                            </li>'."\xA";
+    echo '                        </ul>'."\xA";
+    echo '                    </div>'."\xA";
+    echo '                </nav>'."\xA";
 }
 function crearCoordinadores()
 {
-
-    echo '<form class="form-horizontal" role="form" action="crearCoordinador.php" method="post">';
-
     $conn = fSesion();
     $sql = "select nombre_campaign, id_campaign from campaigns order by nombre_campaign asc";
     $stmt = sqlsrv_query($conn, $sql);
-    //$stmt = sqlsrv_query($conexion, $sql, array(), array( "Scrollable" => 'static'));
-    echo '                            <div class="col-md-10 text-left col-md-offset-2">';
-    echo '                            <p>&nbsp;</p>';
-    echo '                                                <!--Formulario-->';
-    echo '                                <div class="form-group">';
-    echo '                                    <label for="nombres" class="col-sm-2 control-label">Nombre(s):</label>';
-    echo '                                    <div class="col-md-8">';
-    echo '                                        <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Nombres" required autofocus autocomplete="off">';
-    echo '                                    </div>';
-    echo '                                </div>';
-    echo '                                <div class="form-group">';
-    echo '                                    <label for="apellidos" class="col-sm-2 control-label">Apellidos: </label>';
-    echo '                                    <div class="col-md-8">';
-    echo '                                        <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="Apellidos" required autocomplete="off">';
-    echo '                                    </div>';
-    echo '                                </div>';
-    echo '                                <div class="form-group">';
-    echo '                                    <label for="cedula" class="col-sm-2 control-label">Cédula: </label>';
-    echo '                                    <div class="col-md-8">';
-    echo '                                        <input type="text" class="form-control" id="cedula" name="cedula" placeholder="Cédula" required autocomplete="off">';
-    echo '                                    </div>';
-    echo '                                </div>';
-    echo '                                <div class="form-group">';
-    echo '                                    <label for="campa" class="col-sm-2 control-label">Campaña:</label>';
-    echo '                                    <div class="col-md-4">';
-    echo '                                        <select id="selectorCampaign" name="selectorCampaign" class="selectpicker" data-live-search="true" title="Seleccione una campaña" required autocomplete="off">';
+    
+    echo '<form class="form-horizontal" role="form" action="crearCoordinador.php" method="post">'."\xA";
+    echo '                                    <div class="col-md-10 text-left col-md-offset-2">'."\xA";
+    echo '                                        <p>&nbsp;</p>'."\xA";
+    echo '                                        <!--Formulario-->'."\xA";
+    echo '                                        <div class="form-group">'."\xA";
+    echo '                                            <label for="nombres" class="col-sm-2 control-label">Nombre(s):</label>'."\xA";
+    echo '                                            <div class="col-md-8">'."\xA";
+    echo '                                                <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Nombres" required autofocus autocomplete="off">'."\xA";
+    echo '                                            </div>'."\xA";
+    echo '                                        </div>'."\xA";
+    echo '                                        <div class="form-group">'."\xA";
+    echo '                                            <label for="apellidos" class="col-sm-2 control-label">Apellidos: </label>'."\xA";
+    echo '                                            <div class="col-md-8">'."\xA";
+    echo '                                                <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="Apellidos" required autocomplete="off">'."\xA";
+    echo '                                            </div>'."\xA";
+    echo '                                        </div>'."\xA";
+    echo '                                        <div class="form-group">'."\xA";
+    echo '                                            <label for="cedula" class="col-sm-2 control-label">Cédula: </label>'."\xA";
+    echo '                                            <div class="col-md-8">'."\xA";
+    echo '                                                <input type="text" class="form-control" id="cedula" name="cedula" placeholder="Cédula" required autocomplete="off">'."\xA";
+    echo '                                            </div>'."\xA";
+    echo '                                        </div>'."\xA";
+    echo '                                        <div class="form-group">'."\xA";
+    echo '                                            <label for="campa" class="col-sm-2 control-label">Campaña:</label>'."\xA";
+    echo '                                            <div class="col-md-4">'."\xA";
+    echo '                                                <select id="selectorCampaign" name="selectorCampaign" class="selectpicker" data-live-search="true" title="Seleccione una campaña" required autocomplete="off">'."\xA";
+                                      while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+    echo '                                                    <option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>'."\xA";
+                                      }
+                                      sqlsrv_free_stmt($stmt);
+    echo '                                                </select>'."\xA";
+    echo '                                            </div>'."\xA";
+    echo '                                        </div>'."\xA";
+    echo '                                        <div class="form-group">'."\xA";
+    echo '                                            <label for="cant_agentes" class="col-sm-2 control-label">Cantidad de agentes: </label>'."\xA";
+    echo '                                            <div class="col-md-8">'."\xA";
+    echo '                                                <input type="text" class="form-control bfh-number" name="cantagentes" id="cantagentes" autocomplete="off">'."\xA";
+    echo '                                            </div>'."\xA";
+    echo '                                        </div>'."\xA";
+    echo '                                        <div class="form-group">'."\xA";
+    echo '                                            <div class="col-sm-offset-2 col-sm-10">'."\xA";
+    echo '                                                <button type="submit" class="btn btn-default" id="cant_agentes" name="cant_agentes">'."\xA";
+    echo '                                                    Agregar'."\xA";
+    echo '                                                </button>'."\xA";
+    echo '                                            </div>'."\xA";
+    echo '                                        </div>'."\xA";
+    echo '                                    </div>'."\xA";
+    echo '                                </form>'."\xA";
+}
+
+function legacycrearCoordinadores()
+{
+    $conn = fSesion();
+    $sql = "select nombre_campaign, id_campaign from campaigns order by nombre_campaign asc";
+    $stmt = sqlsrv_query($conn, $sql);
+    
+    echo '                      <form class="form-horizontal" role="form" action="crearCoordinador.php" method="post">'."\xA";
+    echo '                            <div class="col-md-10 text-left col-md-offset-2">'."\xA";
+    echo '                            <p>&nbsp;</p>'."\xA";
+    echo '                                                <!--Formulario-->'."\xA";
+    echo '                                <div class="form-group">'."\xA";
+    echo '                                    <label for="nombres" class="col-sm-2 control-label">Nombre(s):</label>'."\xA";
+    echo '                                    <div class="col-md-8">'."\xA";
+    echo '                                        <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Nombres" required autofocus autocomplete="off">'."\xA";
+    echo '                                    </div>'."\xA";
+    echo '                                </div>'."\xA";
+    echo '                                <div class="form-group">'."\xA";
+    echo '                                    <label for="apellidos" class="col-sm-2 control-label">Apellidos: </label>'."\xA";
+    echo '                                    <div class="col-md-8">'."\xA";
+    echo '                                        <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="Apellidos" required autocomplete="off">'."\xA";
+    echo '                                    </div>'."\xA";
+    echo '                                </div>'."\xA";
+    echo '                                <div class="form-group">'."\xA";
+    echo '                                    <label for="cedula" class="col-sm-2 control-label">Cédula: </label>'."\xA";
+    echo '                                    <div class="col-md-8">'."\xA";
+    echo '                                        <input type="text" class="form-control" id="cedula" name="cedula" placeholder="Cédula" required autocomplete="off">'."\xA";
+    echo '                                    </div>'."\xA";
+    echo '                                </div>'."\xA";
+    echo '                                <div class="form-group">'."\xA";
+    echo '                                    <label for="campa" class="col-sm-2 control-label">Campaña:</label>'."\xA";
+    echo '                                    <div class="col-md-4">'."\xA";
+    echo '                                        <select id="selectorCampaign" name="selectorCampaign" class="selectpicker" data-live-search="true" title="Seleccione una campaña" required autocomplete="off">'."\xA";
                                                         while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC))
                                                         {
                                                             echo '<option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>';
                                                         }
                                                         sqlsrv_free_stmt($stmt);
-    echo '                                        </select>';
-    echo '                                    </div>';
-    echo '                                </div>';
-    echo '                                <div class="form-group">';
-    echo '                                    <label for="cant_agentes" class="col-sm-2 control-label">Cantidad de agentes: </label>';
-    echo '                                    <div class="col-md-8">';
-    echo '                                        <input type="text" class="form-control bfh-number" name="cantagentes" id="cantagentes" autocomplete="off">';
-    echo '                                    </div>';
-    echo '                                </div>';
-    echo '                                <div class="form-group">';
-    echo '                                    <div class="col-sm-offset-2 col-sm-10">';
-    echo '                                        <button type="submit" class="btn btn-default" id="cant_agentes" name="cant_agentes">';
-    echo '                                            Agregar';
-    echo '                                        </button>';
-    echo '                                    </div>';
-    echo '                                </div>';
-    echo '                            </form>';
-    echo '';
+    echo '                                        </select>'."\xA";
+    echo '                                    </div>'."\xA";
+    echo '                                </div>'."\xA";
+    echo '                                <div class="form-group">'."\xA";
+    echo '                                    <label for="cant_agentes" class="col-sm-2 control-label">Cantidad de agentes: </label>'."\xA";
+    echo '                                    <div class="col-md-8">'."\xA";
+    echo '                                        <input type="text" class="form-control bfh-number" name="cantagentes" id="cantagentes" autocomplete="off">'."\xA";
+    echo '                                    </div>'."\xA";
+    echo '                                </div>'."\xA";
+    echo '                                <div class="form-group">'."\xA";
+    echo '                                    <div class="col-sm-offset-2 col-sm-10">'."\xA";
+    echo '                                        <button type="submit" class="btn btn-default" id="cant_agentes" name="cant_agentes">'."\xA";
+    echo '                                            Agregar'."\xA";
+    echo '                                        </button>'."\xA";
+    echo '                                    </div>'."\xA";
+    echo '                                </div>'."\xA";
+    echo '                            </form>'."\xA";
+    echo ''."\xA";
 }
 function verCoordinadores($edit, $camp)
 {
@@ -389,7 +403,6 @@ function verCoordinadores($edit, $camp)
     $sql2 = "select nombre_campaign, id_campaign from campaigns order by nombre_campaign asc";
     $stmt2 = sqlsrv_query($conn, $sql2);
     $inject = "' or ''='";
-
     echo '      <form class="form-horizontal" role="form">';
     echo '          <div class="form-group">';
     echo '            <label for="listarcampaign" class="col-sm-3 control-label">Listar por campaña:</label>';
@@ -404,9 +417,7 @@ function verCoordinadores($edit, $camp)
     echo '                </select>';
     echo '            </div>';
     echo '        </div>';
-
     $index = 0;
-
     if(isset($camp))
     {
         $sql1 = $sql1." where campaign_coordinador = '".$camp."'";
@@ -422,16 +433,13 @@ function verCoordinadores($edit, $camp)
         $nombreCampa=' ';
         $sql2 = "select nombre_campaign as nc from campaigns where id_campaign = ".$campaign."";
         $stmt2 = sqlsrv_query($conn, $sql2);
-
         while($cmpgn = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC))
         {
             $nombreCampa = ucwords($cmpgn['nc']);
         }
-
         $deshabilitar = '';
         if($edit == 1) $deshabilitar = '';
         else if($edit == 0) $deshabilitar = 'disabled';
-
         echo '
         <div class="form-group">
             <p>&nbsp;</p>
@@ -576,16 +584,16 @@ function verDiadema()
         $sql1 = "select id_coordinador as id, nombres_coordinador as nombres, apellidos_coordinador as apellidos, cantidad_agentes_coordinador as cantagentes, campaign_coordinador as idcampa from coordinadores";
         $sql2 = "select nombre_campaign, id_campaign from campaigns order by nombre_campaign asc";
         $stmt2 = sqlsrv_query($conn, $sql2);
-        echo '      <form class="form-horizontal" role="form">';
-        echo '          <div class="form-group">';
-        echo '            <label for="listarcampaign" class="col-md-4 control-label">Listar por campaña:</label>';
-        echo '            <div class="col-md-4">';
-        echo '                <select data-size="7" id="selectorCampaign" name="selectorCampaign" class="selectpicker form-control" data-live-search="true" title="Seleccione una campaña" required autocomplete="off" data-width="355px">';
-        echo '                    <option value="Todas las campañas">Todas las campañas</option>';
+        echo '      <form class="form-horizontal" role="form">'."\xA";
+        echo '          <div class="form-group">'."\xA";
+        echo '            <label for="listarcampaign" class="col-md-4 control-label">Listar por campaña:</label>'."\xA";
+        echo '            <div class="col-md-4">'."\xA";
+        echo '                <select data-size="7" id="selectorCampaign" name="selectorCampaign" class="selectpicker form-control" data-live-search="true" title="Seleccione una campaña" required autocomplete="off" data-width="355px">'."\xA";
+        echo '                    <option value="Todas las campañas">Todas las campañas</option>'."\xA";
                                   while($row = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC))
                                   {
                                       $campaigns[$row['id_campaign']] = $row['nombre_campaign'];
-        echo '                    <option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>';
+        echo '                    <option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>'."\xA";
                                   }
                                   sqlsrv_free_stmt($stmt);
         echo '                </select>';
@@ -616,14 +624,12 @@ function verDiadema()
         $temp = array($document["_id"], $document["Marca"], $document["serial"], $document["resumen"]);
         array_push($res, $temp);
     }
-
     for($i = 0; $i<count($res); $i++)
     {
         $serial = $res[$i][0];
         $marca = $res[$i][1];
         $sn = $res[$i][2];
         $id = $res[$i][3][0]['_id'];
-        $estado = $res[$i][3][0]['estado'];
         $agente = $res[$i][3][0]['nombresAg'];
         $coord = $res[$i][3][0]['coordinador_id'];
         $campa = $res[$i][3][0]['campaign'];
@@ -634,26 +640,23 @@ function verDiadema()
         $estado = $resumenTemp['estado'];
         $fecha = $resumenTemp['fechaMov'];
         
-        if($_SESSION['rol'] == 1)
-        {
-            if($coordinador == $_SESSION['id'] && $estado == "1")
-            {
-                echo '<form class="form-horizontal" role="form">' . "\xA";
-                echo '  <div class="form-group">' . "\xA";
-                echo '      <label for="serial" class="col-md-4 control-label">Serial:</label>' . "\xA";
-                echo '      <div class="col-md-6">' . "\xA";
-                echo '          <input type="text" class="form-control" rel="serial" id="serial" name="serial" value="'.$serial.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                echo '      </div>' . "\xA";
-                echo '      <label for="nombreag" class="col-md-4 control-label">Agente o IP del equipo:</label>' . "\xA";
-                echo '      <div class="col-md-6">' . "\xA";
-                echo '          <input type="text" class="form-control" rel="nombreag" id="nombreag" name="nombreag" value="'.$agente.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                echo '      </div>' . "\xA";
-                echo '      <label for="marca" class="col-md-4 control-label">Marca:</label>' . "\xA";
-                echo '      <div class="col-md-6">' . "\xA";
-                echo '          <input type="text" class="form-control" rel="marca" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                echo '      </div>' . "\xA";
-                if($res[$i][2] != NULL)
-                {
+        if($_SESSION['rol'] == 1){
+            if($coordinador == $_SESSION['id'] && $estado == "1"){
+                echo '      <form class="form-horizontal" role="form">' . "\xA";
+                echo '        <div class="form-group">' . "\xA";
+                echo '            <label for="serial" class="col-md-4 control-label">Serial:</label>' . "\xA";
+                echo '            <div class="col-md-6">' . "\xA";
+                echo '                <input type="text" class="form-control" rel="serial" id="serial" name="serial" value="'.$serial.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                echo '            </div>' . "\xA";
+                echo '            <label for="nombreag" class="col-md-4 control-label">Agente o IP del equipo:</label>' . "\xA";
+                echo '            <div class="col-md-6">' . "\xA";
+                echo '                <input type="text" class="form-control" rel="nombreag" id="nombreag" name="nombreag" value="'.$agente.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                echo '            </div>' . "\xA";
+                echo '            <label for="marca" class="col-md-4 control-label">Marca:</label>' . "\xA";
+                echo '            <div class="col-md-6">' . "\xA";
+                echo '                <input type="text" class="form-control" rel="marca" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
+                echo '            </div>' . "\xA";
+                if($res[$i][2] != NULL){
                     echo '      <label for="sn" class="col-md-4 control-label">S/N:</label>' . "\xA";
                     echo '      <div class="col-md-6">' . "\xA";
                     echo '          <input type="text" class="form-control" rel="sn" id="sn" name="sn" value="'.$sn.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
@@ -666,14 +669,10 @@ function verDiadema()
                 echo '      </div>' . "\xA";
             }
         }
-        else
-        {
-            if(isset($_GET['camplist']))
-            {
-                if($_GET['camplist'] == $campa)
-                {
-                    if($estado == "1")
-                    {
+        else{
+            if(isset($_GET['camplist'])){
+                if($_GET['camplist'] == $campa){
+                    if($estado == "1"){
                         echo '<form class="form-horizontal" role="form">' . "\xA";
                         echo '  <div class="form-group">' . "\xA";
                         echo '      <label for="serial" class="col-md-4 control-label">Serial:</label>' . "\xA";
@@ -696,8 +695,7 @@ function verDiadema()
                         echo '      <div class="col-md-6">' . "\xA";
                         echo '          <input type="text" class="form-control" rel="serial" id="coordinador" name="coordinador" value="'.$coord.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
                         echo '      </div>' . "\xA";
-                        if($res[$i][2] != NULL)
-                        {
+                        if($res[$i][2] != NULL){
                             echo '      <label for="serial" class="col-md-4 control-label">S/N:</label>' . "\xA";
                             echo '      <div class="col-md-6">' . "\xA";
                             echo '          <input type="text" class="form-control" rel="sn" id="sn" name="sn" value="'.$sn.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
@@ -711,8 +709,7 @@ function verDiadema()
                     }
                 }
             }
-            else
-            {
+            else{
                 echo '<form class="form-horizontal" role="form">' . "\xA";
                 echo '  <div class="form-group">' . "\xA";
                 echo '      <label for="serial" class="col-md-4 control-label">Serial:</label>' . "\xA";
@@ -735,8 +732,7 @@ function verDiadema()
                 echo '      <div class="col-md-6">' . "\xA";
                 echo '          <input type="text" class="form-control" rel="coordinador" id="coordinador" name="coordinador" value="'.$coord.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
                 echo '      </div>' . "\xA";
-                if($res[$i][2] != NULL)
-                {
+                if($res[$i][2] != NULL){
                     echo '      <label for="sn" class="col-md-4 control-label">S/N:</label>' . "\xA";
                     echo '      <div class="col-md-6">' . "\xA";
                     echo '          <input type="text" class="form-control" rel="sn" id="sn" name="sn" value="'.$sn.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
@@ -760,7 +756,6 @@ function crearCamp()
     $conn = fSesion();
     $sql = "select id_ubicacion, nombre_ubicacion from ubicaciones order by nombre_ubicacion asc";
     $stmt = sqlsrv_query($conn, $sql);
-
     echo '<form class="form-horizontal" role="form" action="crear_camp.php" method="post">' . "\xA";
     echo '  <div align="center">' . "\xA";
     echo '                    <!--Formulario-->';
@@ -818,10 +813,8 @@ function verCamp()
     $conn = fSesion();
     $sql_ObtenerNombres  = "select nombre_campaign as nombre, ubicacion_campaign from campaigns";
     $stmt_ObtenerNombres = sqlsrv_query($conn, $sql_ObtenerNombres);
-
     echo '<form class="form-horizontal" role="form" method="post">' . "\xA";
     echo '    <div align="center">' . "\xA";
-
     while($campaigns = sqlsrv_fetch_array($stmt_ObtenerNombres, SQLSRV_FETCH_ASSOC))
     {
         $stmt_ObtenerCantCampaign = sqlsrv_query($conn, fetchCantCampaign($campaigns["nombre"]));
@@ -848,7 +841,6 @@ function verCamp()
     echo '    </div>' . "\xA";
     echo '</form>' . "\xA";
     echo '<script>' . "\xA";
-
     sqlsrv_free_stmt($stmt_ObtenerNombres);
     sqlsrv_free_stmt($stmt_ObtenerCantCampaign);
 }
@@ -920,16 +912,12 @@ function getListaCoordinadores()
     $sql1 = "select id_coordinador as id, nombres_coordinador as nombres, apellidos_coordinador as apellidos, cantidad_agentes_coordinador as cantagentes, campaign_coordinador as idcampa from coordinadores";
     $stmt1 = sqlsrv_query($conn, $sql1);
     $coordinadores = array();
-
     while($ppl = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC))
     {
         $coordinadores[$ppl['id']] = array(
-
             "nombre"=>$ppl['nombres']." ".$ppl['apellidos'],
-
         );
     }
-
     return $coordinadores;
 }
 function cambioDiadema()
@@ -978,7 +966,6 @@ function cambioDiadema()
     echo '        }';
     echo '    });';
     echo '</script>';
-
     echo '                    <!--Formulario-->';
     echo '    <div class="form-group">' . "\xA";
     echo '      <label for="camp" class="col-md-4 control-label">Campaña:</label>' . "\xA";
@@ -1041,7 +1028,14 @@ function cambioDiadema()
     echo '             });' . "\xA";
     echo '         </script>' . "\xA";
 }
-
+function correccionTexto($texto)
+{
+    $comilladoble = '"';
+    $prohibidos = array("'", $comilladoble, ";", "=");
+    $texto = str_replace($prohibidos, "-", $texto);
+    $texto = mb_convert_case($texto, MB_CASE_TITLE, "ISO-8859-1");
+    return $texto;
+}
 
 
 

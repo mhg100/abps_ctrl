@@ -35,8 +35,7 @@
                             <button id="ingresar" name="ingresar" class="btn btn-primary" style="padding:15px">Ingresar</button>
                         <?php
                             validaEstadoLogin();
-                        ?>
-                        </fieldset>
+                        ?></fieldset>
                     </div>
                 </div>
             </fieldset>
