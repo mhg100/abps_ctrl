@@ -33,8 +33,7 @@
         $apellido = 'apellidos_coordinador';
         $fecha = 'ultimoacceso_coordinador';
     }
-    $sql = "select * from ".$tabla." where ".$columna." = '".$usuario."' and ".$passw." COLLATE Modern_Spanish_CS_AS = '".$password."' order by ".$apellido." COLLATE Modern_Spanish_CS_AS_KS";
-    //$sql = "select * from ".$tabla." where ".$columna." COLLATE Modern_Spanish_CS_AS = '".$usuario."' and ".$passw." COLLATE Modern_Spanish_CS_AS = '".$password."' COLLATE latin2_czech_cs";
+    $sql = "select * from ".$tabla." where ".$columna." = '".$usuario."' and ".$passw." COLLATE Modern_Spanish_CS_AS = '".$password."' order by ".$apellido;
     $qry = sqlsrv_query($conexion, $sql, array(), array( "Scrollable" => 'static' ));
     $resultado = sqlsrv_fetch_array($qry);
 
@@ -44,16 +43,16 @@
         $qry = sqlsrv_query($conexion, $sql, array(), array( "Scrollable" => 'static' ));
         if($_SESSION['rol'] == '1')
         {
-            $_SESSION['nombres']  = $resultado['nombres_coordinador'];
-            $_SESSION['apellidos']= $resultado['apellidos_coordinador'];
+            $_SESSION['nombres']  = ucwords(mb_strtolower($resultado['nombres_coordinador'],  'UTF-8'));
+            $_SESSION['apellidos']= ucwords(mb_strtolower($resultado['apellidos_coordinador'],'UTF-8'));
             $_SESSION['id']= $usuario;
             $_SESSION['horaAcceso'] = time();
             header('Location: defaultcoord.php');
         }
         else if ($_SESSION['rol'] == '0')
         {
-            $_SESSION['nombres']  = $resultado['nombres_admin'];
-            $_SESSION['apellidos']= $resultado['apellidos_admin'];
+            $_SESSION['nombres']  = ucwords(mb_strtolower($resultado['nombres_admin'],  'UTF-8'));
+            $_SESSION['apellidos']= ucwords(mb_strtolower($resultado['apellidos_admin'],'UTF-8'));
             $_SESSION['horaAcceso'] = time();
             header('Location: default.php');
         }

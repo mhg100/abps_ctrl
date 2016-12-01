@@ -19,12 +19,7 @@ comprobarAdmin();
                         else if($_GET['ic']==1)                     echo "Creación de dispositivo";
                         else if($_GET['ic']==2)                     echo "Cambios";
                     ?></h2>
-                        <center>
-                            <a href="exportardiademas.php" class="text-success">Descargar en formato .xls
-                                <span class="glyphicon glyphicon-download-alt"></span>
-                            </a>
-                        </center>
-                        <div class="clearfix">&nbsp;</div>
+                        <div class="clearfix" id="exportar">&nbsp;</div>
                             <div class="jumbotron" style="background-color: #F8F8F8; outline: 1px solid #E7E7E7;">
                                 <div class="row text-center">
                                     <div class="col-md-8 col-lg-offset-2" style="outline: 1px solid #E7E7E7;">
@@ -49,7 +44,10 @@ comprobarAdmin();
                 </div>
                 <div class="col-md-4">
                     <h2>Solicitar cambio</h2>
-                    <p>Después de crear el caso en <a href="http://172.27.30.103/USDKRC1/" target="_blank">Aranda Service Desk®</a>, utilice esta opción para registrar la solicitud de cambio. El técnico verificará que el serial de la diadema que entregue sea el mismo que está grabado en el dispositivo.</p>
+                    <p>
+                        Después de crear el caso en <a href="http://172.27.30.103/USDKRC1/" target="_blank">Aranda Service Desk®</a>, utilice esta opción para registrar la solicitud de cambio.
+                        El técnico verificará que el serial de la diadema que entregue sea el mismo que está grabado en el dispositivo.
+                    </p>
                 </div>
                 <div class="col-md-4">
                     <h2>Ver dispositivos</h2>

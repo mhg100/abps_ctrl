@@ -19,7 +19,7 @@
                     <label class="col-md-4 control-label" for="id" name="id"></label>
                     <div class="col-md-4 input-group">
                         <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-user"></span></span>
-                        <input id="id" name="id" type="text" placeholder="ID de campaña" class="form-control input-md" autocomplete="off" required autofocus>
+                        <input id="id" name="id" type="text" placeholder="ID de campaña" class="form-control input-md" autocomplete="off"  maxlength="4" required autofocus>
                     </div>
                 </div>
                 <div class="form-group">

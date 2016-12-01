@@ -500,8 +500,10 @@ function verDiadema()
     else
     {
         $cursor = $collection->find();
-        
         $conn = fSesion();
+        $inner = '<center><a href="exportardiademas.php" class="text-success">Descargar en formato .xls<span class="glyphicon glyphicon-download-alt"></span></a></center><br>';
+        echo "<script>\xA \t\t\t\t\t\t\t\t\t\t\t\tdocument.getElementById('exportar').innerHTML = '".$inner."';
+    </script>\xA                                            ";
         $sql1 = "select id_coordinador as id, nombres_coordinador as nombres, apellidos_coordinador as apellidos, cantidad_agentes_coordinador as cantagentes, campaign_coordinador as idcampa from coordinadores";
         $sql2 = "select nombre_campaign, id_campaign from campaigns order by nombre_campaign asc";
         $stmt2 = sqlsrv_query($conn, $sql2);
