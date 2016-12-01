@@ -24,10 +24,8 @@ function fMongoDB()
 }
 function fTimeStamp()
 {
-    if(isset($_SESSION['horaAcceso']))
-    {
-        if (time() - $_SESSION['horaAcceso'] > 600)
-        {
+    if(isset($_SESSION['horaAcceso'])){
+        if (time() - $_SESSION['horaAcceso'] > 600){
             unset(
                 $_SESSION['nombres'],
                 $_SESSION['apellidos'],
@@ -38,10 +36,7 @@ function fTimeStamp()
         }
         else $_SESSION['horaAcceso'] = time();
     }
-    else if($_SESSION['nombres'] == '' || !isset($_SESSION['nombre']))
-    {
-        header('Location: logout.php?mtv=2');
-    }
+    else if($_SESSION['nombres'] == '' || !isset($_SESSION['nombre']))  header('Location: logout.php?mtv=2'); 
 }
 function initHTML($environment)
 {
@@ -79,11 +74,9 @@ function llamarPieChart($width, $height)
     echo "    function drawChart() {\xA";
     echo "        var data = google.visualization.arrayToDataTable([\xA";
     echo "            ['Campaña', '% de diademas'],\xA";
-    while($campaigns = sqlsrv_fetch_array($stmtnombres, SQLSRV_FETCH_ASSOC))
-    {
+    while($campaigns = sqlsrv_fetch_array($stmtnombres, SQLSRV_FETCH_ASSOC)){
         $stmtcantcamp = sqlsrv_query($conn, fetchCantCampaign($campaigns["nombre"]));
-        while($cant = sqlsrv_fetch_array($stmtcantcamp, SQLSRV_FETCH_ASSOC))
-        {
+        while($cant = sqlsrv_fetch_array($stmtcantcamp, SQLSRV_FETCH_ASSOC)){
             if($cant['total'] == NULL){
                 $cant['total'] = 0;
             }
@@ -513,8 +506,7 @@ function verDiadema()
         echo '                                                    <div class="col-md-4">'."\xA";
         echo '                                                        <select data-size="7" id="selectorCampaign" name="selectorCampaign" class="selectpicker form-control" data-live-search="true" title="Seleccione una campaña" required autocomplete="off" data-width="355px">'."\xA";
         echo '                                                            <option value="Todas las campañas">Todas las campañas</option>'."\xA";
-                                  while($row = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC))
-                                  {
+                                  while($row = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC)){
                                       $campaigns[$row['id_campaign']] = $row['nombre_campaign'];
         echo '                                                            <option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>'."\xA";
                                   }
@@ -695,8 +687,7 @@ function crearCamp()
     echo '      <label for="sede" class="col-md-4 control-label">Sede:</label>' . "\xA";
     echo '        <div class="col-md-4">' . "\xA";
     echo '          <select id="sede" name="sede" class="selectpicker" data-live-search="true" title="Sede en donde se encuentra la campaña" data-width="355px" required>' . "\xA";
-                        while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC))
-                        {
+                        while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)){
     echo '              <option value="'.$row['id_ubicacion'].'">'.$row['nombre_ubicacion'].'</option>';
                         }
     echo '          </select>' . "\xA";
@@ -705,17 +696,14 @@ function crearCamp()
     echo '    <div class="form-group">' . "\xA";
     echo '      <div class="col-md-10" align="right">' . "\xA";
     echo '        <fieldset>' . "\xA";
-    if(isset($_GET['ag']))
-    {
+    if(isset($_GET['ag'])){
         $padding = 25;
-        if($_GET['ag'] == 0)
-        {
+        if($_GET['ag'] == 0){
             echo '                <label for="agregar" class="alert alert-danger col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
             echo '                    <strong>Error al crear. Valide la información</strong>';
             echo '                </label>';
         }
-        else if($_GET['ag'] == 1)
-        {
+        else if($_GET['ag'] == 1){
             echo '                <label for="agregar" class="alert alert-success col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
             echo '                    <strong>Campaña agregada correctamente</strong>';
             echo '                </label>';
@@ -735,11 +723,9 @@ function verCamp()
     $stmt_ObtenerNombres = sqlsrv_query($conn, $sql_ObtenerNombres);
     echo '<form class="form-horizontal" role="form" method="post">' . "\xA";
     echo '    <div align="center">' . "\xA";
-    while($campaigns = sqlsrv_fetch_array($stmt_ObtenerNombres, SQLSRV_FETCH_ASSOC))
-    {
+    while($campaigns = sqlsrv_fetch_array($stmt_ObtenerNombres, SQLSRV_FETCH_ASSOC)){
         $stmt_ObtenerCantCampaign = sqlsrv_query($conn, fetchCantCampaign($campaigns["nombre"]));
-        while($cant = sqlsrv_fetch_array($stmt_ObtenerCantCampaign, SQLSRV_FETCH_ASSOC))
-        {
+        while($cant = sqlsrv_fetch_array($stmt_ObtenerCantCampaign, SQLSRV_FETCH_ASSOC)){
             if($cant['total'] == NULL){
                 $cant['total'] = 0;
             }
@@ -832,8 +818,7 @@ function getListaCoordinadores()
     $sql1 = "select id_coordinador as id, nombres_coordinador as nombres, apellidos_coordinador as apellidos, cantidad_agentes_coordinador as cantagentes, campaign_coordinador as idcampa from coordinadores";
     $stmt1 = sqlsrv_query($conn, $sql1);
     $coordinadores = array();
-    while($ppl = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC))
-    {
+    while($ppl = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC)){
         $coordinadores[$ppl['id']] = array(
             "nombre"=>$ppl['nombres']." ".$ppl['apellidos'],
         );
@@ -864,8 +849,7 @@ function cambioDiadema()
     echo '              <div class="col-md-4">';
     echo '                  <select data-size="7" id="selectorCampaign" name="selectorCampaign" class="selectpicker form-control" data-live-search="true" title="Seleccione una campaña" required autocomplete="off" data-width="355px">';
     echo '                      <option value="Todas las campañas">Todas las campañas</option>';
-                                while($row = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC))
-                                {
+                                while($row = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC)){
                                     $campaigns[$row['id_campaign']] = $row['nombre_campaign'];
     echo '                      <option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>';
                                 }
@@ -923,14 +907,12 @@ function cambioDiadema()
     if(isset($_GET['ag']))
     {
         $padding = 25;
-        if($_GET['ag'] == 0)
-        {
+        if($_GET['ag'] == 0){
             echo '        <label for="agregar" class="alert alert-danger col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
             echo '          <strong>Error: Serial '.$_GET["sd"].' duplicado</strong>' . "\xA";
             echo '        </label>' . "\xA";
         }
-        else if($_GET['ag'] == 1)
-        {
+        else if($_GET['ag'] == 1){
             echo '        <label for="agregar" class="alert alert-success col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
             echo '          <strong>Diadema '.$_GET["sd"].' agregada correctamente</strong>' . "\xA";
             echo '        </label>' . "\xA";
