@@ -65,7 +65,7 @@ function initHTML($environment)
 }
 function llamarPieChart($width, $height)
 {
-    $conn = fSesion();
+    $conn       = fSesion();
     $camps      = getCantidadDiademasPorCampaign();
     $campids    = array_keys($camps);
     
@@ -81,15 +81,18 @@ function llamarPieChart($width, $height)
         $cant   = count($camps[$campids[$i]]);
         $nombre = getListaCampaigns()[$campids[$i]]['nombre'];
         
-        echo "            ['".$nombre."', " .$cant."],\xA";
+        echo "            ['".$nombre."(".$cant.")', " .$cant."],\xA";
     }
 
     echo "            ['', '']\xA";
     echo "         ]);\xA";
     echo "         var options = {\xA";
     echo "             title: '',\xA";
+    echo "             pieHole: 0.5,\xA";
     echo "             width: ".$width.",\xA";
     echo "             height: ".$height.",\xA";
+    echo "             pieStartAngle: 100,\xA";
+    echo "             chartArea:{left:20,top:40,width:'90%',height:'70%'},\xA";
     echo "             backgroundColor: { fill:'transparent' },\xA";
     echo "             is3D: true\xA";
     echo "         };\xA";
@@ -105,7 +108,9 @@ function llamarAreaChart($width, $height)
     echo "    google.charts.setOnLoadCallback(drawChart);\xA";
     echo "    function drawChart() {\xA";
     echo "        var data = google.visualization.arrayToDataTable([\xA";
-    echo "            ['Mes',         'Salida',       'Entrada'],\xA";
+    echo "            ['Mes',         'Entrada',       'Salida'],\xA";
+    echo "            ['Junio',      110,                 540],\xA";
+    echo "            ['Julio',      465,                 301],\xA";
     echo "            ['Agosto',      1030,                 540],\xA";
     echo "            ['Septiembre',  1000,                 400],\xA";
     echo "            ['Octubre',     1170,                 460],\xA";
@@ -113,10 +118,11 @@ function llamarAreaChart($width, $height)
     echo "        ]);\xA";
     echo "        var options = {\xA";
     echo "            title: '',\xA";
-    echo "            hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},\xA";
+    echo "            hAxis: {title: 'últimos meses',  titleTextStyle: {color: '#333'}},\xA";
     echo "            vAxis: {minValue: 0},\xA";
     echo "            width: ".$width.",\xA";
     echo "            height: ".$height.",\xA";
+    echo "             chartArea:{left:35,top:30,width:'68%',height:'60%'},\xA";
     echo "            backgroundColor: { fill: 'transparent' },\xA";
     echo "            is3D: false\xA";
     echo "        };\xA";

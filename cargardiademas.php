@@ -14,7 +14,7 @@ $inforgral = array();
 
 $fecha = date('Ymd');
 
-$sql = "select * from inventariodiademas where fecha > '$fecha' order by campaign";
+$sql = "select * from inventariodiademas order by campaign";
 
 echo $sql;
 $stmt = sqlsrv_query($conn, $sql);
