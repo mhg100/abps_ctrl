@@ -1,5 +1,4 @@
 <?php
-//29316520 vpn
 //200.93.165.20
 function fSesion()
 {
@@ -12,7 +11,8 @@ function fSesion()
     if(!is_resource($conn)){
         session_start();
         $_SESSION['ns'] = 3;
-        header('Location: index.php'); var_dump(sqlsrv_errors(SQLSRV_ERR_ALL)); exit(0);
+        header('Location: index.php'); var_dump(sqlsrv_errors(SQLSRV_ERR_ALL));
+        exit(0);
     }
     return $conn;
 }
@@ -66,25 +66,24 @@ function initHTML($environment)
 function llamarPieChart($width, $height)
 {
     $conn = fSesion();
-    $sqlnombres  = "select nombre_campaign as nombre from campaigns";
-    $stmtnombres = sqlsrv_query($conn, $sqlnombres);
+    $camps      = getCantidadDiademasPorCampaign();
+    $campids    = array_keys($camps);
+    
     echo '<script type="text/javascript">'."\xA";
     echo "    google.charts.load('current', {'packages':['corechart']});\xA";
     echo "    google.charts.setOnLoadCallback(drawChart);\xA";
     echo "    function drawChart() {\xA";
     echo "        var data = google.visualization.arrayToDataTable([\xA";
     echo "            ['Campaña', '% de diademas'],\xA";
-    while($campaigns = sqlsrv_fetch_array($stmtnombres, SQLSRV_FETCH_ASSOC)){
-        $stmtcantcamp = sqlsrv_query($conn, fetchCantCampaign($campaigns["nombre"]));
-        while($cant = sqlsrv_fetch_array($stmtcantcamp, SQLSRV_FETCH_ASSOC)){
-            if($cant['total'] == NULL){
-                $cant['total'] = 0;
-            }
-            echo "            ['".$campaigns["nombre"]."', " .$cant['total']."],\xA";
-        }
+    
+    for($i = 0; $i<count($campids); $i++){
+        
+        $cant   = count($camps[$campids[$i]]);
+        $nombre = getListaCampaigns()[$campids[$i]]['nombre'];
+        
+        echo "            ['".$nombre."', " .$cant."],\xA";
     }
-    sqlsrv_free_stmt($stmt_ObtenerNombres);
-    sqlsrv_free_stmt($stmt_ObtenerCantCampaign);
+
     echo "            ['', '']\xA";
     echo "         ]);\xA";
     echo "         var options = {\xA";
@@ -92,7 +91,7 @@ function llamarPieChart($width, $height)
     echo "             width: ".$width.",\xA";
     echo "             height: ".$height.",\xA";
     echo "             backgroundColor: { fill:'transparent' },\xA";
-    echo "             is3D: false\xA";
+    echo "             is3D: true\xA";
     echo "         };\xA";
     echo "         var chart = new google.visualization.PieChart(document.getElementById('tortaOperaciones'));\xA";
     echo "         chart.draw(data, options);\xA";
@@ -486,11 +485,9 @@ function verDiadema()
     $res = array();
     $campaigns = array();
     
-    if(!$_SESSION['rol'] == 0)
-    {
+    if(!$_SESSION['rol'] == 0){
         $cursor = $collection->find(array('resumen.coordinador_id' => $_SESSION['id']));
-    }
-    else
+    }else
     {
         $cursor = $collection->find();
         $conn = fSesion();
@@ -719,13 +716,13 @@ function verCamp()
     $padding = 10;
     $index = 0;
     $conn = fSesion();
-    $sql_ObtenerNombres  = "select nombre_campaign as nombre, ubicacion_campaign from campaigns";
-    $stmt_ObtenerNombres = sqlsrv_query($conn, $sql_ObtenerNombres);
+    $sql  = "select nombre_campaign as nombre, ubicacion_campaign from campaigns";
+    $stmt = sqlsrv_query($conn, $sql);
     echo '<form class="form-horizontal" role="form" method="post">' . "\xA";
     echo '    <div align="center">' . "\xA";
-    while($campaigns = sqlsrv_fetch_array($stmt_ObtenerNombres, SQLSRV_FETCH_ASSOC)){
-        $stmt_ObtenerCantCampaign = sqlsrv_query($conn, fetchCantCampaign($campaigns["nombre"]));
-        while($cant = sqlsrv_fetch_array($stmt_ObtenerCantCampaign, SQLSRV_FETCH_ASSOC)){
+    while($campaigns = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)){
+        $stmt2 = sqlsrv_query($conn, fetchCantCampaign($campaigns["nombre"]));
+        while($cant = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC)){
             if($cant['total'] == NULL){
                 $cant['total'] = 0;
             }
@@ -747,8 +744,8 @@ function verCamp()
     echo '    </div>' . "\xA";
     echo '</form>' . "\xA";
     echo '<script>' . "\xA";
-    sqlsrv_free_stmt($stmt_ObtenerNombres);
-    sqlsrv_free_stmt($stmt_ObtenerCantCampaign);
+    sqlsrv_free_stmt($stmt);
+    sqlsrv_free_stmt($stmt2);
 }
 function adminCrearDiadema()
 {
@@ -938,11 +935,56 @@ function correccionTexto($texto)
     $texto = mb_convert_case($texto, MB_CASE_TITLE, "ISO-8859-1");
     return $texto;
 }
+function getListaCampaigns()
+{
+    $conn = fSesion();
+    $sql1 = "select * from campaigns";
+    $stmt1 = sqlsrv_query($conn, $sql1);
+    $campaigns = array();
+    while($camps = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC)){
+        $campaigns[$camps['id_campaign']] = array(
+            "nombre"   =>$camps['nombre_campaign'],
+            "ubicacion"=>$camps['ubicacion_campaign']
+        );
+    }
+    return $campaigns;
+}
+function getCantidadDiademasPorCampaign()
+{
+    $collection = fMongoDB();
+    $camps = getListaCampaigns();
+    $campsKeys = array_keys($camps);
+    $diademas = array();
+    $camp = array();
 
+    for( $i = 0; $i < count( $campsKeys ); $i++ ) {
+        $camp = array();
+        $cursor = $collection->find(array('resumen.campaign'=>"$campsKeys[$i]"));
+        foreach($cursor as $lista){
+            if($lista['resumen'][count($lista['resumen'])-1]['estado'] == '1'){
+                array_push($camp, $lista);
+            }
+        }
+        if($camp != array()) {
+            $diademas[$campsKeys[$i]] = $camp;
+        }
+    }
 
+    //echo '<pre>';
+    //    print_r($diademas);
+    //echo '</pre>';
 
+    //echo count($diademas['6205'])."\xA";
+    //echo count($diademas['6253'])."\xA";
 
-
+    return $diademas;
+}
+function pprint($arreglo)
+{
+    echo '<pre>';
+        print_r($arreglo);
+    echo '</pre>';
+}
 
 
 

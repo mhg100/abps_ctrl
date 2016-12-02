@@ -1,8 +1,14 @@
 <?php
+
 require 'php/php_func.php';
-session_start();
-header('Content-Type: text/html; charset=UTF-8');
 
+$camps      = getCantidadDiademasPorCampaign();
+$campids    = array_keys($camps);
 
+for($i = 0; $i<count($campids); $i++){
+    $cant = count($camps[$campids[$i]]);
+    $camps= getListaCampaigns()[$campids[$i]]['nombre'];
+    echo "            ['".$cant."', " .$camps."],\xA";
+}
 
 ?>

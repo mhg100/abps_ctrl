@@ -19,8 +19,7 @@ $sql = "select * from inventariodiademas where fecha > '$fecha' order by campaig
 echo $sql;
 $stmt = sqlsrv_query($conn, $sql);
 
-while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC))
-{
+while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
     $_id = $row['consecutivo'];
     $marca = $row['marca'];
     $serial = $row['serial'];
