@@ -1,6 +1,5 @@
- <?php
-
-    include 'php/php_func.php';
+<?php
+include 'php/php_func.php';
 /*
 {
 estados:

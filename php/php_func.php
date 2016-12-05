@@ -490,26 +490,28 @@ function verDiadema()
     $collection = fMongoDB();
     $res = array();
     $campaigns = array();
+    $cant = 0;
     
     if(!$_SESSION['rol'] == 0){
         $cursor = $collection->find(array('resumen.coordinador_id' => $_SESSION['id']));
-    }else
-    {
+    } else {
         $cursor = $collection->find();
+        
         $conn = fSesion();
-        $inner = '<center><a href="exportardiademas.php" class="text-success">Descargar en formato .xls<span class="glyphicon glyphicon-download-alt"></span></a></center><br>';
-        echo "<script>\xA \t\t\t\t\t\t\t\t\t\t\t\tdocument.getElementById('exportar').innerHTML = '".$inner."';
-    </script>\xA                                            ";
         $sql1 = "select id_coordinador as id, nombres_coordinador as nombres, apellidos_coordinador as apellidos, cantidad_agentes_coordinador as cantagentes, campaign_coordinador as idcampa from coordinadores";
         $sql2 = "select nombre_campaign, id_campaign from campaigns order by nombre_campaign asc";
         $stmt2 = sqlsrv_query($conn, $sql2);
+        $inner = '<center><a href="exportardiademas.php" class="text-success">Descargar en formato .xls<span class="glyphicon glyphicon-download-alt"></span></a></center><br>';
+        echo "<script>\xA \t\t\t\t\t\t\t\t\t\t\t\tdocument.getElementById('exportar').innerHTML = '".$inner."';
+    </script>\xA                                            ";
+        
         echo '<form class="form-horizontal" role="form">'."\xA";
         echo '                                                <div class="form-group">'."\xA";
         echo '                                                    <label for="listarcampaign" class="col-md-4 control-label">Listar por campaña:</label>'."\xA";
         echo '                                                    <div class="col-md-4">'."\xA";
         echo '                                                        <select data-size="7" id="selectorCampaign" name="selectorCampaign" class="selectpicker form-control" data-live-search="true" title="Seleccione una campaña" required autocomplete="off" data-width="355px">'."\xA";
         echo '                                                            <option value="Todas las campañas">Todas las campañas</option>'."\xA";
-                                  while($row = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC)){
+                                  while( $row = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC) ){
                                       $campaigns[$row['id_campaign']] = $row['nombre_campaign'];
         echo '                                                            <option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>'."\xA";
                                   }
@@ -517,6 +519,7 @@ function verDiadema()
         echo '                                                        </select>'."\xA";
         echo '                                                    </div>'."\xA";
         echo '                                                </div>'."\xA";
+        echo '                                            <h4 id="campseleccionada">&nbsp;</h4>';
         echo '                                                <script>'."\xA";
         echo '                                                    $("#selectorCampaign").on("changed.bs.select", function (e) {'."\xA";
         echo '                                                        var val = $("#selectorCampaign").val();'."\xA";
@@ -529,21 +532,14 @@ function verDiadema()
         echo '                                                            window.location.href = "device.php?ic=0&camplist="+val;'."\xA";
         echo '                                                        }'."\xA";
         echo '                                                    });'."\xA";
-        echo '                                                </script>'."\xA";
     }
     
-    if(isset($_GET['camplist']))
-    {
-        echo '  <h4>'.$campaigns[$_GET['camplist']].'</h4>';
-    }
-    
-    foreach ($cursor as $document)
-    {   
+    foreach ($cursor as $document){   
         $temp = array($document["_id"], $document["Marca"], $document["serial"], $document["resumen"]);
         array_push($res, $temp);
     }
-    for($i = 0; $i<count($res); $i++)
-    {
+    echo '                                                </script>'."\xA";
+    for($i = 0; $i < count($res); $i++){
         $serial = $res[$i][0];
         $marca = $res[$i][1];
         $sn = $res[$i][2];
@@ -586,11 +582,11 @@ function verDiadema()
                 echo '                                              </div>' . "\xA";
                 echo '                                              </div>' . "\xA";
             }
-        }
-        else{
+        }else{
             if(isset($_GET['camplist'])){
                 if($_GET['camplist'] == $campa){
                     if($estado == "1"){
+                        $cant = $cant + 1;
                         echo '                                          <form class="form-horizontal" role="form">' . "\xA";
                         echo '                                              <div class="form-group">' . "\xA";
                         echo '                                                  <label for="serial" class="col-md-4 control-label">Serial:</label>' . "\xA";
@@ -624,10 +620,11 @@ function verDiadema()
                         echo '      <input type="text" class="form-control" rel="serial" id="ingreso" name="ingreso" value="'.$fecha.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
                         echo '  </div>' . "\xA";
                         echo '  </div>' . "\xA";
+
+
                     }
                 }
-            }
-            else{
+            }else{
                 echo '                                                <div class="form-group">' . "\xA";
                 echo '                                                    <label for="serial" class="col-md-4 control-label">Serial:</label>' . "\xA";
                 echo '                                                    <div class="col-md-6">' . "\xA";
@@ -664,6 +661,8 @@ function verDiadema()
         }
     }
     echo '                                            </form>' . "\xA";
+    if( isset($_GET['camplist']) )  echo '                                        <script>document.getElementById("campseleccionada").innerHTML = "'.$campaigns[$_GET['camplist']].' ('.$cant.')"; </script>';
+    else                            echo '                                        <script>document.getElementById("campseleccionada").innerHTML = "Todas las campañas ('.count($res).')"; </script>';
 }
 function crearCamp()
 {
@@ -675,9 +674,9 @@ function crearCamp()
     echo '  <div align="center">' . "\xA";
     echo '                    <!--Formulario-->';
     echo '    <div class="form-group">' . "\xA";
-    echo '      <label for="costos" class="col-md-4 control-label">Centro de costos:</label>' . "\xA";
+    echo '      <label for="idcamp" class="col-md-4 control-label">ID:</label>' . "\xA";
     echo '        <div class="col-md-6">' . "\xA";
-    echo '          <input type="text" class="form-control back-tooltips" id="costos" name="costos" autocomplete="off" placeholder="Ingrese los cuatro dígitos del centro de costos" required autofocus>' . "\xA";
+    echo '          <input type="text" class="form-control back-tooltips" id="idcamp" name="idcamp" autocomplete="off" placeholder="Ingrese el identificador de la campaña" required autofocus>' . "\xA";
     echo '        </div>' . "\xA";
     echo '    </div>' . "\xA";
     echo '    <div class="form-group">' . "\xA";
@@ -759,7 +758,7 @@ function adminCrearDiadema()
     $jabra = "'img/jabrasn.jpg' width='150px' height='100px'";
     $padding = 10;
     $index = 0;
-    echo '<form class="form-horizontal" role="form" action="crear_diadema.php" method="post">'."\xA";
+    echo '<form class="form-horizontal" role="form" action="admin_crear_diadema.php" method="post">'."\xA";
     echo '                                            <div align="center">'."\xA";
     echo '                                                <!--Formulario-->'."\xA";
     echo '                                                <div class="form-group">'."\xA";
@@ -845,21 +844,34 @@ function cambioDiadema()
     $sql1 = "select id_coordinador as id, nombres_coordinador as nombres, apellidos_coordinador as apellidos, cantidad_agentes_coordinador as cantagentes, campaign_coordinador as idcampa from coordinadores";
     $sql2 = "select nombre_campaign, id_campaign from campaigns order by nombre_campaign asc";
     $stmt2 = sqlsrv_query($conn, $sql2);
-    echo '<form class="form-horizontal" role="form" action="crear_diadema.php" method="post">' . "\xA";
+    echo '<form class="form-horizontal" role="form" action="" method="post">' . "\xA";
     echo '    <div align="center">' . "\xA";
-    echo '            <div class="form-group">';
-    echo '              <label for="listarcampaign" class="col-md-4 control-label">Listar por campaña:</label>';
-    echo '              <div class="col-md-4">';
-    echo '                  <select data-size="7" id="selectorCampaign" name="selectorCampaign" class="selectpicker form-control" data-live-search="true" title="Seleccione una campaña" required autocomplete="off" data-width="355px">';
-    echo '                      <option value="Todas las campañas">Todas las campañas</option>';
-                                while($row = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC)){
-                                    $campaigns[$row['id_campaign']] = $row['nombre_campaign'];
-    echo '                      <option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>';
-                                }
-                                sqlsrv_free_stmt($stmt);
-    echo '                  </select>';
-    echo '              </div>';
-    echo '          </div>';
+        echo '                                                <div class="form-group">'."\xA";
+        echo '                                                    <label for="listarcampaign" class="col-md-4 control-label">Seleccione la campaña:</label>'."\xA";
+        echo '                                                    <div class="col-md-4">'."\xA";
+        echo '                                                        <select data-size="7" id="selectorCampaign" name="selectorCampaign" class="selectpicker form-control" data-live-search="true" title="Seleccione una campaña" required autocomplete="off" data-width="355px">'."\xA";
+        echo '                                                            <option value="Todas las campañas">Todas las campañas</option>'."\xA";
+                                  while($row = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC)){
+                                      $campaigns[$row['id_campaign']] = $row['nombre_campaign'];
+        echo '                                                            <option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>'."\xA";
+                                  }
+                                  sqlsrv_free_stmt($stmt);
+        echo '                                                        </select>'."\xA";
+        echo '                                                    </div>'."\xA";
+        echo '                                                </div>'."\xA";
+        echo '                                                <script>'."\xA";
+        echo '                                                    $("#selectorCampaign").on("changed.bs.select", function (e) {'."\xA";
+        echo '                                                        var val = $("#selectorCampaign").val();'."\xA";
+        echo '                                                        if(val == "Todas las campañas")'."\xA";
+        echo '                                                        {'."\xA";
+        echo '                                                            window.location.href = "device.php?ic=0";'."\xA";
+        echo '                                                        }'."\xA";
+        echo '                                                        else'."\xA";
+        echo '                                                        {'."\xA";
+        echo '                                                            window.location.href = "device.php?ic=0&camplist="+val;'."\xA";
+        echo '                                                        }'."\xA";
+        echo '                                                    });'."\xA";
+        echo '                                                </script>'."\xA";
     echo '<script>';
     echo '    $("#selectorCampaign").on("changed.bs.select", function (e) {';
     echo '        var val = $("#selectorCampaign").val();';

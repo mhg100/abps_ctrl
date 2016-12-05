@@ -30,14 +30,8 @@
                         <div class="col-md-8 col-lg-offset-2" style="outline: 1px solid #E7E7E7;">
                             <div class="row">
                                 <?php
-                                    if($_GET['ic'] == 1)
-                                    {
-                                        crearCamp();
-                                    }
-                                    else if($_GET['ic'] == 0)
-                                    {
-                                        verCamp();
-                                    }
+                                    if($_GET['ic'] == 1)        crearCamp();
+                                    else if($_GET['ic'] == 0)   verCamp();
                                 ?>
                                 </div>
                             </div>

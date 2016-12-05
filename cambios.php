@@ -1,9 +1,9 @@
 <?php
-    include 'php/php_func.php';
-    session_start();
-    fTimeStamp();
-    comprobarAdmin();
-    echo initHTML($_SESSION['rol']);
+include 'php/php_func.php';
+session_start();
+fTimeStamp();
+comprobarAdmin();
+echo initHTML($_SESSION['rol']);
 ?>
 <body>
     <div class="container-fluid">

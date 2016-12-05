@@ -54,11 +54,6 @@ while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
     $inforgral = array();
 }
 
-
-
-
-
-
-
+header("Refresh: 5; url=device.php");
 
 ?>
