@@ -43,11 +43,11 @@ while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
     echo '</pre>';
     try {
         $collection->insert($inforgral);
-        //header("Location: default.php");
+        header("Location: http://172.27.48.125:81/index.php?do=1");
     }
     catch (MongoCursorException $e) {
         echo "error message: ".$e->getMessage()."\n";
-        //header("Location: default.php");
+        header("Location: http://172.27.48.125:81/index.php?do=1");
     }
     $inforgral = array();
 }

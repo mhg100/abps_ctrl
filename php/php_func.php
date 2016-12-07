@@ -81,20 +81,20 @@ function llamarPieChart($width, $height)
         $cant   = count($camps[$campids[$i]]);
         $nombre = getListaCampaigns()[$campids[$i]]['nombre'];
         
-        echo "            ['".$nombre."(".$cant.")', " .$cant."],\xA";
+        echo "            ['".$nombre." (".$cant.")', " .$cant."],\xA";
     }
 
     echo "            ['', '']\xA";
     echo "         ]);\xA";
     echo "         var options = {\xA";
     echo "             title: '',\xA";
-    echo "             pieHole: 0.5,\xA";
+    echo "             pieHole: 0.45,\xA";
     echo "             width: ".$width.",\xA";
     echo "             height: ".$height.",\xA";
     echo "             pieStartAngle: 100,\xA";
     echo "             chartArea:{left:20,top:40,width:'90%',height:'70%'},\xA";
     echo "             backgroundColor: { fill:'transparent' },\xA";
-    echo "             is3D: true\xA";
+    echo "             is3D: false\xA";
     echo "         };\xA";
     echo "         var chart = new google.visualization.PieChart(document.getElementById('tortaOperaciones'));\xA";
     echo "         chart.draw(data, options);\xA";
@@ -185,6 +185,10 @@ function navbar()
     echo '                                    <li><a href="device.php?ic=1">Crear diadema</a></li>'."\xA";
     echo '                                    <li><a href="device.php?ic=2">Realizar cambio</a></li>'."\xA";
     echo '                                    <li><a href="device.php?ic=2">Envío a mantenimiento</a></li>'."\xA";
+    if($_SESSION['id'] == "9002"){
+        echo '                                    <li role="separator" class="divider"></li>'."\xA";
+        echo '                                    <li><a href="cargardiademas.php">Cargar diademas</a></li>'."\xA";
+    }
     echo '                                </ul>'."\xA";
     echo '                            </li>'."\xA";
     echo '                            <li class="dropdown">'."\xA";
@@ -662,7 +666,7 @@ function verDiadema()
     }
     echo '                                            </form>' . "\xA";
     if( isset($_GET['camplist']) )  echo '                                        <script>document.getElementById("campseleccionada").innerHTML = "'.$campaigns[$_GET['camplist']].' ('.$cant.')"; </script>';
-    else                            echo '                                        <script>document.getElementById("campseleccionada").innerHTML = "Todas las campañas ('.count($res).')"; </script>';
+    else                            echo '                                        <script>document.getElementById("campseleccionada").innerHTML = "Todas las campañas ('.getTotalDiademas().')"; </script>';
 }
 function crearCamp()
 {
@@ -718,11 +722,15 @@ function crearCamp()
 }
 function verCamp()
 {
-    $padding = 10;
-    $index = 0;
-    $conn = fSesion();
-    $sql  = "select nombre_campaign as nombre, ubicacion_campaign from campaigns";
-    $stmt = sqlsrv_query($conn, $sql);
+    $padding            = 10;
+    $index              = 0;
+    $conn               = fSesion();
+    $cantdiademascamp   = getCantidadDiademasPorCampaign();
+    $campcantdiademas   = array_keys($cantdiademascamp);
+    
+    $sql                = "select nombre_campaign as nombre, ubicacion_campaign from campaigns";
+    $stmt               = sqlsrv_query($conn, $sql);
+    
     echo '<form class="form-horizontal" role="form" method="post">' . "\xA";
     echo '    <div align="center">' . "\xA";
     while($campaigns = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)){
@@ -736,12 +744,15 @@ function verCamp()
             echo '            <div class="col-md-6">' . "\xA";
             echo '                <input type="text" class="form-control back-tooltips" id="nombre'.$index.'" name="nombre'.$index.'" value="'.$campaigns["nombre"].'" disabled>' . "\xA";
             echo '            </div>' . "\xA";
-            echo '            <label for="cant'.$index.'" class="col-md-4 control-label">Cantidad de diademas:</label>' . "\xA";
+            echo '            <label for="cantagentes'.$index.'" class="col-md-4 control-label">Cantidad de agentes:</label>' . "\xA";
+            echo '            <div class="col-md-6">' . "\xA";
+            echo '                <input type="text" class="form-control back-tooltips" id="cant'.$index.'" name="cant'.$index.'" value="'.$cant['total'].'" disabled>' . "\xA";
+            echo '            </div>' . "\xA";
+            echo '            <label for="cantdiademas'.$index.'" class="col-md-4 control-label">Cantidad de diademas:</label>' . "\xA";
             echo '            <div class="col-md-6">' . "\xA";
             echo '                <input type="text" class="form-control back-tooltips" id="cant'.$index.'" name="cant'.$index.'" value="'.$cant['total'].'" disabled>' . "\xA";
             echo '            </div>' . "\xA";
             echo '        </div>' . "\xA";
-            echo '<p>&nbsp;</p>';
         }
     }
     echo '          </div>' . "\xA";
@@ -987,15 +998,19 @@ function getCantidadDiademasPorCampaign()
             $diademas[$campsKeys[$i]] = $camp;
         }
     }
-
-    //echo '<pre>';
-    //    print_r($diademas);
-    //echo '</pre>';
-
-    //echo count($diademas['6205'])."\xA";
-    //echo count($diademas['6253'])."\xA";
-
     return $diademas;
+}
+function getTotalDiademas()
+{
+    $campaigns = getListaCampaigns();
+    $diademas  = getCantidadDiademasPorCampaign();
+    $campkeys  = array_keys($campaigns);
+    $cantotal  = 0;
+
+    for($i = 0; $i < count($campaigns); $i++){
+        $cantotal += count($diademas[$campkeys[$i]]);
+    }
+    return $cantotal;
 }
 function pprint($arreglo)
 {
@@ -1003,10 +1018,6 @@ function pprint($arreglo)
         print_r($arreglo);
     echo '</pre>';
 }
-
-
-
-
 
 
 
