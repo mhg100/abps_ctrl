@@ -12,12 +12,14 @@ $collection = fMongoDB();
 $inforgral = array();
 $sql = "select * from inventariodiademas order by fecha";
 $stmt = sqlsrv_query($conn, $sql);
+$char = '"';
+$chars= array("'", $char, "=");
 
 while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-    $_id            = $row['consecutivo'];
+    $_id            = str_replace($chars, '¡', $row['consecutivo']);
     $marca          = $row['marca'];
     $serial         = $row['serial'];
-    $nombresAg      = $row['ip_equipo'];
+    $nombresAg      = str_replace($chars, '¡', $row['ip_equipo']);
     $coordinador_id = $row['coordinador'];
     $campaign       = $row['campaign'];
     $fechaMov       = $row['fecha'] -> format('Y-m-d H:i');

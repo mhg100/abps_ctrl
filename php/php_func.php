@@ -51,13 +51,14 @@ function initHTML($environment)
 <html lang="es">
 <head>
     <title>'.$tipoUsuario.' - Inicio de sesión</title>
-    <meta http-equiv="Content-type" content="text/html; utf-8" />
+    <meta http-equiv="Content-type" content="text/html; ISO-8859-1" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="js/charts.loader.js"></script>
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.custom.js"></script>
     <script type="text/javascript" src="js/bootstrap-select.js"></script>
+    <script type="text/javascript" src="js/scripts.js"></script>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap-select.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.custom.css">
@@ -83,20 +84,18 @@ function llamarPieChart($width, $height)
         
         echo "            ['".$nombre." (".$cant.")', " .$cant."],\xA";
     }
-
-    echo "            ['', '']\xA";
     echo "         ]);\xA";
     echo "         var options = {\xA";
     echo "             title: '',\xA";
     echo "             pieHole: 0.45,\xA";
     echo "             width: ".$width.",\xA";
     echo "             height: ".$height.",\xA";
-    echo "             pieStartAngle: 100,\xA";
-    echo "             chartArea:{left:20,top:40,width:'90%',height:'70%'},\xA";
+  //echo "             pieStartAngle: 100,\xA";
+    echo "             chartArea:{left:0,top:40,width:'85%',height:'70%'},\xA";
     echo "             backgroundColor: { fill:'transparent' },\xA";
     echo "             is3D: false\xA";
     echo "         };\xA";
-    echo "         var chart = new google.visualization.PieChart(document.getElementById('tortaOperaciones'));\xA";
+    echo "         var chart = new google.visualization.PieChart(document.getElementById('tortaoperaciones'));\xA";
     echo "         chart.draw(data, options);\xA";
     echo "     }\xA";
     echo "</script>\xA";
@@ -122,7 +121,7 @@ function llamarAreaChart($width, $height)
     echo "            vAxis: {minValue: 0},\xA";
     echo "            width: ".$width.",\xA";
     echo "            height: ".$height.",\xA";
-    echo "             chartArea:{left:35,top:30,width:'68%',height:'60%'},\xA";
+    echo "             chartArea:{left:35,top:30,width:'60%',height:'60%'},\xA";
     echo "            backgroundColor: { fill: 'transparent' },\xA";
     echo "            is3D: false\xA";
     echo "        };\xA";
@@ -181,10 +180,12 @@ function navbar()
     echo '                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>'."\xA";
     echo '                                <ul class="dropdown-menu">'."\xA";
     echo '                                    <li><a href="device.php">Ver todas las diademas</a></li>'."\xA";
+    echo '                                    <li><a href="device.php">Ver diademas en stock</a></li>'."\xA";
+    echo '                                    <li><a href="device.php">Ver diademas en reparación</a></li>'."\xA";
     echo '                                    <li role="separator" class="divider"></li>'."\xA";
     echo '                                    <li><a href="device.php?ic=1">Crear diadema</a></li>'."\xA";
     echo '                                    <li><a href="device.php?ic=2">Realizar cambio</a></li>'."\xA";
-    echo '                                    <li><a href="device.php?ic=2">Envío a mantenimiento</a></li>'."\xA";
+    echo '                                    <li><a href="#">Envío a reparación</a></li>'."\xA";
     if($_SESSION['id'] == "9002"){
         echo '                                    <li role="separator" class="divider"></li>'."\xA";
         echo '                                    <li><a href="cargardiademas.php">Cargar diademas</a></li>'."\xA";
@@ -207,6 +208,15 @@ function navbar()
     echo '                                    <li class="divider"></li>'."\xA";
     echo '                                    <li><a href="defaultcamp.php?ic=1">Crear</a></li>'."\xA";
     echo '                                    <li><a href="defaultcamp.php?ic=3">Modificar</a></li>'."\xA";
+    echo '                                </ul>'."\xA";
+    echo '                            </li>'."\xA";
+    echo '                            <li class="dropdown">'."\xA";
+    echo '                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Técnicos<span class="caret"></span></a>'."\xA";
+    echo '                                <ul class="dropdown-menu">'."\xA";
+    echo '                                    <li><a href="#">Ver técnicos</a></li>'."\xA";
+    echo '                                    <li class="divider"></li>'."\xA";
+    echo '                                    <li><a href="tecnico.php?ic=1">Crear</a></li>'."\xA";
+    echo '                                    <li><a href="#">Modificar</a></li>'."\xA";
     echo '                                </ul>'."\xA";
     echo '                            </li>'."\xA";
     echo '                        </ul>'."\xA";
@@ -339,7 +349,7 @@ function verCoordinadores($edit, $camp)
     $sql1 = "select id_coordinador as id, nombres_coordinador as nombres, apellidos_coordinador as apellidos, cantidad_agentes_coordinador as cantagentes, campaign_coordinador as idcampa from coordinadores";
     $sql2 = "select nombre_campaign, id_campaign from campaigns order by nombre_campaign asc";
     $stmt2 = sqlsrv_query($conn, $sql2);
-    $inject = "' or ''='";
+    $inject = "all";
     
     echo '<form class="form-horizontal" role="form">'."\xA";
     echo '                                    <div class="form-group">'."\xA";
@@ -354,6 +364,7 @@ function verCoordinadores($edit, $camp)
     echo '                                            </select>'."\xA";
     echo '                                        </div>'."\xA";
     echo '                                    </div>'."\xA";
+    echo '                                    <h3 id="cantidad">&nbsp;</h3>'."\xA";
                                         $index = 0;
                                         if(isset($camp)){
                                             $sql1 = $sql1." where campaign_coordinador = '".$camp."'";
@@ -376,7 +387,6 @@ function verCoordinadores($edit, $camp)
                                             else if($edit == 0) $deshabilitar = 'disabled';
 
     echo '                                    <div class="form-group">'."\xA";
-    echo '                                        <p>&nbsp;</p>'."\xA";
     echo '                                        <label for="nombres'.$index.'" class="col-sm-3 control-label">ID:</label>'."\xA";
     echo '                                        <div class="col-md-8">'."\xA";
     echo '                                            <input type="text" class="form-control" id="id'.$index.'" placeholder="ID del agente" required value="'.$id.'" '.$deshabilitar.'>'."\xA";
@@ -408,10 +418,12 @@ function verCoordinadores($edit, $camp)
     echo '                                <script>'."\xA";
     echo '                                    $("#selectorCampaign").on("changed.bs.select", function(e) {'."\xA";
     echo '                                        var val = $("#selectorCampaign").val();'."\xA";
-    echo '                                        if (val == "Todas las campañas") {'."\xA";
+    echo '                                        if (val == "all") {'."\xA";
     echo '                                            window.location.href = "default-opman.php?ic=0";'."\xA";
     echo '                                        }'."\xA";
-    echo '                                        window.location.href = "default-opman.php?ic=0&camplist=" + val;'."\xA";
+    echo '                                        else{'."\xA";
+    echo '                                            window.location.href = "default-opman.php?ic=0&camplist=" + val;'."\xA";
+    echo '                                        }'."\xA";
     echo '                                    });'."\xA";
     echo '                                </script>'."\xA";
 }
@@ -490,40 +502,100 @@ function crearDiadema()
 }
 function verDiadema()
 {
-    $index = 0;
-    $collection = fMongoDB();
-    $res = array();
-    $campaigns = array();
-    $cant = 0;
+    $index              = 0;
+    $collection         = fMongoDB();
+    $listaCampaigns     = getListaCampaigns();
+    $listaCoordinadores = getListaCoordinadores();
+    $idcamps            = array_keys($listaCampaigns);
+    $idcoords           = array_keys($listaCoordinadores);
+    $cant               = getCantidadDiademasPorCampaign();
+    $cantTotal          = getTotalDiademas();
+    $indexCamp          = 0;
     
     if(!$_SESSION['rol'] == 0){
         $cursor = $collection->find(array('resumen.coordinador_id' => $_SESSION['id']));
     } else {
         $cursor = $collection->find();
-        
-        $conn = fSesion();
-        $sql1 = "select id_coordinador as id, nombres_coordinador as nombres, apellidos_coordinador as apellidos, cantidad_agentes_coordinador as cantagentes, campaign_coordinador as idcampa from coordinadores";
-        $sql2 = "select nombre_campaign, id_campaign from campaigns order by nombre_campaign asc";
-        $stmt2 = sqlsrv_query($conn, $sql2);
+    }
         $inner = '<center><a href="exportardiademas.php" class="text-success">Descargar en formato .xls<span class="glyphicon glyphicon-download-alt"></span></a></center><br>';
-        echo "<script>\xA \t\t\t\t\t\t\t\t\t\t\t\tdocument.getElementById('exportar').innerHTML = '".$inner."';
-    </script>\xA                                            ";
-        
+        echo "<script>\xA \t\t\t\t\t\t\t\t\t\t\t\tdocument.getElementById('exportar').innerHTML = '".$inner."';</script>\xA                                            ";
         echo '<form class="form-horizontal" role="form">'."\xA";
-        echo '                                                <div class="form-group">'."\xA";
-        echo '                                                    <label for="listarcampaign" class="col-md-4 control-label">Listar por campaña:</label>'."\xA";
-        echo '                                                    <div class="col-md-4">'."\xA";
-        echo '                                                        <select data-size="7" id="selectorCampaign" name="selectorCampaign" class="selectpicker form-control" data-live-search="true" title="Seleccione una campaña" required autocomplete="off" data-width="355px">'."\xA";
-        echo '                                                            <option value="Todas las campañas">Todas las campañas</option>'."\xA";
-                                  while( $row = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC) ){
-                                      $campaigns[$row['id_campaign']] = $row['nombre_campaign'];
-        echo '                                                            <option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>'."\xA";
-                                  }
-                                  sqlsrv_free_stmt($stmt);
-        echo '                                                        </select>'."\xA";
-        echo '                                                    </div>'."\xA";
-        echo '                                                </div>'."\xA";
-        echo '                                            <h4 id="campseleccionada">&nbsp;</h4>';
+        if($_SESSION['rol'] == 0){
+            echo '                                                <div class="form-group">'."\xA";
+            echo '                                                    <label for="selectorCampaign" class="col-md-4 control-label">Listar por campaña:</label>'."\xA";
+            echo '                                                    <div class="col-md-4">'."\xA";
+            // ------ Opciones selector de campaña ------- //    
+            echo '                                                        <select data-size="7" id="selectorCampaign" name="selectorCampaign" class="selectpicker form-control" data-live-search="true" title="Seleccione una campaña" required autocomplete="off" data-width="355px">'."\xA";
+            echo '                                                            <option value="Todas las campañas">Todas las campañas</option>'."\xA";
+
+            for($i = 0; $i < count($idcamps); $i++){
+                $idcamp     = $idcamps[$i];
+                $nombrecamp = $listaCampaigns[$idcamp]['nombre'];
+                echo '                                                            <option value="'.$idcamp.'">'.$nombrecamp.'</option>'."\xA";
+            }
+            echo '                                                        </select>'."\xA";
+            echo '                                                    </div>'."\xA";
+            echo '                                                </div>'."\xA";
+        }
+        echo '                                                <h4 id="campseleccionada">&nbsp;</h4>';
+        
+        for($i = 0; $i < count($listaCampaigns); $i++){
+            if($_SESSION['rol'] == 0){
+                if(!isset($_GET['camplist']))   $camp = $idcamps[$i];
+                else                            $camp = $_GET['camplist'];
+            }else{
+                $camp = $_SESSION['campid'];
+            }
+            for($j = 0; $j < count($cant[$camp]); $j++){
+                $diadema                  = $cant[$camp][$j];
+                $nombrecamp               = $listaCampaigns[$camp]['nombre'];
+                $idcoord                  = end($diadema['resumen'])['coordinador_id'];
+                $nombrecoord              = $listaCoordinadores[$idcoord]['nombre'];
+                $nombreAg                 = end($diadema['resumen'])['nombresAg'];
+                $ip                       = end($diadema['resumen'])['ipequipo'];
+                $marca                    = $diadema['Marca'];
+                $id                       = $diadema['_id'];
+
+                echo '<div class="form-group">'."\xA";
+                echo '    <div>';
+                echo '        <label for="iddiadema" class="col-lg-4 col-md-4 col-xs-4 control-label">Consecutivo:</label>'."\xA";
+                echo '        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">'."\xA";
+                echo '            <input type="text" class="form-control" rel="iddiadema" id="iddiadema" name="iddiadema" value="'.$id.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+                echo '        </div>'."\xA";
+                
+                echo '        <label for="ip" class="col-lg-4 col-md-4 col-xs-4 control-label">IP del equipo:</label>'."\xA";
+                echo '        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">'."\xA";
+                echo '            <input type="text" class="form-control" rel="ip" id="ip" name="ip" value="'.$ip.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+                echo '        </div>'."\xA";
+                
+                
+                echo '        <label for="marca" class="col-lg-4 col-md-4 col-xs-4 control-label">Marca:</label>'."\xA";
+                echo '        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">'."\xA";
+                echo '            <input type="text" class="form-control" rel="marca" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+                echo '        </div>'."\xA";
+                
+                echo '        <label for="nombrecoord" class="col-lg-4 col-md-4 col-xs-4 control-label">Nombre del coordinador:</label>'."\xA";
+                echo '        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">'."\xA";
+                echo '            <input type="text" class=" form-control" rel="nombrecoord" id="nombrecoord" name="nombrecoord" value="'.$nombrecoord.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+                echo '        </div>'."\xA";
+                
+                if(!isset($_GET['camplist'])){
+                    echo '        <label for="campaign" class="col-lg-4 col-md-4 col-xs-4 control-label">Campaña:</label>'."\xA";
+                    echo '        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">'."\xA";
+                    echo '            <input type="text" class=" form-control" rel="campaign" id="campaign" name="campaign" value="'.$nombrecamp.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+                    echo '        </div>'."\xA";
+                }
+                
+                
+                echo '    </div>'."\xA";
+                echo '</div>'."\xA";
+            }
+            if(isset($_GET['camplist']))    break 1;
+            else{
+                if(isset($_SESSION['campid'])) break 2;
+            }
+        }        
+
         echo '                                                <script>'."\xA";
         echo '                                                    $("#selectorCampaign").on("changed.bs.select", function (e) {'."\xA";
         echo '                                                        var val = $("#selectorCampaign").val();'."\xA";
@@ -536,137 +608,12 @@ function verDiadema()
         echo '                                                            window.location.href = "device.php?ic=0&camplist="+val;'."\xA";
         echo '                                                        }'."\xA";
         echo '                                                    });'."\xA";
-    }
+        echo '                                                </script>'."\xA";   
     
-    foreach ($cursor as $document){   
-        $temp = array($document["_id"], $document["Marca"], $document["serial"], $document["resumen"]);
-        array_push($res, $temp);
-    }
-    echo '                                                </script>'."\xA";
-    for($i = 0; $i < count($res); $i++){
-        $serial = $res[$i][0];
-        $marca = $res[$i][1];
-        $sn = $res[$i][2];
-        $id = $res[$i][3][0]['_id'];
-        $agente = $res[$i][3][0]['nombresAg'];
-        $coord = $res[$i][3][0]['coordinador_id'];
-        $campa = $res[$i][3][0]['campaign'];
-        $resumenTemp = end($res[$i][3]);
-        $coordinador = $resumenTemp['coordinador_id'];
-        $coordinadores = getListaCoordinadores();
-        $coord = $coordinadores[$coord]['nombre'];
-        $estado = $resumenTemp['estado'];
-        $fecha = $resumenTemp['fechaMov'];
-        
-        if($_SESSION['rol'] == 1){
-            if($coordinador == $_SESSION['id'] && $estado == "1"){
-                echo '                                          <form class="form-horizontal" role="form">' . "\xA";
-                echo '                                              <div class="form-group">' . "\xA";
-                echo '                                                  <label for="serial" class="col-md-4 control-label">Serial:</label>' . "\xA";
-                echo '                                                  <div class="col-md-6">' . "\xA";
-                echo '                                                      <input type="text" class="form-control" rel="serial" id="serial" name="serial" value="'.$serial.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                echo '                                                  </div>' . "\xA";
-                echo '                                                  <label for="nombreag" class="col-md-4 control-label">Agente o IP del equipo:</label>' . "\xA";
-                echo '                                                  <div class="col-md-6">' . "\xA";
-                echo '                                                      <input type="text" class="form-control" rel="nombreag" id="nombreag" name="nombreag" value="'.$agente.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                echo '                                                  </div>' . "\xA";
-                echo '                                                  <label for="marca" class="col-md-4 control-label">Marca:</label>' . "\xA";
-                echo '                                                  <div class="col-md-6">' . "\xA";
-                echo '                                                      <input type="text" class="form-control" rel="marca" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                echo '                                                  </div>' . "\xA";
-                if($res[$i][2] != NULL){
-                    echo '                                              <label for="sn" class="col-md-4 control-label">S/N:</label>' . "\xA";
-                    echo '                                              <div class="col-md-6">' . "\xA";
-                    echo '                                                  <input type="text" class="form-control" rel="sn" id="sn" name="sn" value="'.$sn.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                    echo '                                              </div>' . "\xA";
-                }
-                echo '                                              <label for="serial" class="col-md-4 control-label">Fecha de ingreso:</label>' . "\xA";
-                echo '                                              <div class="col-md-6">' . "\xA";
-                echo '                                                  <input type="text" class="form-control" rel="serial" id="ingreso" name="ingreso" value="'.$fecha.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                echo '                                              </div>' . "\xA";
-                echo '                                              </div>' . "\xA";
-            }
-        }else{
-            if(isset($_GET['camplist'])){
-                if($_GET['camplist'] == $campa){
-                    if($estado == "1"){
-                        $cant = $cant + 1;
-                        echo '                                          <form class="form-horizontal" role="form">' . "\xA";
-                        echo '                                              <div class="form-group">' . "\xA";
-                        echo '                                                  <label for="serial" class="col-md-4 control-label">Serial:</label>' . "\xA";
-                        echo '                                                  <div class="col-md-6">' . "\xA";
-                        echo '                                                      <input type="text" class="form-control" rel="serial" id="serial" name="serial" value="'.$serial.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                        echo '                                                  </div>' . "\xA";
-                        echo '                                                  <label for="serial" class="col-md-4 control-label">Agente o IP del equipo:</label>' . "\xA";
-                        echo '                                                  <div class="col-md-6">' . "\xA";
-                        echo '                                                      <input type="text" class="form-control" rel="serial" id="serial" name="nombreag" value="'.$agente.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                        echo '                                                  </div>' . "\xA";
-                        echo '                                                  <label for="serial" class="col-md-4 control-label">Marca:</label>' . "\xA";
-                        echo '                                                  <div class="col-md-6">' . "\xA";
-                        echo '                                                      <input type="text" class="form-control" rel="serial" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                        echo '                                                  </div>' . "\xA";
-                        echo '                                                  <label for="campa" class="col-md-4 control-label">Campaña:</label>' . "\xA";
-                        echo '                                                  <div class="col-md-6">' . "\xA";
-                        echo '                                                      <input type="text" class="form-control" rel="campa" id="camap" name="campa" value="'.$campaigns[$campa].'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                        echo '                                                  </div>' . "\xA";
-                        echo '                                                  <label for="serial" class="col-md-4 control-label">Coordinador:</label>' . "\xA";
-                        echo '                                                  <div class="col-md-6">' . "\xA";
-                        echo '                                                      <input type="text" class="form-control" rel="serial" id="coordinador" name="coordinador" value="'.$coord.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                        echo '                                                  </div>' . "\xA";
-                        if($res[$i][2] != NULL){
-                            echo '  <label for="serial" class="col-md-4 control-label">S/N:</label>' . "\xA";
-                            echo '  <div class="col-md-6">' . "\xA";
-                            echo '      <input type="text" class="form-control" rel="sn" id="sn" name="sn" value="'.$sn.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                            echo '  </div>' . "\xA";
-                        }
-                        echo '  <label for="serial" class="col-md-4 control-label">Fecha de ingreso:</label>' . "\xA";
-                        echo '  <div class="col-md-6">' . "\xA";
-                        echo '      <input type="text" class="form-control" rel="serial" id="ingreso" name="ingreso" value="'.$fecha.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                        echo '  </div>' . "\xA";
-                        echo '  </div>' . "\xA";
-
-
-                    }
-                }
-            }else{
-                echo '                                                <div class="form-group">' . "\xA";
-                echo '                                                    <label for="serial" class="col-md-4 control-label">Serial:</label>' . "\xA";
-                echo '                                                    <div class="col-md-6">' . "\xA";
-                echo '                                                        <input type="text" class="form-control" rel="serial" id="serial" name="serial" value="'.$serial.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                echo '                                                    </div>' . "\xA";
-                echo '                                                    <label for="nombreag" class="col-md-4 control-label">Agente o IP del equipo:</label>' . "\xA";
-                echo '                                                    <div class="col-md-6">' . "\xA";
-                echo '                                                        <input type="text" class="form-control" rel="nombreag" id="nombreag" name="nombreag" value="'.$agente.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                echo '                                                    </div>' . "\xA";
-                echo '                                                    <label for="marca" class="col-md-4 control-label">Marca:</label>' . "\xA";
-                echo '                                                    <div class="col-md-6">' . "\xA";
-                echo '                                                        <input type="text" class="form-control" rel="marca" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                echo '                                                    </div>' . "\xA";
-                echo '                                                    <label for="campa" class="col-md-4 control-label">Campaña:</label>' . "\xA";
-                echo '                                                    <div class="col-md-6">' . "\xA";
-                echo '                                                        <input type="text" class="form-control" rel="campa" id="campa" name="campa" value="'.$campaigns[$campa].'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                echo '                                                    </div>' . "\xA";
-                echo '                                                    <label for="coordinador" class="col-md-4 control-label">Coordinador:</label>' . "\xA";
-                echo '                                                    <div class="col-md-6">' . "\xA";
-                echo '                                                        <input type="text" class="form-control" rel="coordinador" id="coordinador" name="coordinador" value="'.$coord.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                echo '                                                    </div>' . "\xA";
-                if($res[$i][2] != NULL){
-                    echo '                                                    <label for="sn" class="col-md-4 control-label">S/N:</label>' . "\xA";
-                    echo '                                                    <div class="col-md-6">' . "\xA";
-                    echo '                                                        <input type="text" class="form-control" rel="sn" id="sn" name="sn" value="'.$sn.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                    echo '                                                    </div>' . "\xA";
-                }
-                echo '                                                    <label for="ingreso" class="col-md-4 control-label">Fecha de ingreso:</label>' . "\xA";
-                echo '                                                    <div class="col-md-6">' . "\xA";
-                echo '                                                        <input type="text" class="form-control" rel="ingreso" id="ingreso" name="ingreso" value="'.$fecha.'" data-toggle="tooltip" autocomplete="off" disabled>' . "\xA";
-                echo '                                                    </div>' . "\xA";
-                echo '                                                </div>' . "\xA";
-            }
-        }
-    }
+    
     echo '                                            </form>' . "\xA";
-    if( isset($_GET['camplist']) )  echo '                                        <script>document.getElementById("campseleccionada").innerHTML = "'.$campaigns[$_GET['camplist']].' ('.$cant.')"; </script>';
-    else                            echo '                                        <script>document.getElementById("campseleccionada").innerHTML = "Todas las campañas ('.getTotalDiademas().')"; </script>';
+    if( isset($_GET['camplist']) )  echo '                                        <script>document.getElementById("campseleccionada").innerHTML = "'.$listaCampaigns[$_GET['camplist']]['nombre'].' ('.count( $cant[$_GET['camplist']] ).')"; </script>';
+    else                            echo '                                        <script>document.getElementById("campseleccionada").innerHTML = "Todas las campañas ('.getTotalDiademas().')"; </script>'."\xA";
 }
 function crearCamp()
 {
@@ -727,9 +674,12 @@ function verCamp()
     $conn               = fSesion();
     $cantdiademascamp   = getCantidadDiademasPorCampaign();
     $campcantdiademas   = array_keys($cantdiademascamp);
-    
     $sql                = "select nombre_campaign as nombre, ubicacion_campaign from campaigns";
     $stmt               = sqlsrv_query($conn, $sql);
+    $camps              = getCantidadDiademasPorCampaign();
+    $campids            = array_keys($camps);
+    $cant               = count($camps[$campids[$i]]);
+    $nombre             = getListaCampaigns()[$campids[$i]]['nombre'];
     
     echo '<form class="form-horizontal" role="form" method="post">' . "\xA";
     echo '    <div align="center">' . "\xA";
@@ -825,137 +775,6 @@ function adminCrearDiadema()
     echo '                                        </script>'."\xA";
                                             
 }
-function getListaCoordinadores()
-{
-    $conn = fSesion();
-    $sql1 = "select id_coordinador as id, nombres_coordinador as nombres, apellidos_coordinador as apellidos, cantidad_agentes_coordinador as cantagentes, campaign_coordinador as idcampa from coordinadores";
-    $stmt1 = sqlsrv_query($conn, $sql1);
-    $coordinadores = array();
-    while($ppl = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC)){
-        $coordinadores[$ppl['id']] = array(
-            "nombre"=>$ppl['nombres']." ".$ppl['apellidos'],
-        );
-    }
-    return $coordinadores;
-}
-function cambioDiadema()
-{
-    $diadema = "'img/diadema1.jpg' width='150px' height='150px'";
-    $jabra = "'img/jabrasn.jpg' width='150px' height='100px'";
-    $padding = 10;
-    $index = 0;
-    
-    $index = 0;
-    $collection = fMongoDB();
-    $res = array();
-    $campaigns = array();
-    $cursor = $collection->find();
-        
-    $conn = fSesion();
-    $sql1 = "select id_coordinador as id, nombres_coordinador as nombres, apellidos_coordinador as apellidos, cantidad_agentes_coordinador as cantagentes, campaign_coordinador as idcampa from coordinadores";
-    $sql2 = "select nombre_campaign, id_campaign from campaigns order by nombre_campaign asc";
-    $stmt2 = sqlsrv_query($conn, $sql2);
-    echo '<form class="form-horizontal" role="form" action="" method="post">' . "\xA";
-    echo '    <div align="center">' . "\xA";
-        echo '                                                <div class="form-group">'."\xA";
-        echo '                                                    <label for="listarcampaign" class="col-md-4 control-label">Seleccione la campaña:</label>'."\xA";
-        echo '                                                    <div class="col-md-4">'."\xA";
-        echo '                                                        <select data-size="7" id="selectorCampaign" name="selectorCampaign" class="selectpicker form-control" data-live-search="true" title="Seleccione una campaña" required autocomplete="off" data-width="355px">'."\xA";
-        echo '                                                            <option value="Todas las campañas">Todas las campañas</option>'."\xA";
-                                  while($row = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC)){
-                                      $campaigns[$row['id_campaign']] = $row['nombre_campaign'];
-        echo '                                                            <option value="'.$row['id_campaign'].'">'.$row['nombre_campaign'].'</option>'."\xA";
-                                  }
-                                  sqlsrv_free_stmt($stmt);
-        echo '                                                        </select>'."\xA";
-        echo '                                                    </div>'."\xA";
-        echo '                                                </div>'."\xA";
-        echo '                                                <script>'."\xA";
-        echo '                                                    $("#selectorCampaign").on("changed.bs.select", function (e) {'."\xA";
-        echo '                                                        var val = $("#selectorCampaign").val();'."\xA";
-        echo '                                                        if(val == "Todas las campañas")'."\xA";
-        echo '                                                        {'."\xA";
-        echo '                                                            window.location.href = "device.php?ic=0";'."\xA";
-        echo '                                                        }'."\xA";
-        echo '                                                        else'."\xA";
-        echo '                                                        {'."\xA";
-        echo '                                                            window.location.href = "device.php?ic=0&camplist="+val;'."\xA";
-        echo '                                                        }'."\xA";
-        echo '                                                    });'."\xA";
-        echo '                                                </script>'."\xA";
-    echo '<script>';
-    echo '    $("#selectorCampaign").on("changed.bs.select", function (e) {';
-    echo '        var val = $("#selectorCampaign").val();';
-    echo '        if(val == "Todas las campañas")';
-    echo '        {';
-    echo '            window.location.href = "device.php?ic=0";';
-    echo '        }';
-    echo '        else';
-    echo '        {';
-    echo '            window.location.href = "device.php?ic=0&camplist="+val;';
-    echo '        }';
-    echo '    });';
-    echo '</script>';
-    echo '                    <!--Formulario-->';
-    echo '    <div class="form-group">' . "\xA";
-    echo '      <label for="camp" class="col-md-4 control-label">Campaña:</label>' . "\xA";
-    echo '        <div class="col-md-4">' . "\xA";
-    echo '          <select id="camp" name="camp" class="selectpicker" data-live-search="true" title="Seleccione la campaña" data-width="355px" required>' . "\xA";
-    echo '            <option value="Jabra">Jabra</option>' . "\xA";
-    echo '            <option value="Plantronics">Plantronics</option>' . "\xA";
-    echo '            <option value="China">China</option>' . "\xA";
-    echo '          </select>' . "\xA";
-    echo '        </div>' . "\xA";
-    echo '    </div>' . "\xA";
-    echo '    <div class="form-group">' . "\xA";
-    echo '      <label for="serialrecogida" class="col-md-4 control-label">Serial de la diadema recogida:</label>' . "\xA";
-    echo '        <div class="col-md-6">' . "\xA";
-    echo '          <select id="serialrecogida" name="serialrecogida" class="selectpicker" data-live-search="true" title="Seleccione el serial de la diadema recogida" data-width="355px" required>' . "\xA";
-    echo '            <option value="">ABPS001</option>' . "\xA";
-    echo '            <option value="">ABPS002</option>' . "\xA";
-    echo '            <option value="">ABPS003</option>' . "\xA";
-    echo '          </select>' . "\xA";
-    echo '        </div>' . "\xA";
-    echo '    </div>' . "\xA";
-    echo '    <div class="form-group">' . "\xA";
-    echo '      <label for="serialentregada" class="col-md-4 control-label">Serial de la diadema recogida:</label>' . "\xA";
-    echo '        <div class="col-md-6">' . "\xA";
-    echo '          <select id="serialentregada" name="serialentregada" class="selectpicker" data-live-search="true" title="Seleccione el serial de la diadema entregada" data-width="355px" required>' . "\xA";
-    echo '            <option value="">ABPS001</option>' . "\xA";
-    echo '            <option value="">ABPS002</option>' . "\xA";
-    echo '            <option value="">ABPS003</option>' . "\xA";
-    echo '          </select>' . "\xA";
-    echo '        </div>' . "\xA";
-    echo '    </div>' . "\xA";
-    echo '    <div class="form-group">' . "\xA";
-    echo '      <div class="col-md-10" align="right">' . "\xA";
-    echo '        <fieldset>' . "\xA";
-    if(isset($_GET['ag']))
-    {
-        $padding = 25;
-        if($_GET['ag'] == 0){
-            echo '        <label for="agregar" class="alert alert-danger col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
-            echo '          <strong>Error: Serial '.$_GET["sd"].' duplicado</strong>' . "\xA";
-            echo '        </label>' . "\xA";
-        }
-        else if($_GET['ag'] == 1){
-            echo '        <label for="agregar" class="alert alert-success col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
-            echo '          <strong>Diadema '.$_GET["sd"].' agregada correctamente</strong>' . "\xA";
-            echo '        </label>' . "\xA";
-        }
-    }
-    echo '            <button type="submit" class="btn btn-success" id="agregar" name="agregar" style="padding: '.$padding.'px;">Agregar</button>' . "\xA";
-    echo '              </fieldset>' . "\xA";
-    echo '            </div>' . "\xA";
-    echo '         </form>' . "\xA";
-    echo '         <script>' . "\xA";
-    echo '             $("#marca").on("changed.bs.select", function (e) {' . "\xA";
-    echo '                 var val = $("#marca").val();' . "\xA";
-    echo '                 if(val == "Jabra") $( "#serialnumber" ).prop( "disabled", false );' . "\xA";
-    echo '                 else $( "#serialnumber" ).prop( "disabled", true );' . "\xA";
-    echo '             });' . "\xA";
-    echo '         </script>' . "\xA";
-}
 function correccionTexto($texto)
 {
     $comilladoble = '"';
@@ -963,6 +782,32 @@ function correccionTexto($texto)
     $texto = str_replace($prohibidos, "-", $texto);
     $texto = mb_convert_case($texto, MB_CASE_TITLE, "ISO-8859-1");
     return $texto;
+}
+function getListaCoordinadores()
+{
+    $conn           = fSesion();
+    $sql1           = "select
+                           coordinadores.id_coordinador as idcoord,
+                           coordinadores.nombres_coordinador as nombres, 
+                           coordinadores.apellidos_coordinador as apellidos, 
+                           coordinadores.campaign_coordinador as idcamp,
+                           campaigns.nombre_campaign as nombrecamp, 
+                           coordinadores.cantidad_agentes_coordinador as cantagentes
+                       from coordinadores, campaigns
+                       where
+                           campaign_coordinador = campaigns.id_campaign
+                       order by nombres";
+    $stmt1          = sqlsrv_query($conn, $sql1);
+    $coordinadores  = array();
+    
+    while($ppl = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC)){
+        $coordinadores[$ppl['idcoord']] = array(
+            "nombre"     => $ppl['nombres']." ".$ppl['apellidos'],
+            "idcamp"     => $ppl['idcamp'],
+            "nombrecamp" => $ppl['nombrecamp']
+        );
+    }
+    return $coordinadores;
 }
 function getListaCampaigns()
 {
@@ -981,13 +826,13 @@ function getListaCampaigns()
 function getCantidadDiademasPorCampaign()
 {
     $collection = fMongoDB();
-    $camps = getListaCampaigns();
-    $campsKeys = array_keys($camps);
-    $diademas = array();
-    $camp = array();
+    $camps      = getListaCampaigns();
+    $campsKeys  = array_keys($camps);
+    $diademas   = array();
+    $camp       = array();
 
-    for( $i = 0; $i < count( $campsKeys ); $i++ ) {
-        $camp = array();
+    for( $i = 0; $i < count($campsKeys); $i++ ) {
+        $camp   = array();
         $cursor = $collection->find(array('resumen.campaign'=>"$campsKeys[$i]"));
         foreach($cursor as $lista){
             if($lista['resumen'][count($lista['resumen'])-1]['estado'] == '1'){
@@ -1018,18 +863,251 @@ function pprint($arreglo)
         print_r($arreglo);
     echo '</pre>';
 }
+function crearTecnico()
+{
+    echo '<form class="form-horizontal" role="form" action="creartecnico.php" method="post">'."\xA";
+    echo '                            <div>'."\xA";
+    echo '                            <!--Formulario-->'."\xA";
+    echo '                                <br>'."\xA";
+    echo '                                <div class="form-group">'."\xA";
+    echo '                                    <label for="nombres" class="col-md-4 control-label">Nombres:</label>'."\xA";
+    echo '                                    <div class="col-md-6">'."\xA";
+    echo '                                        <input type="text" class="form-control" id="nombres" name="nombres" autocomplete="off" placeholder="Nombre(s) del técnico" required autofocus>'."\xA";
+    echo '                                    </div>'."\xA";
+    echo '                                </div>'."\xA";
+    echo '                                <div class="form-group">'."\xA";
+    echo '                                    <label for="apellidos" class="col-md-4 control-label">Apellidos:</label>'."\xA";
+    echo '                                    <div class="col-md-6">'."\xA";
+    echo '                                        <input type="text" class="form-control" rel="apellidos" id="apellidos" name="apellidos" autocomplete="off" placeholder="Apellidos del técnico" required autofocus>'."\xA";
+    echo '                                    </div>'."\xA";
+    echo '                                </div>'."\xA";
+    echo '                                <div class="form-group">'."\xA";
+    echo '                                    <label for="lider" class="col-md-4 control-label">Líder:</label>'."\xA";
+    echo '                                    <div class="col-md-6">'."\xA";
+    echo '                                        <select id="lider" name="lider" class="selectpicker" data-live-search="true" title="Seleccione el líder del técnico que está creando" data-width="400px" required>'."\xA";
+                                                  llamarLideres();
+    echo '                                        </select>'."\xA";
+    echo '                                    </div>'."\xA";
+    echo '                                </div>'."\xA";
+    echo '                                <div class="form-group">'."\xA";
+    echo '                                    <label for="ubicacion" class="col-md-4 control-label">Ubicación:</label>'."\xA";
+    echo '                                    <div class="col-md-6">'."\xA";
+    echo '                                        <select id="ubicacion" name="ubicacion" class="selectpicker" data-live-search="true" title="Seleccione la sede en donde se encuentra el técnico" data-width="400px" required>'."\xA";
+                                                  llamarUbicaciones();
+    echo '                                        </select>'."\xA";
+    echo '                                    </div>'."\xA";
+    echo '                                </div>'."\xA";
+    echo '                                <div class="form-group">'."\xA";
+    echo '                                    <div class="col-md-10" align="right">'."\xA";
+    echo '                                        <fieldset>'."\xA";
+    echo '                                            <button type="submit" class="btn btn-success" id="agregar" name="agregar" style="padding: '.$padding.'px;">Crear</button>'."\xA";
+    echo '                                        </fieldset>'."\xA";
+    echo '                                    </div>'."\xA";
+    echo '                                </div>'."\xA";
+    echo '                            </div>'."\xA";
+echo '                        </form>'."\xA";
+}
+function llamarLideres()
+{
+    $conn = fSesion();
+    $sql = "select id_admin, nombres_admin, apellidos_admin, rol_admin from admins order by nombres_admin";
+    $stmt= sqlsrv_query($conn, $sql);
+    while($ppl = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)){
+        if($ppl['rol_admin'] == "1"){
+            $nombrelider = $ppl['nombres_admin']." ".$ppl['apellidos_admin'];
+            echo '                                            <option value="'.$ppl['id_admin'].'">'.$nombrelider.'</option>'."\xA";
+        }
+    }
+}
+function llamarUbicaciones()
+{
+    $conn = fSesion();
+    $sql = "select id_ubicacion, nombre_ubicacion from ubicaciones order by nombre_ubicacion";
+    $stmt= sqlsrv_query($conn, $sql);
+    while($ppl = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)){
+        echo '                                            <option value="'.$ppl['id_ubicacion'].'">'.$ppl['nombre_ubicacion'].'</option>'."\xA";
+    }
+}
+function cambioDiadema()
+{
+    $padding    = "";
+    $index      = 0;
+    $index      = 0;
+    $collection = fMongoDB();
+    $cursor     = $collection->find();
+    $conn       = fSesion();
+    $coords     = getListaCoordinadores();
+    $campaigns  = getListaCampaigns();
+    $idcoords   = array_keys($coords);
+    $idcamps    = array_keys($campaigns);
+    
+    //---en campaña---//
+    
+    $cursor         = $collection->find();
+    $diademascamp   = array();
+    $rescamp        = array();
 
+    foreach($cursor as $doc){
+        array_push($rescamp, $doc);
+    }
 
+    for($i = 0; $i < count($rescamp); $i++){
+        if(end($rescamp[$i]['resumen'])['estado'] == "1"){
+            array_push($diademascamp, str_replace(" ", "", $rescamp[$i]['_id']));
+        }
+    }
+    
+    //---en bodega---//
+    
+    $cursor      = $collection->find();
+    $diademasbod = array();
+    $resbod      = array();
 
+    foreach($cursor as $doc){
+        array_push($resbod, $doc);
+    }
 
+    for($i = 0; $i < count($resbod); $i++){
+        if(end($resbod[$i]['resumen'])['estado'] == "0"){
+            array_push($diademasbod, str_replace(" ", "", $resbod[$i]['_id']));
+        }
+    }
+    echo '    <form class="form-horizontal" role="form" action="cambiodiadema.php" method="post">' . "\xA";
+    echo '                                        <div align="center">' . "\xA";
+    echo '                                            <div class="form-group">'."\xA";
+    echo '                                                <label for="campid" class="col-md-4 control-label">Seleccione la campaña:</label>'."\xA";
+    echo '                                                <div class="col-md-4">'."\xA";
+    echo '                                                    <select data-size="7" id="campid" name="campid" class="selectpicker form-control" data-live-search="true" title="Seleccione una campaña" required autocomplete="off" data-width="355px">'."\xA";
 
+    for($i = 0; $i < count($idcamps); $i++){
+        echo '                                                        <option value="'.$idcamps[$i].'">'.$campaigns[$idcamps[$i]]['nombre'].'</option>'."\xA";
+    }
+    
+    sqlsrv_free_stmt($stmt);
 
+    echo '                                                    </select>'."\xA";
+    echo '                                                </div>'."\xA";
+    echo '                                            </div>'."\xA";
+    echo '                                            <!--Formulario-->'."\xA";
+    echo '                                            <div class="form-group">' . "\xA";
+    echo '                                                <label for="coordid" class="col-md-4 control-label">Seleccione un coordinador:</label>' . "\xA";
+    echo '                                                <div class="col-md-4">' . "\xA";
+    echo '                                                    <select id="coordid" name="coordid" class="selectpicker" data-live-search="true" title="Seleccione un coordinador" data-width="355px" required>' . "\xA";
 
+    for($i = 0; $i < count($idcoords); $i++){
+        $idcoord = $idcoords[$i];
+        echo '                                                        <option value="'.$idcoord.'">'.ucwords(mb_strtolower($coords[$idcoord]['nombre'])).'</option>'."\xA";
+    }
 
-
-
-
-
-
-
-
+    echo '                                                    </select>' . "\xA";
+    echo '                                                </div>' . "\xA";
+    echo '                                            </div>' . "\xA";
+    echo '                                            <div class="form-group">' . "\xA";
+    echo '                                                <label for="diademaentrante" class="col-md-4 control-label">Serial de la diadema recogida:</label>' . "\xA";
+    echo '                                                <div class="col-md-4">' . "\xA";
+    echo '                                                    <select id="diademaentrante" name="diademaentrante" class="selectpicker" data-live-search="true" title="Seleccione el serial de la diadema recogida" data-width="355px" required>' . "\xA";
+    
+    for($i = 0; $i < count($diademascamp); $i++){
+        echo '                                                        <option value="'.$diademascamp[$i].'">'.$diademascamp[$i].'</option>'."\xA";
+    }
+    
+    echo '                                                    </select>' . "\xA";
+    echo '                                                </div>' . "\xA";
+    echo '                                            </div>' . "\xA";
+    echo '                                            <div class="form-group">' . "\xA";
+    echo '                                                <label for="diademasaliente" class="col-md-4 control-label">Serial de la diadema entregada:</label>' . "\xA";
+    echo '                                                    <div class="col-md-4">' . "\xA";
+    echo '                                                        <select id="diademasaliente" name="diademasaliente" class="selectpicker" data-live-search="true" title="Seleccione el serial de la diadema entregada" data-width="355px" required>' . "\xA";
+    
+    for($i = 0; $i < count($diademasbod); $i++){
+        echo '                                                            <option value="'.$diademasbod[$i].'">'.$diademasbod[$i].'</option>';
+    }
+    
+    echo '                                                        </select>' . "\xA";
+    echo '                                                    </div>' . "\xA";
+    echo '                                                </div>' . "\xA";
+    echo '                                            <div class="form-group">' . "\xA";
+    echo '                                                <div class="col-md-10" align="right">' . "\xA";
+    echo '                                                    <fieldset>' . "\xA";
+    
+    if(isset($_GET['ag'])){
+        $padding = 15;
+        if($_GET['ag'] == 0){
+            echo '                                                        <label for="agregar" class="alert alert-danger col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
+            echo '                                                            <strong>Error: Serial '.$_GET["sd"].' duplicado</strong>' . "\xA";
+            echo '                                                        </label>' . "\xA";
+        }
+        else if($_GET['ag'] == 1){
+            echo '                                                        <label for="agregar" class="alert alert-success col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
+            echo '                                                            <strong>Diadema '.$_GET["sd"].' agregada correctamente</strong>' . "\xA";
+            echo '                                                        </label>' . "\xA";
+        }
+    }
+    echo '                                                    <button type="submit" class="btn btn-success" id="agregar" name="agregar" style="padding: '.$padding.'px;">Realizar cambio</button>' . "\xA";
+    echo '                                                </fieldset>' . "\xA";
+    echo '                                            </div>' . "\xA";
+    echo '                                        </form>' . "\xA";
+    echo '                                        <script>' . "\xA";
+    echo '                                            $("#marca").on("changed.bs.select", function (e) {' . "\xA";
+    echo '                                                var val = $("#marca").val();' . "\xA";
+    echo '                                                if(val == "Jabra") $( "#serialnumber" ).prop( "disabled", false );' . "\xA";
+    echo '                                                else $( "#serialnumber" ).prop( "disabled", true );' . "\xA";
+    echo '                                            });' . "\xA";
+    echo '                                        </script>' . "\xA";
+}
+function verTecnicos()
+{
+    $conn = fSesion();
+    $sql = "select tecnicos.id_tecnico, tecnicos.nombres_tecnico, tecnicos.apellidos_tecnico, tecnicos.lider_tecnico, admins.nombres_admin, admins.apellidos_admin, tecnicos.ubicacion_tecnico, ubicaciones.nombre_ubicacion from tecnicos, admins, ubicaciones where ubicacion_tecnico = ubicaciones.id_ubicacion and admins.id_admin = tecnicos.lider_tecnico order by nombres_tecnico";
+    $stmt= sqlsrv_query($conn, $sql);
+    
+    while($ppl = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)){
+        $idtecnico      = $ppl['id_tecnico'];
+        $nombreTecnico  = $ppl['nombres_tecnico']." ".$ppl['apellidos_tecnico'];
+        $lider          = $ppl['nombres_admin']." ".$ppl['apellidos_admin'];
+        $ubicacion      = $ppl['nombre_ubicacion'];
+        
+        echo '<form class="form-horizontal" role="form" action="creartecnico.php" method="post">'."\xA";
+        echo '                            <div>'."\xA";
+        echo '                            <!--Formulario-->'."\xA";
+        echo '                                <br>'."\xA";
+        echo '                                <div class="form-group">'."\xA";
+        echo '                                    <label for="idtecnico" class="col-md-4 control-label">ID:</label>'."\xA";
+        echo '                                    <div class="col-md-6">'."\xA";
+        echo '                                        <input type="text" class="form-control" id="idtecnico" name="idtecnico" autocomplete="off" value="'.$idtecnico.'" disabled>'."\xA";
+        echo '                                    </div>'."\xA";
+        echo '                                    <label for="nombres" class="col-md-4 control-label">Nombres:</label>'."\xA";
+        echo '                                    <div class="col-md-6">'."\xA";
+        echo '                                        <input type="text" class="form-control" id="nombres" name="nombres" autocomplete="off" value="'.$nombreTecnico.'" disabled>'."\xA";
+        echo '                                    </div>'."\xA";
+        echo '                                    <label for="lider" class="col-md-4 control-label">Líder:</label>'."\xA";
+        echo '                                    <div class="col-md-6">'."\xA";
+        echo '                                        <input type="text" class="form-control" id="nombres" name="nombres" autocomplete="off" value="'.$lider.'" disabled>'."\xA";
+        echo '                                    </div>'."\xA";
+        echo '                                    <label for="ubicacion" class="col-md-4 control-label">Ubicación:</label>'."\xA";
+        echo '                                    <div class="col-md-6">'."\xA";
+        echo '                                        <input type="text" class="form-control" id="nombres" name="nombres" autocomplete="off" value="'.$ubicacion.'" disabled>'."\xA";
+        echo '                                    </div>'."\xA";
+        echo '                                </div>'."\xA";
+        echo '                            </div>'."\xA";
+        echo '                        </form>'."\xA";
+        echo '                        <script>document.getElementById("tecnicoheader").innerHTML = "Ver técnicos";</script>';
+    }
+}
+function getDiademasCampaign()
+{
+    $collection = fMongoDB();
+}
+function verDiademasEnStock()
+{
+    $collection = fMongoDB();
+    $cursor = $collection->find();
+    $diademasenstock = array();
+    
+    foreach($cursor as $document){
+        if(end($document['resumen'])['estado'] == "0"){
+            array_push($diademasenstock, $document);
+        }
+    }
+    return $diademasenstock;
+}

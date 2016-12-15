@@ -22,8 +22,8 @@ comprobarAdmin();
                     <br /><br />
                     <div class="row">
                         <div class="col-md-4" style="outline: 1px solid #E7E7E7;">
-                            <h4 class="text-center">Total diademas (<?php echo getTotalDiademas()?>)</h4>
-                            <div id="tortaOperaciones"></div>
+                            <h4 class="text-center">Total de diademas en campaña: (<?php echo getTotalDiademas()?>)</h4>
+                            <div id="tortaoperaciones"></div>
                         </div>
                         <div class="col-md-4" style="outline: 1px solid #E7E7E7;">
                             <h4 class="text-center">Movimientos de los tres últimos meses</h4>

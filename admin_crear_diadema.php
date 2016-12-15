@@ -53,8 +53,9 @@ if(!isset($_GET['ic']))
         "Marca"  => strtoupper($_POST['marca']),
         "serial" => strtoupper($_POST['serialnumber'])
     );
-    $resumen = array("_id" => "001",
-                     "estado" => "0",
+    $resumen = array("_id"      => "001",
+                     "estado"   => "0",
+                     "campaign" =>"6118",
                      "fechaMov" => date("Y-m-d H:i"),
     );
     $resumenDiadema = array("resumen" => [$resumen]);

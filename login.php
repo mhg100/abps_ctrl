@@ -16,8 +16,7 @@
     
     session_start();
 
-    if($_SESSION['rol'] == '0')
-    {
+    if($_SESSION['rol'] == '0'){
         $tabla      = 'dbo.admins';
         $columna    = 'id_admin';
         $passw      = 'pass_admin';
@@ -25,8 +24,7 @@
         $fecha      = 'ultimoacceso_admin';
         $ip         = 'ultimaip_admin';
     }
-    else if($_SESSION['rol'] == '1')
-    {
+    else if($_SESSION['rol'] == '1'){
         $tabla      = 'dbo.coordinadores';
         $columna    = 'id_coordinador';
         $passw      = 'pass_coordinador';
@@ -38,21 +36,20 @@
     $qry = sqlsrv_query($conexion, $sql, array(), array( "Scrollable" => 'static' ));
     $resultado = sqlsrv_fetch_array($qry);
 
-    if($resultado[0] == $usuario)//--------------------------------acceso autorizado
-    {
+    if($resultado[0] == $usuario){//-------------------------------acceso autorizado
         $sql = "update $tabla set $fecha = GETDATE(), $ip = '$dirip' where $columna = '$usuario'";
         $qry = sqlsrv_query($conexion, $sql, array(), array( "Scrollable" => 'static' ));
-        if($_SESSION['rol'] == '1')
-        {
+        if($_SESSION['rol'] == '1'){
             $_SESSION['nombres']    = ucwords(mb_strtolower($resultado['nombres_coordinador'],  'UTF-8'));
             $_SESSION['apellidos']  = ucwords(mb_strtolower($resultado['apellidos_coordinador'],'UTF-8'));
+            $_SESSION['campid']     = $resultado['campaign_coordinador'];
             $_SESSION['id']         = $usuario;
             $_SESSION['horaAcceso'] = time();
             header('Location: defaultcoord.php');
         }
-        else if ($_SESSION['rol'] == '0')
-        {
+        else if ($_SESSION['rol'] == '0'){
             $_SESSION['id']         = $usuario;
+            $_SESSION['tipo']       = $resultado['rol_admin'];
             $_SESSION['nombres']    = ucwords(mb_strtolower($resultado['nombres_admin'],  'UTF-8'));
             $_SESSION['apellidos']  = ucwords(mb_strtolower($resultado['apellidos_admin'],'UTF-8'));
             $_SESSION['horaAcceso'] = time();

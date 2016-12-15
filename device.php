@@ -24,10 +24,10 @@ comprobarAdmin();
                                 <div class="row text-center">
                                     <div class="col-md-8 col-lg-offset-2" style="outline: 1px solid #E7E7E7;">
                                         <div class="row">
-                                            <?php
-                                            if(!isset($_GET['ic']) || $_GET['ic'] == 0) verDiadema();
-                                            else if($_GET['ic'] == 1)                   adminCrearDiadema();
-                                            else if($_GET['ic'] == 2)                   cambioDiadema();
+                                        <?php
+                                        if(!isset($_GET['ic']) || $_GET['ic'] == 0) verDiadema();
+                                        else if($_GET['ic'] == 1)                   adminCrearDiadema();
+                                        else if($_GET['ic'] == 2)                   cambioDiadema();
                                         ?>
                                         <p>&nbsp;</p>
                                     </div>

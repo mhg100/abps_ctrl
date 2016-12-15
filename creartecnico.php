@@ -1,0 +1,31 @@
+<?php
+
+    include 'php/php_func.php';
+    session_start();
+    fTimeStamp();
+    comprobarAdmin();
+    $id = correccionTexto($_POST['idcamp']);
+    $nombre = correccionTexto($_POST['nombre']);
+    $sede = strtolower(correccionTexto($_POST['sede']));
+    
+    echo $id."\xA".$nombre."\xA".$sede."\xA";
+
+    $conn = fSesion();
+    $sql = "insert into tecnicos (nombres_tecnico, apellidos_tecnico, pass_tecnico, lider_tecnico, ubicacion_tecnico) values ('".$_POST['nombres']."', '".$_POST['apellidos']."', 'password', '".$_POST['lider']."', '".$_POST['ubicacion']."')";
+    $stmt = sqlsrv_query($conn, $sql);
+    if( ($errors = sqlsrv_errors() ) != null) {
+        foreach( $errors as $error ) {
+            echo "SQLSTATE: ".$error[ 'SQLSTATE']."<br />";
+            echo "code: ".$error[ 'code']."<br />";
+            echo "message: ".$error[ 'message']."<br />";
+        }
+    }
+    if(!$stmt)
+    {
+        header("Location: tecnico.php?ic=1&ag=0");
+    }
+    else
+    {
+        header("Location: tecnico.php?ic=1&ag=1");
+    }
+?> 

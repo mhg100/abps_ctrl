@@ -1,4 +1,4 @@
- <?php
+<?php
 
     include 'php/php_func.php';
 /*
