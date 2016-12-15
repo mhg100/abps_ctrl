@@ -560,31 +560,31 @@ function verDiadema()
 
                 echo '<div class="form-group">'."\xA";
                 echo '    <div>';
-                echo '        <label for="iddiadema" class="col-lg-4 col-md-4 col-xs-4 control-label">Consecutivo:</label>'."\xA";
-                echo '        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">'."\xA";
+                echo '        <label for="iddiadema" class="col-md-3 control-label">Consecutivo:</label>'."\xA";
+                echo '        <div class="col-md-9 ">'."\xA";
                 echo '            <input type="text" class="form-control" rel="iddiadema" id="iddiadema" name="iddiadema" value="'.$id.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
                 echo '        </div>'."\xA";
                 
-                echo '        <label for="ip" class="col-lg-4 col-md-4 col-xs-4 control-label">IP del equipo:</label>'."\xA";
-                echo '        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">'."\xA";
+                echo '        <label for="ip" class="col-md-3 control-label">IP del equipo:</label>'."\xA";
+                echo '        <div class="col-md-9">'."\xA";
                 echo '            <input type="text" class="form-control" rel="ip" id="ip" name="ip" value="'.$ip.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
                 echo '        </div>'."\xA";
                 
                 
-                echo '        <label for="marca" class="col-lg-4 col-md-4 col-xs-4 control-label">Marca:</label>'."\xA";
-                echo '        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">'."\xA";
+                echo '        <label for="marca" class="col-md-3 control-label">Marca:</label>'."\xA";
+                echo '        <div class="col-md-9">'."\xA";
                 echo '            <input type="text" class="form-control" rel="marca" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
                 echo '        </div>'."\xA";
                 
                 if($_SESSION['rol'] == 0){
                     if(!isset($_GET['camplist'])){
-                        echo '        <label for="campaign" class="col-lg-4 col-md-4 col-xs-4 control-label">Campaña:</label>'."\xA";
-                        echo '        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">'."\xA";
+                        echo '        <label for="campaign" class="col-md-3 control-label">Campaña:</label>'."\xA";
+                        echo '        <div class="col-md-9">'."\xA";
                         echo '            <input type="text" class=" form-control" rel="campaign" id="campaign" name="campaign" value="'.$nombrecamp.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
                         echo '        </div>'."\xA";
                     }
-                    echo '        <label for="nombrecoord" class="col-lg-4 col-md-4 col-xs-4 control-label">Nombre del coordinador:</label>'."\xA";
-                    echo '        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">'."\xA";
+                    echo '        <label for="nombrecoord" class="col-md-3 control-label">Nombre del coordinador:</label>'."\xA";
+                    echo '        <div class="col-md-9">'."\xA";
                     echo '            <input type="text" class=" form-control" rel="nombrecoord" id="nombrecoord" name="nombrecoord" value="'.$nombrecoord.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
                     echo '        </div>'."\xA";
                 }

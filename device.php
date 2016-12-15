@@ -22,7 +22,7 @@ comprobarAdmin();
                         <div class="clearfix" id="exportar">&nbsp;</div>
                             <div class="jumbotron" style="background-color: #F8F8F8; outline: 1px solid #E7E7E7;">
                                 <div class="row text-center">
-                                    <div class="col-md-8 col-lg-offset-2" style="outline: 1px solid #E7E7E7;">
+                                    <div class="col-md-8 col-md-offset-2" style="outline: 1px solid #E7E7E7;">
                                         <div class="row">
                                         <?php
                                         if(!isset($_GET['ic']) || $_GET['ic'] == 0) verDiadema();

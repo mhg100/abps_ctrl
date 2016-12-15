@@ -14,7 +14,7 @@
                 <div class="jumbotron">
                     <h2 align="center">
                     <?php
-                        if($_GET['ic'] == 0)        echo "lista de dispositivos";
+                        if($_GET['ic'] == 0)        echo "Lista de dispositivos";
                         else if($_GET['ic'] == 1)   echo "Creación de dispositivo";
                     ?>
                     </h2>
