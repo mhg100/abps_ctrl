@@ -518,9 +518,11 @@ function verDiadema()
         $cursor = $collection->find();
     }
         $inner = '<center><a href="exportardiademas.php" class="text-success">Descargar en formato .xls<span class="glyphicon glyphicon-download-alt"></span></a></center><br>';
-        echo "<script>\xA \t\t\t\t\t\t\t\t\t\t\t\tdocument.getElementById('exportar').innerHTML = '".$inner."';</script>\xA                                            ";
-        echo '<form class="form-horizontal" role="form">'."\xA";
+        echo '    <form class="form-horizontal" role="form">'."\xA";
         if($_SESSION['rol'] == 0){
+        echo "                                                <script>\xA";
+            echo"                                                    document.getElementById('exportar').innerHTML = '".$inner."';\xA";
+            echo "                                                </script>\xA";
             echo '                                                <div class="form-group">'."\xA";
             echo '                                                    <label for="selectorCampaign" class="col-md-4 control-label">Listar por campaña:</label>'."\xA";
             echo '                                                    <div class="col-md-4">'."\xA";
@@ -574,17 +576,19 @@ function verDiadema()
                 echo '            <input type="text" class="form-control" rel="marca" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
                 echo '        </div>'."\xA";
                 
-                echo '        <label for="nombrecoord" class="col-lg-4 col-md-4 col-xs-4 control-label">Nombre del coordinador:</label>'."\xA";
-                echo '        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">'."\xA";
-                echo '            <input type="text" class=" form-control" rel="nombrecoord" id="nombrecoord" name="nombrecoord" value="'.$nombrecoord.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
-                echo '        </div>'."\xA";
-                
-                if(!isset($_GET['camplist'])){
-                    echo '        <label for="campaign" class="col-lg-4 col-md-4 col-xs-4 control-label">Campaña:</label>'."\xA";
+                if($_SESSION['rol'] == 0){
+                    if(!isset($_GET['camplist'])){
+                        echo '        <label for="campaign" class="col-lg-4 col-md-4 col-xs-4 control-label">Campaña:</label>'."\xA";
+                        echo '        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">'."\xA";
+                        echo '            <input type="text" class=" form-control" rel="campaign" id="campaign" name="campaign" value="'.$nombrecamp.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+                        echo '        </div>'."\xA";
+                    }
+                    echo '        <label for="nombrecoord" class="col-lg-4 col-md-4 col-xs-4 control-label">Nombre del coordinador:</label>'."\xA";
                     echo '        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">'."\xA";
-                    echo '            <input type="text" class=" form-control" rel="campaign" id="campaign" name="campaign" value="'.$nombrecamp.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+                    echo '            <input type="text" class=" form-control" rel="nombrecoord" id="nombrecoord" name="nombrecoord" value="'.$nombrecoord.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
                     echo '        </div>'."\xA";
                 }
+                
                 
                 
                 echo '    </div>'."\xA";
