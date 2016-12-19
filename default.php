@@ -6,7 +6,7 @@ fTimeStamp();
 echo initHTML($_SESSION['rol']);
 llamarPieChart(400, 250);
 llamarAreaChart(400, 250);
-if($_SESSION['rol'] == 1)
+if($_SESSION['rol'] != 0)
 comprobarAdmin();
 ?>
 <body>
@@ -22,7 +22,7 @@ comprobarAdmin();
                     <br /><br />
                     <div class="row">
                         <div class="col-md-4" style="outline: 1px solid #E7E7E7;">
-                            <h4 class="text-center">Total de diademas en campaña: (<?php echo getTotalDiademas()?>)</h4>
+                            <h4 class="text-center">Total de diademas registradas: (<?php echo getTotalDiademas()+count(verDiademasEnStock())?>)</h4>
                             <div id="tortaoperaciones"></div>
                         </div>
                         <div class="col-md-4" style="outline: 1px solid #E7E7E7;">

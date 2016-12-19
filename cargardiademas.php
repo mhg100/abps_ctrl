@@ -29,17 +29,17 @@ while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
         $_id = $_id." ".$ipequipo;
     }
     $inforgral = array(
-        '_id'=>$_id,
-        'Marca'=>$marca,
-        'serial'=>$serial,
-        'resumen'=>[array(
-            '_id'=>"001",
-            'estado'=>"1",
-            'ipequipo'=>$ipequipo,
-            'nombresAg'=>$nombresAg,
-            'coordinador_id'=>$coordinador_id,
-            'campaign'=>$campaign,
-            'fechaMov'=>$fechaMov
+        '_id'       => $_id,
+        'Marca'     => $marca,
+        'serial'    => $serial,
+        'resumen'   => [array(
+            '_id'            => "1",
+            'estado'         => "1",
+            'ipequipo'       => $ipequipo,
+            'nombresAg'      => $nombresAg,
+            'coordinador_id' => $coordinador_id,
+            'campaign'       => $campaign,
+            'fechaMov'       => $fechaMov
         )]
     );
     echo '<pre>';

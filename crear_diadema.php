@@ -56,19 +56,17 @@ if(!isset($_GET['ic']))
         "Marca"  => strtoupper($_POST['marca']),
         "serial" => strtoupper($_POST['serialnumber'])
     );
-    $resumen = array("_id" => "001",
-                     "estado" => "1",
-                     "nombresAg" => $_POST['nombres'],
-                     "coordinador_id" => $_SESSION['id'],
-                     "fechaMov" => date("Y-m-d H:i"),
+    $resumen = array("_id"              => "1",
+                     "estado"           => "1",
+                     "nombresAg"        => $_POST['nombres'],
+                     "coordinador_id"   => $_SESSION['id'],
+                     "fechaMov"         => date("Y-m-d H:i"),
     );
     $resumenDiadema = array("resumen" => [$resumen]);
 
     $diadema = array_merge($infoDiadema, $resumenDiadema);
 
-    echo '<pre>';
-    var_dump($diadema);
-    echo '</pre>';
+    pprint($diadema);
     echo '<pre>id coordinador: '.$_SESSION['id'].'</pre>';
 }
 

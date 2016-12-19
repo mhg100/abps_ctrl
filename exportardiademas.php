@@ -19,9 +19,10 @@ header("Content-Type: application/vnd.ms-excel");
 header("Content-Type: text/plain");
 header('Content-Type: text/html; charset=UTF-8');
 header("Content-Disposition: attachment; filename=\"$archivo\"");
+
 foreach($cursor as $document){
-    $camp = iconv('UTF-8', 'ISO-8859-1', $campaigns[$document['resumen'][0]['campaign']]['nombre']);
-    $coor = iconv('UTF-8', 'ISO-8859-1', $coordinadores[$document['resumen'][0]['coordinador_id']]['nombre']);
+    $camp = iconv('UTF-8', 'ISO-8859-1', $campaigns[end($document['resumen'])['campaign']]['nombre']);
+    $coor = iconv('UTF-8', 'ISO-8859-1', $coordinadores[end($document['resumen'])['coordinador_id']]['nombre']);
     $temp = array(
         "ID"         => "".$document['_id'],
         "Marca"      => "".$document['Marca'],
@@ -31,6 +32,7 @@ foreach($cursor as $document){
     array_push($exportable, $temp);
     $temp = array();
 }
+
 $bandera = false;
 foreach($exportable as $row){
     if(!$bandera){

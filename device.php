@@ -18,16 +18,18 @@ comprobarAdmin();
                         if($_GET['ic']==0 || !isset($_GET['ic']))   echo "Lista de dispositivos";  
                         else if($_GET['ic']==1)                     echo "Creación de dispositivo";
                         else if($_GET['ic']==2)                     echo "Cambios";
+                        else if($_GET['ic']==3)                     echo "Recoger diademas";
                     ?></h2>
                         <div class="clearfix" id="exportar">&nbsp;</div>
-                            <div class="jumbotron" style="background-color: #F8F8F8; outline: 1px solid #E7E7E7;">
-                                <div class="row text-center">
-                                    <div class="col-md-8 col-md-offset-2" style="outline: 1px solid #E7E7E7;">
+                            <div class="jumbotron" style="background-color: #F8F8F8; outline: 0px solid #E7E7E7;">
+                                <div class="row text-center" style="background-color: #F8F8F8;">
+                                    <div class="col-md-8 col-md-offset-2">
                                         <div class="row">
                                         <?php
                                         if(!isset($_GET['ic']) || $_GET['ic'] == 0) verDiadema();
                                         else if($_GET['ic'] == 1)                   adminCrearDiadema();
                                         else if($_GET['ic'] == 2)                   cambioDiadema();
+                                        else if($_GET['ic'] == 3)                   recogerDiademas();
                                         ?>
                                         <p>&nbsp;</p>
                                     </div>

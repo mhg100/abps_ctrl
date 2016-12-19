@@ -109,7 +109,7 @@ if(!isset($_GET['ic'])){
     $id1 ++;
     $resumen1 = array ("_id"                 => $id1,
                        "estado"              => "1",
-                       "coord_id"            => $coordid,
+                       "coordinador_id"      => $coordid,
                        "campaign"            => $campid,
                        "fechaMov"            => date ("Y-m-d H:i"),
                        "tecnico_id"          => $tecnicoid,
@@ -142,16 +142,6 @@ if(!isset($_GET['ic'])){
     $collection->update(array('_id'=>$diademasaliente), array('$addToSet'=>array("resumen"=>$resumen1)));
     $collection->update(array('_id'=>$diademaentrante), array('$addToSet'=>array("resumen"=>$resumen2)));
 }
-
-/*try {
-    $collection->insert($diadema);
-    header( "refresh:0; device.php?ic=1&ag=1&sd=".$_POST['serial']);
-}
-catch (MongoCursorException $e) {
-    echo "error message: ".$e->getMessage()."\n";
-    echo "error code: ".$e->getCode()."\n";
-    header( "refresh:0; defaultdevice.php?ic=1&ag=0&sd=".$_POST['serial']);
-}*/
 ?>
 
 <html>

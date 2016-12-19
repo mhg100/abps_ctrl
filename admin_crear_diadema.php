@@ -55,7 +55,7 @@ if(!isset($_GET['ic']))
     );
     $resumen = array("_id"      => "001",
                      "estado"   => "0",
-                     "campaign" =>"6118",
+                     "campaign" => "6118",
                      "fechaMov" => date("Y-m-d H:i"),
     );
     $resumenDiadema = array("resumen" => [$resumen]);
