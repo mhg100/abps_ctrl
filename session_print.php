@@ -3,6 +3,6 @@
 require 'php/php_func.php';
 session_start();
 
-pprint($_SESSION);
+echo time() - $_SESSION['horaAcceso'];
 
 ?>

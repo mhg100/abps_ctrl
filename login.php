@@ -89,6 +89,7 @@
         else if ($usuario[0] == "8"){
             $_SESSION['nombres']    = ucwords(mb_strtolower($resultado['nombres_tecnico'],  'UTF-8'));
             $_SESSION['apellidos']  = ucwords(mb_strtolower($resultado['apellidos_tecnico'],'UTF-8'));
+            $_SESSION['id']         = $usuario;
             header('Location: tecdefault.php');
         }
         $_SESSION['ns'] = 0;

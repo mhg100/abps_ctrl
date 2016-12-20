@@ -179,7 +179,7 @@ function navbar()
     echo '                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>'."\xA";
     echo '                                <ul class="dropdown-menu">'."\xA";
     echo '                                    <li><a href="device.php">Ver todas las diademas</a></li>'."\xA";
-    echo '                                    <li><a href="device.php">Ver diademas en stock</a></li>'."\xA";
+    echo '                                    <li><a href="device.php?ic=4">Ver diademas en stock</a></li>'."\xA";
     echo '                                    <li><a href="device.php">Ver diademas en reparación</a></li>'."\xA";
     echo '                                    <li role="separator" class="divider"></li>'."\xA";
     echo '                                    <li><a href="device.php?ic=1">Crear diadema</a></li>'."\xA";
@@ -294,18 +294,21 @@ function navbarTecnico()
     echo '                    <div class="navbar-header">'."\xA";
     echo '                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">'."\xA";
     echo '                            <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>'."\xA";
-    echo '                        </button><a class="navbar-brand" href="default.php">COOrd</a>'."\xA";
+    echo '                        </button><a class="navbar-brand" href="default.php">TEcn</a>'."\xA";
     echo '                    </div>'."\xA";
     echo '                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">'."\xA";
     echo '                        <ul class="nav navbar-nav">'."\xA";
     echo '                            <li class="dropdown">'."\xA";
     echo '                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>'."\xA";
     echo '                                <ul class="dropdown-menu">'."\xA";
-    echo '                                    <li><a href="defaultdevice.php?ic=0">Ver lista de diademas en stock</a></li>'."\xA";
+    echo '                                    <li><a href="tecdev.php?ic=0">Ver lista de diademas en stock</a></li>'."\xA";
     echo '                                    <li class="divider"></li>'."\xA";
-    echo '                                    <li><a href="tcrear.php">Crear diadema</a></li>'."\xA";
-    echo '                                    <li><a href="tcambiar.php">Cambiar diadema</a></li>'."\xA";
-    echo '                                    <li><a href="trecoger.php">Recoger diademas</a></li>'."\xA";
+    echo '                                    <li><a href="tecdev.php?ic=1">Crear diadema</a></li>'."\xA";
+    echo '                                    <li><a href="tecdev.php?ic=2">Cambiar diadema</a></li>'."\xA";
+    echo '                                    <li><a href="tecdev.php?ic=3">Recoger diademas</a></li>'."\xA";
+    echo '                                    <li class="divider"></li>'."\xA";
+    echo '                                    <li><a href="tecdev.php?ic=4">Enviar a reparación</a></li>'."\xA";
+    echo '                                    <li><a href="tecdev.php?ic=5">Recibir de reparación</a></li>'."\xA";
     echo '                                </ul>'."\xA";
     echo '                            </li>'."\xA";
     echo '                        </ul>'."\xA";
@@ -543,18 +546,20 @@ function crearDiadema()
     echo '                                                });'."\xA";
     echo '                                            </script>'."\xA";
 }
-function verDiadema()
+function verDiadema($opcion)
 {
     $listaCampaigns     = getListaCampaigns();
-    $listaCoordinadores = getListaCoordinadores();
-    $idcamps            = array_keys($listaCampaigns);
-    $idcoords           = array_keys($listaCoordinadores);
-    $cant               = getCantidadDiademasPorCampaign();
-    $cantTotal          = getTotalDiademas();
+    if($opcion == "0"){
+        $listaCoordinadores = getListaCoordinadores();
+        $idcamps            = array_keys($listaCampaigns);
+        $cant               = getCantidadDiademasPorCampaign();
+    }else if($opcion == "1"){
+        $cant['6118'] = verDiademasEnStock();
+    }
     
     $inner = '<center><a href="exportardiademas.php" class="text-success">Descargar en formato .xls<span class="glyphicon glyphicon-download-alt"></span></a></center><br>';
     echo '    <form class="form-horizontal" role="form">'."\xA";
-    if($_SESSION['rol'] == 0){
+    if($_SESSION['rol'] == 0 && $opcion != "1"){
         echo "                                                <script>\xA";
         echo"                                                    document.getElementById('exportar').innerHTML = '".$inner."';\xA";
         echo "                                                </script>\xA";
@@ -579,84 +584,91 @@ function verDiadema()
         echo '                                                <h4 id="campseleccionada">&nbsp;</h4>';
         
     for($i = 0; $i < count($listaCampaigns); $i++){
-        if($_SESSION['rol'] == 0){
-            if(!isset($_GET['camplist']))   $camp = $idcamps[$i];
-            else                            $camp = $_GET['camplist'];
+        if($_SESSION['rol'] == "0"){
+            if($opcion == "1")                  $camp = "6118";
+            else{
+                if(!isset($_GET['camplist']))   $camp = $idcamps[$i];
+                else                            $camp = $_GET['camplist'];
+            }
         }else{
-            $camp = $_SESSION['campid'];
+            if($opcion == "1")              $camp = "6118";
+            else                            $camp = $_SESSION['campid'];
         }
         for($j = 0; $j < count($cant[$camp]); $j++){
-            $diadema                  = $cant[$camp][$j];
-            $idcoord                  = end($diadema['resumen'])['coordinador_id'];
-            $nombrecoord              = $listaCoordinadores[$idcoord]['nombre'];
-            $nombrecamp               = $listaCampaigns[$camp]['nombre'];
-            $nombreAg                 = end($diadema['resumen'])['nombresAg'];
-            $ip                       = end($diadema['resumen'])['ipequipo'];
-            $marca                    = $diadema['Marca'];
-            $id                       = $diadema['_id'];
-            $estado                   = end($diadema['resumen'])['estado'];
-            
-            if($estado == "1"){
+            $diadema                      = $cant[$camp][$j];
+            $idcoord                      = end($diadema['resumen'])['coordinador_id'];
+            $nombreAg                     = end($diadema['resumen'])['nombresAg'];
+            $ip                           = end($diadema['resumen'])['ipequipo'];
+            $estado                       = end($diadema['resumen'])['estado'];
+            $nombrecamp                   = $listaCampaigns[$camp]['nombre'];
+            $nombrecoord                  = $listaCoordinadores[$idcoord]['nombre'];
+            $marca                        = $diadema['Marca'];
+            $id                           = $diadema['_id'];
+
+            if($estado == "1" || $opcion == "1"){
                 echo '<div class="form-group">'."\xA";
-                echo '    <div>'."\xA";
-                echo '        <label for="iddiadema" class="col-md-3 control-label">Consecutivo:</label>'."\xA";
-                echo '        <div class="col-md-9 ">'."\xA";
-                echo '            <input type="text" class="form-control" rel="iddiadema" id="iddiadema" name="iddiadema" value="'.$id.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
-                echo '        </div>'."\xA";
+                echo '                                                    <div>'."\xA";
+                echo '                                                        <label for="iddiadema" class="col-md-3 control-label">Consecutivo:</label>'."\xA";
+                echo '                                                        <div class="col-md-9 ">'."\xA";
+                echo '                                                            <input type="text" class="form-control" rel="iddiadema" id="iddiadema" name="iddiadema" value="'.$id.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+                echo '                                                        </div>'."\xA";
 
-                echo '        <label for="ip" class="col-md-3 control-label">IP del equipo:</label>'."\xA";
-                echo '        <div class="col-md-9">'."\xA";
-                echo '            <input type="text" class="form-control" rel="ip" id="ip" name="ip" value="'.$ip.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
-                echo '        </div>'."\xA";
+                if($opcion != "1"){
+                    echo '                                                        <label for="ip" class="col-md-3 control-label">IP del equipo:</label>'."\xA";
+                    echo '                                                        <div class="col-md-9">'."\xA";
+                    echo '                                                            <input type="text" class="form-control" rel="ip" id="ip" name="ip" value="'.$ip.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+                    echo '                                                        </div>'."\xA";
+                }
 
-
-                echo '        <label for="marca" class="col-md-3 control-label">Marca:</label>'."\xA";
-                echo '        <div class="col-md-9">'."\xA";
-                echo '            <input type="text" class="form-control" rel="marca" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
-                echo '        </div>'."\xA";
+                echo '                                                        <label for="marca" class="col-md-3 control-label">Marca:</label>'."\xA";
+                echo '                                                        <div class="col-md-9">'."\xA";
+                echo '                                                            <input type="text" class="form-control" rel="marca" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+                echo '                                                        </div>'."\xA";
 
                 if($_SESSION['rol'] == 0){
                     if(!isset($_GET['camplist'])){
-                        echo '        <label for="campaign" class="col-md-3 control-label">Campaña:</label>'."\xA";
-                        echo '        <div class="col-md-9">'."\xA";
-                        echo '            <input type="text" class=" form-control" rel="campaign" id="campaign" name="campaign" value="'.$nombrecamp.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
-                        echo '        </div>'."\xA";
+                        echo '                                                        <label for="campaign" class="col-md-3 control-label">Campaña:</label>'."\xA";
+                        echo '                                                        <div class="col-md-9">'."\xA";
+                        echo '                                                            <input type="text" class=" form-control" rel="campaign" id="campaign" name="campaign" value="'.$nombrecamp.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+                        echo '                                                        </div>'."\xA";
                     }
-                    echo '        <label for="nombrecoord" class="col-md-3 control-label">Nombre del coordinador:</label>'."\xA";
-                    echo '        <div class="col-md-9">'."\xA";
-                    echo '            <input type="text" class=" form-control" rel="nombrecoord" id="nombrecoord" name="nombrecoord" value="'.$nombrecoord.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
-                    echo '        </div>'."\xA";
+                    if($opcion != "1"){
+                        echo '                                                        <label for="nombrecoord" class="col-md-3 control-label">Nombre del coordinador:</label>'."\xA";
+                        echo '                                                        <div class="col-md-9">'."\xA";
+                        echo '                                                            <input type="text" class=" form-control" rel="nombrecoord" id="nombrecoord" name="nombrecoord" value="'.$nombrecoord.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+                        echo '                                                        </div>'."\xA";
+                    }
                 }
-                echo '    </div>'."\xA";
-                echo '</div>'."\xA";
+                echo '                                                    </div>'."\xA";
+                echo '                                                </div>'."\xA";
             }
         }
-        if(isset($_GET['camplist']))        break 1;
-        elseif(isset($_SESSION['campid']))  break 2;
-    }        
-    echo '                                                <script>'."\xA";
-    echo '                                                    $("#selectorCampaign").on("changed.bs.select", function (e) {'."\xA";
-    echo '                                                        var val = $("#selectorCampaign").val();'."\xA";
-    echo '                                                        if(val == "Todas las campañas")'."\xA";
-    echo '                                                        {'."\xA";
-    echo '                                                            window.location.href = "device.php?ic=0";'."\xA";
-    echo '                                                        }'."\xA";
-    echo '                                                        else'."\xA";
-    echo '                                                        {'."\xA";
-    echo '                                                            window.location.href = "device.php?ic=0&camplist="+val;'."\xA";
-    echo '                                                        }'."\xA";
-    echo '                                                    });'."\xA";
-    echo '                                                </script>'."\xA";   
-    echo '                                            </form>' . "\xA";
-    if( isset($_GET['camplist']) )  echo '                                        <script>document.getElementById("campseleccionada").innerHTML = "'.$listaCampaigns[$_GET['camplist']]['nombre'].' ('.count( $cant[$_GET['camplist']] ).')"; </script>';
-    else                            echo '                                        <script>document.getElementById("campseleccionada").innerHTML = "Todas las campañas ('.getTotalDiademas().')"; </script>'."\xA";
-}
-function verDiademaStock($donde)
-{
-    // $donde = 1 => Stock
-    // $donde = 2 => Reparacion
-    
-    $collection = fMongoDB();
+        if(isset($_GET['camplist']))
+            break 1;
+        elseif(isset($_SESSION['campid'])  || $opcion == "1")
+            break;
+    }
+    if($opcion == "0"){
+        echo '                                                <script>'."\xA";
+        echo '                                                    $("#selectorCampaign").on("changed.bs.select", function (e) {'."\xA";
+        echo '                                                        var val = $("#selectorCampaign").val();'."\xA";
+        echo '                                                        if(val == "Todas las campañas")'."\xA";
+        echo '                                                        {'."\xA";
+        echo '                                                            window.location.href = "device.php?ic=0";'."\xA";
+        echo '                                                        }'."\xA";
+        echo '                                                        else'."\xA";
+        echo '                                                        {'."\xA";
+        echo '                                                            window.location.href = "device.php?ic=0&camplist="+val;'."\xA";
+        echo '                                                        }'."\xA";
+        echo '                                                    });'."\xA";
+        echo '                                                </script>'."\xA";   
+        echo '                                            </form>' . "\xA";
+    }
+    if(isset($_GET['camplist']))    echo '                                        <script>document.getElementById("campseleccionada").innerHTML = "'.$listaCampaigns[$_GET['camplist']]['nombre'].' ('.count( $cant[$_GET['camplist']] ).')"; </script>'."\xA";
+    else{
+        if($opcion == "0")          echo '                                        <script>document.getElementById("campseleccionada").innerHTML = "Todas las campañas ('.getTotalDiademas().')"; </script>'."\xA";
+        else if($opcion == "1")     echo '                                        <script>document.getElementById("campseleccionada").innerHTML = "Tecnología ('.count($cant['6118']).')"; </script>'."\xA";
+    }
 }
 function crearCamp()
 {
@@ -1150,6 +1162,19 @@ function verDiademasEnStock()
     }
     return $diademasenstock;
 }
+function verDiademasEnReparacion()
+{
+    $collection = fMongoDB();
+    $cursor = $collection->find();
+    $diademasenreparacion = array();
+    
+    foreach($cursor as $document){
+        if(end($document['resumen'])['estado'] == "2"){
+            array_push($diademasenreparacion, $document);
+        }
+    }
+    return $diademasenreparacion;
+}
 function verDiademasEnCamp()
 {
     $collection = fMongoDB();
@@ -1168,35 +1193,133 @@ function recogerDiademas()
     $diademas = verDiademasEnCamp();
     $campaigns = getListaCampaigns();
 
-    echo '<form action="recoger.php" method="post">'."\xA";
-    echo '    <form class="form-horizontal" role="form" action="login.php" method="post">'."\xA";
-    echo '        <fieldset>'."\xA";
-    echo '            <div class="form-group">'."\xA";
-    echo '                <label class="col-md-2 control-label" for="id" name="id"></label>'."\xA";
-    echo '                <div class="col-md-8 input-group" style="outline: 0px>'."\xA";
-    echo '                    <span class="input-group-addon"></span>'."\xA";
-    echo '                    <select id="diademas[]" name="diademas[]" class="selectpicker" data-live-search="true" multiple data-selected-text-format="count" title="Seleccione las diademas a recoger" data-width="100%">'."\xA";
+    echo '<form action="recoger.php" method="post" class="form-horizontal">'."\xA";
+    echo '    <fieldset>'."\xA";
+    echo '        <div class="form-group">'."\xA";
+    echo '            <label class="col-md-2 control-label" for="id" name="id"></label>'."\xA";
+    echo '            <div class="col-md-8 input-group" style="outline: 0px>'."\xA";
+    echo '                <span class="input-group-addon"></span>'."\xA";
+    echo '                <select id="diademas[]" name="diademas[]" class="selectpicker" data-live-search="true" multiple data-selected-text-format="count" title="Seleccione las diademas a recoger" data-width="100%">'."\xA";
     
     for($i = 0; $i < count($diademas); $i++){
         $idcamp = end($diademas[$i]['resumen'])['campaign'];
         $nombrecamp = $campaigns[$idcamp]['nombre'];
-        echo '                        <option data-tokens="'.$nombrecamp.'">'.$diademas[$i]['_id'].'</option>'."\xA";
+        echo '                        <option data-tokens="'.$nombrecamp.' '.$diademas[$i]['_id'].'">'.$diademas[$i]['_id'].'</option>'."\xA";
     }
     
-    echo '                    </select>'."\xA";
-    echo '                </div>'."\xA";
+    echo '                </select>'."\xA";
     echo '            </div>'."\xA";
-    echo '            <div class="form-group">'."\xA";
-    echo '                <div class="col-md-10 input-group" style="outline: 0px" align="right">'."\xA";
-    echo '                    <fieldset>'."\xA";
-    echo '                        <button id="ingresar" name="ingresar" class="btn btn-primary">Ingresar</button>'."\xA";
-    echo '                    </fieldset>'."\xA";
-    echo '                </div>'."\xA";
+    echo '        </div>'."\xA";
+    echo '        <div class="form-group">'."\xA";
+    echo '            <div class="col-md-10 input-group" style="outline: 0px" align="right">'."\xA";
+    echo '                <fieldset>'."\xA";
+    echo '                    <button id="ingresar" name="ingresar" class="btn btn-primary">Recoger</button>'."\xA";
+    echo '                </fieldset>'."\xA";
     echo '            </div>'."\xA";
-    echo '        </fieldset>'."\xA";
-    echo '    </form>'."\xA";
+    echo '        </div>'."\xA";
+    echo '    </fieldset>'."\xA";
     echo '</form>'."\xA";
     
 }
+function getCantidadReparaciones()
+{
+    $diademas   = getCantidadDiademasPorCampaign();
+    $camps      = array_keys($diademas);
+    $mants      = array();
+    
+    for($i = 0; $i < count($camps); $i++){
+        $camp   = $camps[$i];
+        for($j = 0; $j < count($diademas[$camp]); $j++){
+            $diadematemp    = $diademas[$camp][$j];
+            $diademaid      = $diadematemp['_id'];
+            $marca          = $diadematemp['Marca'];
+            $valortemporal  = 0;
+            for($k = 0; $k < count($diadematemp['resumen']); $k++){
+                $tempresumen = $diadematemp['resumen'][$k];
+                if($tempresumen['estado'] == "2"){
+                    $valortemporal ++;
+                }
+            }
+            $mants[$diademaid] = ['marca'=>$marca, 'reparaciones'=>$valortemporal];
+        }
+    }
+    pprint($mants);
+}
+function repararDiademas()
+{
+    $diademas = verDiademasEnStock();
+
+    echo '<form class="form-horizontal" role="form" action="reparar.php" method="post">'."\xA";
+    echo '                                            <fieldset>'."\xA";
+    echo '                                                <div class="form-group">'."\xA";
+    echo '                                                    <label class="col-md-2 control-label" for="id" name="id"></label>'."\xA";
+    echo '                                                    <div class="col-md-8 input-group" style="outline: 0px>'."\xA";
+    echo '                                                        <span class="input-group-addon"></span>'."\xA";
+    echo '                                                        <select id="diademas[]" name="diademas[]" class="selectpicker" data-live-search="true" multiple data-selected-text-format="count" title="Seleccione las diademas a recoger" data-width="100%">'."\xA";
+    
+    for($i = 0; $i < count($diademas); $i++){
+        echo '                                                            <option>'.$diademas[$i]['_id'].'</option>'."\xA";
+    }
+    
+    echo '                                                        </select>'."\xA";
+    echo '                                                    </div>'."\xA";
+    echo '                                                </div>'."\xA";
+    echo '                                                <div class="form-group">'."\xA";
+    echo '                                                    <div class="col-md-10 input-group" style="outline: 0px" align="right">'."\xA";
+    echo '                                                        <fieldset>'."\xA";
+    echo '                                                            <button id="ingresar" name="ingresar" class="btn btn-primary">Recoger</button>'."\xA";
+    echo '                                                        </fieldset>'."\xA";
+    echo '                                                    </div>'."\xA";
+    echo '                                                </div>'."\xA";
+    echo '                                            </fieldset>'."\xA";
+    echo '                                        </form>'."\xA";
+    
+}
+function recibirDiademasDeReparacion()
+{
+    $diademas = verDiademasEnReparacion();
+
+    echo '<form class="form-horizontal" role="form" action="recoger.php" method="post">'."\xA";
+    echo '                                            <fieldset>'."\xA";
+    echo '                                                <div class="form-group">'."\xA";
+    echo '                                                    <label class="col-md-2 control-label" for="id" name="id"></label>'."\xA";
+    echo '                                                    <div class="col-md-8 input-group" style="outline: 0px>'."\xA";
+    echo '                                                        <span class="input-group-addon"></span>'."\xA";
+    echo '                                                        <select id="diademas[]" name="diademas[]" class="selectpicker" data-live-search="true" multiple data-selected-text-format="count" title="Seleccione las diademas a recoger" data-width="100%">'."\xA";
+    
+    for($i = 0; $i < count($diademas); $i++){
+        echo '                                                            <option>'.$diademas[$i]['_id'].'</option>'."\xA";
+    }
+    
+    echo '                                                        </select>'."\xA";
+    echo '                                                    </div>'."\xA";
+    echo '                                                </div>'."\xA";
+    echo '                                                <div class="form-group">'."\xA";
+    echo '                                                    <div class="col-md-10 input-group" style="outline: 0px" align="right">'."\xA";
+    echo '                                                        <fieldset>'."\xA";
+    echo '                                                            <button id="ingresar" name="ingresar" class="btn btn-primary">Recoger</button>'."\xA";
+    echo '                                                        </fieldset>'."\xA";
+    echo '                                                    </div>'."\xA";
+    echo '                                                </div>'."\xA";
+    echo '                                            </fieldset>'."\xA";
+    echo '                                        </form>'."\xA";
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
