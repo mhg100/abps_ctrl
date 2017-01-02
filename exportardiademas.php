@@ -1,18 +1,23 @@
 <?php
 namespace abps;
 include   'php/php_func.php';
+session_start();
+fTimeStamp();
 function  cleanData(&$cadena)
 {
     $cadena = preg_replace("/\t/", "\\t", $cadena);
     $cadena = preg_replace("/\r?\n/", "\\n", $cadena);
     if(strstr($cadena, '"')) $cadena = '"' . str_replace('"', '""', $cadena) . '"';
 }
-$collection     = fMongoDB();
-$cursor         = $collection->find();
-$coordinadores  = getListaCoordinadores();
-$campaigns      = getListaCampaigns();
-$archivo        = "reporte_diademas_".date('m_d_Y').".xls";
-$exportable     = array();
+$collection         = fMongoDB();
+$cursor             = $collection->find();
+$coordinadores      = getListaCoordinadores();
+$campaigns          = getListaCampaigns();
+$cantReparaciones   = getCantidadReparaciones();
+$archivo            = "reporte_diademas_".date('m_d_Y').".xls";
+$exportable         = array();
+$formulaSuma        = array("","","","","Cantidad total de mantenimientos: ","=suma(F2:F176)");
+$flag = 1;
 
 //header('Content-Type: text/html; charset=ISO-8859-1');
 header("Content-Type: application/vnd.ms-excel");
@@ -23,16 +28,32 @@ header("Content-Disposition: attachment; filename=\"$archivo\"");
 foreach($cursor as $document){
     $camp = iconv('UTF-8', 'ISO-8859-1', $campaigns[end($document['resumen'])['campaign']]['nombre']);
     $coor = iconv('UTF-8', 'ISO-8859-1', $coordinadores[end($document['resumen'])['coordinador_id']]['nombre']);
+    $txtc = iconv('UTF-8', 'ISO-8859-1', "Campaña");
+    if($camp == "") $camp = iconv('UTF-8', 'ISO-8859-1', "En reparación");
+    if($coor == "") $coor = "Mesa Mantenimiento";
     $temp = array(
-        "ID"         => "".$document['_id'],
-        "Marca"      => "".$document['Marca'],
-        "Serial"     => "".$document['serial'],
-        iconv('UTF-8', 'ISO-8859-1', "Campaña")    => "".$camp,
-        "Coordinador"=> "".mb_convert_case($coor, MB_CASE_TITLE, "ISO-8859-1"));
+        "ID"                => "".$document['_id'],
+        "Marca"             => "".$document['Marca'],
+        "Serial"            => "".$document['serial']."",
+        $txtc               => "".$camp,
+        "Coordinador"       => "".mb_convert_case($coor, MB_CASE_TITLE, "ISO-8859-1"),
+        "# de reparaciones" => "".getCantidadReparaciones()[$document['_id']],
+        "Valor"             => '=SI(B'.($flag + 1).'=$M$1;$M$2;SI(B'.($flag + 1).'=$N$1;$N$2; SI(B'.($flag + 1).'=$O$1;$O$2)))'
+    );
+    
+    if($flag == 1){
+        $temp = array_merge($temp, array(" "=>" ",));
+        $temp = array_merge($temp, array("  "=>" ",));
+        $temp = array_merge($temp, array("   "=>" ",));
+        $temp = array_merge($temp, array("    "=>" ",));
+        $temp = array_merge($temp, array("     "=>" ",));
+        $temp = array_merge($temp, array("Jabra"=>"65", "Plantronics"=>"50", "China"=>"45"));
+    }
     array_push($exportable, $temp);
     $temp = array();
+    $flag++;
 }
-
+array_push($exportable, $formulaSuma);
 $bandera = false;
 foreach($exportable as $row){
     if(!$bandera){

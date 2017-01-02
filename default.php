@@ -22,7 +22,7 @@ comprobarAdmin();
                     <br /><br />
                     <div class="row">
                         <div class="col-md-4" style="outline: 1px solid #E7E7E7;">
-                            <h4 class="text-center">Total de diademas registradas: (<?php echo getTotalDiademas()+count(verDiademasEnStock())?>)</h4>
+                            <h4 class="text-center">Total de diademas registradas: (<?php echo getTotalDiademas()+count(getDiademasEnStock())?>)</h4>
                             <div id="tortaoperaciones"></div>
                         </div>
                         <div class="col-md-4" style="outline: 1px solid #E7E7E7;">
@@ -51,23 +51,30 @@ comprobarAdmin();
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4">
-                <h2>Operación de coordinadores</h2>
-                <p></p>
+            <div class="col-md-3">
+                <h2>Diademas</h2>
+                <p>En esta sección se pueden realizar las consultas relacionadas con las diademas. Se pueden crear y ver por campañas, consular el stock (disponible para cambios o entregas), ver cuáles están en reparación o entregar las que necesitan servicio</p>
                 <p>
                     <a class="btn" href="#">View details »</a>
                 </p>
             </div>
-            <div class="col-md-4">
-                <h2>Operación de coordinadores</h2>
-                <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+            <div class="col-md-3">
+                <h2>Coordinadores</h2>
+                <p>Sección el a que se pueden realizar las operaciones con los coordinadores de las campañas. Se puede verificar información, modificar datos, restablecer clave de acceso y listar por campaña.</p>
                 <p>
                     <a class="btn" href="#">View details »</a>
                 </p>
             </div>
-            <div class="col-md-4">
-                <h2>Operación de coordinadores</h2>
-                <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+            <div class="col-md-3">
+                <h2>Campañas</h2>
+                <p>Se pueden ver, crear o modificar las campañas.</p>
+                <p>
+                    <a class="btn" href="#">View details »</a>
+                </p>
+            </div>
+            <div class="col-md-3">
+                <h2>Técnicos</h2>
+                <p>Aquí se pueden ver, editar o crear los perfiles para los técnicos, quiene acceden con las credenciales que se generen.</p>
                 <p>
                     <a class="btn" href="#">View details »</a>
                 </p>
