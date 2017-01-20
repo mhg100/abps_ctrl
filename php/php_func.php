@@ -78,7 +78,6 @@ function llamarPieChart($width, $height)
         echo "            ['".$nombre." (".$cant.")', " .$cant."],\xA";
     }
     
-    
     echo "            ['Tecnología (".count(getDiademasEnStock()).")', ".count(getDiademasEnStock())."],\xA";
     echo "         ]);\xA";
     echo "         var options = {\xA";

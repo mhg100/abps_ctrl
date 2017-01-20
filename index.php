@@ -29,8 +29,7 @@
                     <div class="col-md-8 input-group" align="right">
                         <fieldset>
                             <button id="ingresar" name="ingresar" class="btn btn-primary" style="padding:15px">Ingresar</button>
-                        <?php
-                            validaEstadoLogin();
+                        <?php validaEstadoLogin();
                         ?></fieldset>
                     </div>
                 </div>
