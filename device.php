@@ -38,6 +38,7 @@ comprobarAdmin();
                                         else if($_GET['ic'] == 5)                   repararDiademas();
                                         else if($_GET['ic'] == 6)                   verDiademasEnReparacion();
                                         else if($_GET['ic'] == 7)                   recibirDiademasDeReparacion();
+                                        else if($_GET['ic'] == 8)                   entregarDiademas();
                                         ?>
                                         <p>&nbsp;</p>
                                     </div>

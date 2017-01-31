@@ -1340,3 +1340,77 @@ function verDiademasEnReparacion()
     }
     echo '                                            <script>document.getElementById("campseleccionada").innerHTML = "Cantidad de diademas que se encuentran en reparación: '.count($cant).'"; </script>'."\xA";
 }
+function entregarDiademas()
+{
+    $diademas   = getDiademasEnStock();
+    $campaigns  = getListaCampaigns();
+    $coords     = getListaCoordinadores();
+    $idcamps    = array_keys($campaigns);
+    $idcoords   = array_keys($coords);
+
+    echo '<form action="entregar.php" method="post" class="form-horizontal">'."\xA";
+    echo '<p class="text-center"><small>Utilice esta opción para seleccionar una o varias diademas que se van a entregar.</small></p>';
+    echo '    <fieldset>'."\xA";
+    echo '        <div class="form-group">'."\xA";
+    echo '            <label class="col-md-2 control-label" for="camp" name="camp"></label>'."\xA";
+    echo '            <div class="col-md-8 input-group" style="outline: 0px>'."\xA";
+    echo '                <span class="input-group-addon"></span>'."\xA";
+    echo '                <select data-size="7" id="camp" name="camp" class="selectpicker" data-live-search="true" data-selected-text-format="count" title="Seleccione una campaña" data-width="100%">'."\xA";
+    
+    for($i = 0; $i < count($idcamps); $i++){
+        if($idcamps[$i] != "6118")
+        echo '                                                        <option value="'.$idcamps[$i].'">'.$campaigns[$idcamps[$i]]['nombre'].'</option>'."\xA";
+    }
+    
+    sqlsrv_free_stmt($stmt);
+    
+    echo '                </select>'."\xA";
+    echo '            </div>'."\xA";
+    echo '        </div>'."\xA";
+    
+    echo '        <div class="form-group">'."\xA";
+    echo '            <label class="col-md-2 control-label" for="coord" name="coord"></label>'."\xA";
+    echo '            <div class="col-md-8 input-group" style="outline: 0px>'."\xA";
+    echo '                <span class="input-group-addon"></span>'."\xA";
+    echo '                <select data-size="7" id="coord" name="coord" class="selectpicker" data-live-search="true" data-selected-text-format="count" title="Seleccione un coordinador" data-width="100%">'."\xA";
+    
+    for($i = 0; $i < count($idcoords); $i++){
+        $idcoord = $idcoords[$i];
+        echo '                                                        <option value="'.$idcoord.'" data-tokens="'.$coords[$idcoord]['nombrecamp'].' '.ucwords(mb_strtolower($coords[$idcoord]['nombre'])).'">'.ucwords(mb_strtolower($coords[$idcoord]['nombre'])).'</option>'."\xA";
+    }
+    
+    echo '                </select>'."\xA";
+    echo '            </div>'."\xA";
+    echo '        </div>'."\xA";
+    
+    
+    
+    echo '        <div class="form-group">'."\xA";
+    echo '            <label class="col-md-2 control-label" for="diademas[]" name="diademas[]"></label>'."\xA";
+    echo '            <div class="col-md-8 input-group" style="outline: 0px>'."\xA";
+    echo '                <span class="input-group-addon"></span>'."\xA";
+    echo '                <select id="diademas[]" name="diademas[]" class="selectpicker" data-live-search="true" multiple data-selected-text-format="count" title="Seleccione las diademas a entregar" data-width="100%">'."\xA";
+    
+    for($i = 0; $i < count($diademas); $i++){
+        $idcamp = end($diademas[$i]['resumen'])['campaign'];
+        $nombrecamp = $campaigns[$idcamp]['nombre'];
+        echo '                        <option data-tokens="'.$diademas[$i]['_id'].'">'.$diademas[$i]['_id'].'</option>'."\xA";
+    }
+    
+    echo '                </select>'."\xA";
+    echo '            </div>'."\xA";
+    echo '        </div>'."\xA";
+    
+    
+    
+    echo '        <div class="form-group">'."\xA";
+    echo '            <div class="col-md-10 input-group" style="outline: 0px" align="right">'."\xA";
+    echo '                <fieldset>'."\xA";
+    echo '                    <button id="entregar" name="entregar" class="btn btn-primary">Entregar</button>'."\xA";
+    echo '                </fieldset>'."\xA";
+    echo '            </div>'."\xA";
+    echo '        </div>'."\xA";
+    echo '    </fieldset>'."\xA";
+    echo '</form>'."\xA";
+    
+}
