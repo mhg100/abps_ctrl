@@ -26,5 +26,6 @@ if($cant > 0){
             }
         }
     }
+    header('Location: device.php?ic=5');
 }
 ?>

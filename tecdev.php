@@ -20,6 +20,7 @@ echo initHTML();
                         else if($_GET['ic']==3)                     echo "Recoger diademas";
                         else if($_GET['ic']==4)                     echo "Reparar diademas";
                         else if($_GET['ic']==5)                     echo "Recibir diademas de reparación";
+                        else if($_GET['ic']==6)                     echo "Entregar a campaña";
                     ?></h2>
                         <div class="clearfix" id="exportar">&nbsp;</div>
                             <div class="jumbotron" style="background-color: #F8F8F8; outline: 0px solid #E7E7E7;">
@@ -39,6 +40,8 @@ echo initHTML();
                                             repararDiademas();
                                         else if($_GET['ic'] == 5)                   
                                             recibirDiademasDeReparacion();
+                                        else if($_GET['ic'] == 6)                   
+                                            entregarDiademas();
                                         ?><p>&nbsp;</p>
                                     </div>
                                 </div>

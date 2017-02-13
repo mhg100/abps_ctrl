@@ -21,6 +21,7 @@ if($cant > 0){
             );
             try{
                 $collection->update(array('_id'=>$recoger[$i]), array('$addToSet'=>array("resumen"=>$resumen)));
+                header('Location: device.php?ic=3');
             }catch(Exception $e) {
                 echo "Exception: ", $e->getMessage(), "\n";
             }

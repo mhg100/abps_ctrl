@@ -64,7 +64,7 @@ function llamarPieChart($width, $height)
     $conn       = fSesion();
     $camps      = getCantidadDiademasPorCampaign();
     $campids    = array_keys($camps);
-    
+    //172.29.106.225
     echo '<script type="text/javascript">'."\xA";
     echo "    google.charts.load('current', {'packages':['corechart']});\xA";
     echo "    google.charts.setOnLoadCallback(drawChart);\xA";
@@ -77,7 +77,7 @@ function llamarPieChart($width, $height)
         $nombre = getListaCampaigns()[$campids[$i]]['nombre'];
         echo "            ['".$nombre." (".$cant.")', " .$cant."],\xA";
     }
-    
+
     echo "            ['Tecnología (".count(getDiademasEnStock()).")', ".count(getDiademasEnStock())."],\xA";
     echo "         ]);\xA";
     echo "         var options = {\xA";
@@ -99,31 +99,31 @@ function llamarPieChart($width, $height)
 function llamarAreaChart($width, $height)
 {
     echo '<script type="text/javascript">'."\xA";
-    echo "    google.charts.load('current', {'packages':['corechart']});\xA";
-    echo "    google.charts.setOnLoadCallback(drawChart);\xA";
-    echo "    function drawChart() {\xA";
-    echo "        var data = google.visualization.arrayToDataTable([\xA";
-    echo "            ['Mes',         'Entrada',       'Salida'],\xA";
-    echo "            ['Junio',      110,                 540],\xA";
-    echo "            ['Julio',      465,                 301],\xA";
-    echo "            ['Agosto',      1030,                 540],\xA";
-    echo "            ['Septiembre',  1000,                 400],\xA";
-    echo "            ['Octubre',     1170,                 460],\xA";
-    echo "            ['Noviembre',   660,                 1120],\xA";
-    echo "        ]);\xA";
-    echo "        var options = {\xA";
-    echo "            title: '',\xA";
-    echo "            hAxis: {title: 'últimos meses',  titleTextStyle: {color: '#333'}},\xA";
-    echo "            vAxis: {minValue: 0},\xA";
-    echo "            width: ".$width.",\xA";
-    echo "            height: ".$height.",\xA";
-    echo "             chartArea:{left:35,top:30,width:'60%',height:'60%'},\xA";
-    echo "            backgroundColor: { fill: 'transparent' },\xA";
-    echo "            is3D: false\xA";
-    echo "        };\xA";
-    echo "        var chart = new google.visualization.AreaChart(document.getElementById('movimientos'));\xA";
-    echo "        chart.draw(data, options);\xA";
-    echo "    }\xA";
+    echo indent(04)."google.charts.load('current', {'packages':['corechart']});\xA";
+    echo indent(04)."google.charts.setOnLoadCallback(drawChart);\xA";
+    echo indent(04)."function drawChart() {\xA";
+    echo indent(08)."var data = google.visualization.arrayToDataTable([\xA";
+    echo indent(12)."['Mes',         'Entrada',       'Salida'],\xA";
+    echo indent(12)."['Junio',      110,                 540],\xA";
+    echo indent(12)."['Julio',      465,                 301],\xA";
+    echo indent(12)."['Agosto',      1030,                 540],\xA";
+    echo indent(12)."['Septiembre',  1000,                 400],\xA";
+    echo indent(12)."['Octubre',     1170,                 460],\xA";
+    echo indent(12)."['Noviembre',   660,                 1120],\xA";
+    echo indent(08)."]);\xA";
+    echo indent(08)."var options = {\xA";
+    echo indent(12)."title: '',\xA";
+    echo indent(12)."hAxis: {title: 'últimos meses',  titleTextStyle: {color: '#333'}},\xA";
+    echo indent(12)."vAxis: {minValue: 0},\xA";
+    echo indent(12)."width: ".$width.",\xA";
+    echo indent(12)."height: ".$height.",\xA";
+    echo indent(12)."chartArea:{left:35,top:30,width:'60%',height:'60%'},\xA";
+    echo indent(12)."backgroundColor: { fill: 'transparent' },\xA";
+    echo indent(12)."is3D: false\xA";
+    echo indent(08)."};\xA";
+    echo indent(08)."var chart = new google.visualization.AreaChart(document.getElementById('movimientos'));\xA";
+    echo indent(08)."chart.draw(data, options);\xA";
+    echo indent(04)."}\xA";
     echo "</script>\xA";
 }
 function validaEstadoLogin()
@@ -132,33 +132,33 @@ function validaEstadoLogin()
     if(isset($_SESSION['ns'])){
         if($_SESSION['ns'] == 1){
             unset($_SESSION['ns']);
-            echo '       <label class="alert alert-danger col-md-4 col-md-offset-6 text-center">'."\xA";
-            echo '                                  <strong>Usuario o clave incorrectos</strong>'."\xA";
-            echo '                              </label>'."\xA";
+            echo indent(07).'<label class="alert alert-danger col-md-4 col-md-offset-6 text-center">'."\xA";
+            echo indent(34).'<strong>Usuario o clave incorrectos</strong>'."\xA";
+            echo indent(30).'</label>'."\xA";
         }
         else if($_SESSION['ns'] == 0){
             if($_SESSION['rol'] == 0)       header('location: default.php');
             else if($_SESSION['rol'] == 1)  header('location: defaultcoord.php');
         }
         else if($_SESSION['ns'] == 3){
-            echo '       <label class="alert alert-danger col-md-4 col-md-offset-6 text-center">'."\xA";
-            echo '                                  <strong>Error al iniciar sesion (codigo 0x8160)</strong>'."\xA";
-            echo '                              </label>';
+            echo indent(07).'<label class="alert alert-danger col-md-4 col-md-offset-6 text-center">'."\xA";
+            echo indent(34).'<strong>Error al iniciar sesion (codigo 0x8160)</strong>'."\xA";
+            echo indent(30).'</label>';
         }
         else if($_SESSION['ns'] == 2){
-            echo '       <label class="alert alert-warning col-md-4 col-md-offset-6 text-center">'."\xA";
-            echo '                                  <strong>Sesión cerrada por inactividad</strong>'."\xA";
-            echo '                              </label>'."\xA";
+            echo indent(07).'<label class="alert alert-warning col-md-4 col-md-offset-6 text-center">'."\xA";
+            echo indent(34).'<strong>Sesión cerrada por inactividad</strong>'."\xA";
+            echo indent(30).'</label>'."\xA";
             }
         else if($_SESSION['ns'] == 4){
-            echo '       <label class="alert alert-warning col-md-4 col-md-offset-6 text-center">';
-            echo '                                  <strong>Sesión finalizada</strong>';
-            echo '                              </label>';
+            echo indent(07).'<label class="alert alert-warning col-md-4 col-md-offset-6 text-center">';
+            echo indent(34).'<strong>Sesión finalizada</strong>';
+            echo indent(30).'</label>';
         }
         else if($_SESSION['ns'] == 5){
-            echo '       <label class="alert alert-warning col-md-4 col-md-offset-6 text-center">';
-            echo '                                  <strong>Sesión no iniciada</strong>';
-            echo '                              </label>';
+            echo indent(07).'<label class="alert alert-warning col-md-4 col-md-offset-6 text-center">';
+            echo indent(34).'<strong>Sesión no iniciada</strong>';
+            echo indent(30).'</label>';
         }
         else echo '';
         $_SESSION   = array();
@@ -166,175 +166,179 @@ function validaEstadoLogin()
 }
 function navbar()
 {
-    echo '<nav class="navbar navbar-default nav-center" role="navigation">'."\xA";
-    echo '                    <div class="navbar-header">'."\xA";
-    echo '                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">'."\xA";
-    echo '                            <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>'."\xA";
-    echo '                        </button><a class="navbar-brand" href="default.php">ADMin</a>'."\xA";
-    echo '                    </div>'."\xA";
-    echo '                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">'."\xA";
-    echo '                        <ul class="nav navbar-nav">'."\xA";
-    echo '                            <li class="dropdown">'."\xA";
-    echo '                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>'."\xA";
-    echo '                                <ul class="dropdown-menu">'."\xA";
-    echo '                                    <li><a href="device.php">Ver todas las diademas en campaña</a></li>'."\xA";
-    echo '                                    <li><a href="device.php?ic=4">Ver diademas en stock</a></li>'."\xA";
-    echo '                                    <li><a href="device.php?ic=6">Ver diademas en reparación</a></li>'."\xA";
-    echo '                                    <li role="separator" class="divider"></li>'."\xA";
-    echo '                                    <li><a href="device.php?ic=1">Crear diadema</a></li>'."\xA";
-    echo '                                    <li><a href="device.php?ic=2">Realizar cambio</a></li>'."\xA";
-    echo '                                    <li><a href="device.php?ic=3">Recoger diademas</a></li>'."\xA";
-    echo '                                    <li><a href="device.php?ic=5">Envío a reparación</a></li>'."\xA";
-    echo '                                    <li><a href="device.php?ic=7">Recibir de reparación</a></li>'."\xA";
+    echo indent(00).'<nav class="navbar navbar-default nav-center" role="navigation">'."\xA";
+    echo indent(20).'<div class="navbar-header">'."\xA";
+    echo indent(24).'<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">'."\xA";
+    echo indent(28).'<span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>'."\xA";
+    echo indent(24).'</button><a class="navbar-brand" href="default.php">ADMin</a>'."\xA";
+    echo indent(20).'</div>'."\xA";
+    echo indent(20).'<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">'."\xA";
+    echo indent(24).'<ul class="nav navbar-nav">'."\xA";
+    echo indent(28).'<li class="dropdown">'."\xA";
+    echo indent(32).'<a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>'."\xA";
+    echo indent(32).'<ul class="dropdown-menu">'."\xA";
+    echo indent(36).'<li><a href="device.php">Ver todas las diademas en campaña</a></li>'."\xA";
+    echo indent(36).'<li><a href="device.php?ic=4">Ver diademas en stock</a></li>'."\xA";
+    echo indent(36).'<li><a href="device.php?ic=6">Ver diademas en reparación</a></li>'."\xA";
+    echo indent(36).'<li role="separator" class="divider"></li>'."\xA";
+    echo indent(36).'<li><a href="device.php?ic=1">Crear diadema</a></li>'."\xA";
+    echo indent(36).'<li><a href="device.php?ic=2">Realizar cambio</a></li>'."\xA";
+    echo indent(36).'<li><a href="device.php?ic=3">Recoger diademas</a></li>'."\xA";
+    echo indent(36).'<li><a href="device.php?ic=5">Envío a reparación</a></li>'."\xA";
+    echo indent(36).'<li><a href="device.php?ic=7">Recibir de reparación</a></li>'."\xA";
+    echo indent(36).'<li><a href="device.php?ic=8">Entregar a campaña</a></li>'."\xA";
+    
     if($_SESSION['id'] == "9002"){
-        echo '                                    <li role="separator" class="divider"></li>'."\xA";
-        echo '                                    <li><a href="cargardiademas.php">Cargar diademas</a></li>'."\xA";
+        echo indent(36).'<li role="separator" class="divider"></li>'."\xA";
+        echo indent(36).'<li><a href="cargardiademas.php">Cargar diademas</a></li>'."\xA";
     }
-    echo '                                </ul>'."\xA";
-    echo '                            </li>'."\xA";
-    echo '                            <li class="dropdown">'."\xA";
-    echo '                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Coordinadores<span class="caret"></span></a>'."\xA";
-    echo '                                <ul class="dropdown-menu">'."\xA";
-    echo '                                    <li><a href="default-opman.php?ic=0">Ver coordinadores</a></li>'."\xA";
-    echo '                                    <li class="divider"></li>'."\xA";
-    echo '                                    <li><a href="default-opman.php?ic=1">Crear</a></li>'."\xA";
-    echo '                                    <li><a href="default-opman.php?ic=2">Modificar</a></li>'."\xA";
-    echo '                                </ul>'."\xA";
-    echo '                            </li>'."\xA";
-    echo '                            <li class="dropdown">'."\xA";
-    echo '                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Campañas<span class="caret"></span></a>'."\xA";
-    echo '                                <ul class="dropdown-menu">'."\xA";
-    echo '                                    <li><a href="defaultcamp.php?ic=0">Ver campañas</a></li>'."\xA";
-    echo '                                    <li class="divider"></li>'."\xA";
-    echo '                                    <li><a href="defaultcamp.php?ic=1">Crear</a></li>'."\xA";
-    echo '                                    <li><a href="defaultcamp.php?ic=3">Modificar</a></li>'."\xA";
-    echo '                                </ul>'."\xA";
-    echo '                            </li>'."\xA";
-    echo '                            <li class="dropdown">'."\xA";
-    echo '                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Técnicos<span class="caret"></span></a>'."\xA";
-    echo '                                <ul class="dropdown-menu">'."\xA";
-    echo '                                    <li><a href="#">Ver técnicos</a></li>'."\xA";
-    echo '                                    <li class="divider"></li>'."\xA";
-    echo '                                    <li><a href="tecnico.php?ic=1">Crear</a></li>'."\xA";
-    echo '                                    <li><a href="#">Modificar</a></li>'."\xA";
-    echo '                                </ul>'."\xA";
-    echo '                            </li>'."\xA";
-    echo '                        </ul>'."\xA";
-    echo '                        <form class="navbar-form navbar-left" role="search">'."\xA";
-    echo '                            <div class="form-group">'."\xA";
-    echo '                                <input type="text" class="form-control">'."\xA";
-    echo '                            </div>'."\xA";
-    echo '                            <button type="submit" class="btn btn-default">'."\xA";
-    echo '                                Buscar coordinador'."\xA";
-    echo '                            </button>'."\xA";
-    echo '                        </form>'."\xA";
-    echo '                        <ul class="nav navbar-nav navbar-right">'."\xA";
-    echo '                            <li class="dropdown">'."\xA";
-    echo '                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">'."\xA";
-    echo '                                    <span class="caret"></span>'."\xA";
-    echo '                                    <span class="glyphicon glyphicon-user"></span> '.$_SESSION['nombres'].' '.$_SESSION['apellidos']."\xA";
-    echo '                                </a>'."\xA";
-    echo '                                <ul class="dropdown-menu">'."\xA";
-    echo '                                    <li><a href="infopersonal.php"><span class="glyphicon glyphicon-info-sign"></span> Ver información personal</a></li>'."\xA";
-    echo '                                    <li class="divider"></li>'."\xA";
-    echo '                                    <li><a href="logout.php?rol=0"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>'."\xA";
-    echo '                                </ul>'."\xA";
-    echo '                            </li>'."\xA";
-    echo '                        </ul>'."\xA";
-    echo '                    </div>'."\xA";
-    echo '                </nav>'."\xA";
+    
+    echo indent(32).'</ul>'."\xA";
+    echo indent(28).'</li>'."\xA";
+    echo indent(28).'<li class="dropdown">'."\xA";
+    echo indent(32).'<a class="dropdown-toggle" data-toggle="dropdown" href="#">Coordinadores<span class="caret"></span></a>'."\xA";
+    echo indent(32).'<ul class="dropdown-menu">'."\xA";
+    echo indent(36).'<li><a href="default-opman.php?ic=0">Ver coordinadores</a></li>'."\xA";
+    echo indent(36).'<li class="divider"></li>'."\xA";
+    echo indent(36).'<li><a href="default-opman.php?ic=1">Crear</a></li>'."\xA";
+    echo indent(36).'<li><a href="default-opman.php?ic=2">Modificar</a></li>'."\xA";
+    echo indent(32).'</ul>'."\xA";
+    echo indent(28).'</li>'."\xA";
+    echo indent(28).'<li class="dropdown">'."\xA";
+    echo indent(32).'<a class="dropdown-toggle" data-toggle="dropdown" href="#">Campañas<span class="caret"></span></a>'."\xA";
+    echo indent(32).'<ul class="dropdown-menu">'."\xA";
+    echo indent(36).'<li><a href="defaultcamp.php?ic=0">Ver campañas</a></li>'."\xA";
+    echo indent(36).'<li class="divider"></li>'."\xA";
+    echo indent(36).'<li><a href="defaultcamp.php?ic=1">Crear</a></li>'."\xA";
+    echo indent(36).'<li><a href="defaultcamp.php?ic=3">Modificar</a></li>'."\xA";
+    echo indent(32).'</ul>'."\xA";
+    echo indent(28).'</li>'."\xA";
+    echo indent(28).'<li class="dropdown">'."\xA";
+    echo indent(32).'<a class="dropdown-toggle" data-toggle="dropdown" href="#">Técnicos<span class="caret"></span></a>'."\xA";
+    echo indent(32).'<ul class="dropdown-menu">'."\xA";
+    echo indent(36).'<li><a href="#">Ver técnicos</a></li>'."\xA";
+    echo indent(36).'<li class="divider"></li>'."\xA";
+    echo indent(36).'<li><a href="tecnico.php?ic=1">Crear</a></li>'."\xA";
+    echo indent(36).'<li><a href="#">Modificar</a></li>'."\xA";
+    echo indent(32).'</ul>'."\xA";
+    echo indent(28).'</li>'."\xA";
+    echo indent(24).'</ul>'."\xA";
+    echo indent(24).'<form class="navbar-form navbar-left" role="search">'."\xA";
+    echo indent(28).'<div class="form-group">'."\xA";
+    echo indent(32).'<input type="text" class="form-control">'."\xA";
+    echo indent(28).'</div>'."\xA";
+    echo indent(28).'<button type="submit" class="btn btn-default">'."\xA";
+    echo indent(32).'Buscar coordinador'."\xA";
+    echo indent(28).'</button>'."\xA";
+    echo indent(24).'</form>'."\xA";
+    echo indent(24).'<ul class="nav navbar-nav navbar-right">'."\xA";
+    echo indent(28).'<li class="dropdown">'."\xA";
+    echo indent(32).'<a class="dropdown-toggle" data-toggle="dropdown" href="#">'."\xA";
+    echo indent(36).'<span class="caret"></span>'."\xA";
+    echo indent(36).'<span class="glyphicon glyphicon-user"></span> '.$_SESSION['nombres'].' '.$_SESSION['apellidos']."\xA";
+    echo indent(32).'</a>'."\xA";
+    echo indent(32).'<ul class="dropdown-menu">'."\xA";
+    echo indent(36).'<li><a href="infopersonal.php"><span class="glyphicon glyphicon-info-sign"></span> Ver información personal</a></li>'."\xA";
+    echo indent(36).'<li class="divider"></li>'."\xA";
+    echo indent(36).'<li><a href="logout.php?rol=0"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>'."\xA";
+    echo indent(32).'</ul>'."\xA";
+    echo indent(28).'</li>'."\xA";
+    echo indent(24).'</ul>'."\xA";
+    echo indent(20).'</div>'."\xA";
+    echo indent(16).'</nav>'."\xA";
 }
 function navbarCoordinadores()
 {
     echo '<nav class="navbar navbar-default" role="navigation">'."\xA";
-    echo '                    <div class="navbar-header">'."\xA";
-    echo '                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">'."\xA";
-    echo '                            <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>'."\xA";
-    echo '                        </button><a class="navbar-brand" href="default.php">COOrd</a>'."\xA";
-    echo '                    </div>'."\xA";
-    echo '                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">'."\xA";
-    echo '                        <ul class="nav navbar-nav">'."\xA";
-    echo '                            <li class="dropdown">'."\xA";
-    echo '                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>'."\xA";
-    echo '                                <ul class="dropdown-menu">'."\xA";
-    echo '                                    <li><a href="defaultdevice.php?ic=0">Ver lista de diademas</a></li>'."\xA";
-    echo '                                    <li class="divider"></li>'."\xA";
-    echo '                                    <li><a href="defaultdevice.php?ic=1">Crear diadema</a></li>'."\xA";
-    echo '                                    <li><a href="cambios.php">Solicitud de cambio</a></li>'."\xA";
-    echo '                                </ul>'."\xA";
-    echo '                            </li>'."\xA";
-    echo '                        </ul>'."\xA";
-    echo '                        <form class="navbar-form navbar-left" role="search">'."\xA";
-    echo '                            <div class="form-group">'."\xA";
-    echo '                                <input type="text" class="form-control">'."\xA";
-    echo '                            </div>'."\xA";
-    echo '                            <button type="submit" class="btn btn-default">'."\xA";
-    echo '                                Buscar diadema'."\xA";
-    echo '                            </button>'."\xA";
-    echo '                        </form>'."\xA";
-    echo '                        <ul class="nav navbar-nav navbar-right">'."\xA";
-    echo '                            <li class="dropdown">'."\xA";
-    echo '                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">'."\xA";
-    echo '                                    <span class="caret"></span>'."\xA";
-    echo '                                    <span class="glyphicon glyphicon-user"></span>'.$_SESSION['nombres'].' '.$_SESSION['apellidos']."\xA";
-    echo '                                </a>'."\xA";
-    echo '                                <ul class="dropdown-menu">'."\xA";
-    echo '                                    <li><a href="#"><span class="glyphicon glyphicon-info-sign"></span> Ver información personal</a></li>'."\xA";
-    echo '                                    <li class="divider"></li>'."\xA";
-    echo '                                    <li><a href="logout.php?rol=0"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>'."\xA";
-    echo '                                </ul>'."\xA";
-    echo '                            </li>'."\xA";
-    echo '                        </ul>'."\xA";
-    echo '                    </div>'."\xA";
-    echo '                </nav>'."\xA";
+    echo indent(20).'<div class="navbar-header">'."\xA";
+    echo indent(24).'<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">'."\xA";
+    echo indent(28).'<span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>'."\xA";
+    echo indent(24).'</button><a class="navbar-brand" href="default.php">COOrd</a>'."\xA";
+    echo indent(20).'</div>'."\xA";
+    echo indent(20).'<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">'."\xA";
+    echo indent(24).'<ul class="nav navbar-nav">'."\xA";
+    echo indent(28).'<li class="dropdown">'."\xA";
+    echo indent(32).'<a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>'."\xA";
+    echo indent(32).'<ul class="dropdown-menu">'."\xA";
+    echo indent(36).'<li><a href="defaultdevice.php?ic=0">Ver lista de diademas</a></li>'."\xA";
+    //echo '                                    <li class="divider"></li>'."\xA";
+    //echo '                                    <li><a href="defaultdevice.php?ic=1">Crear diadema</a></li>'."\xA";
+    //echo '                                    <li><a href="cambios.php">Solicitud de cambio</a></li>'."\xA";
+    echo indent(32).'</ul>'."\xA";
+    echo indent(28).'</li>'."\xA";
+    echo indent(24).'</ul>'."\xA";
+    echo indent(24).'<form class="navbar-form navbar-left" role="search">'."\xA";
+    echo indent(28).'<div class="form-group">'."\xA";
+    echo indent(32).'<input type="text" class="form-control">'."\xA";
+    echo indent(28).'</div>'."\xA";
+    echo indent(28).'<button type="submit" class="btn btn-default">'."\xA";
+    echo indent(32).'Buscar diadema'."\xA";
+    echo indent(28).'</button>'."\xA";
+    echo indent(24).'</form>'."\xA";
+    echo indent(24).'<ul class="nav navbar-nav navbar-right">'."\xA";
+    echo indent(28).'<li class="dropdown">'."\xA";
+    echo indent(32).'<a class="dropdown-toggle" data-toggle="dropdown" href="#">'."\xA";
+    echo indent(36).'<span class="caret"></span>'."\xA";
+    echo indent(36).'<span class="glyphicon glyphicon-user"></span>'.$_SESSION['nombres'].' '.$_SESSION['apellidos']."\xA";
+    echo indent(32).'</a>'."\xA";
+    echo indent(32).'<ul class="dropdown-menu">'."\xA";
+    echo indent(36).'<li><a href="#"><span class="glyphicon glyphicon-info-sign"></span> Ver información personal</a></li>'."\xA";
+    echo indent(36).'<li class="divider"></li>'."\xA";
+    echo indent(36).'<li><a href="logout.php?rol=0"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>'."\xA";
+    echo indent(32).'</ul>'."\xA";
+    echo indent(28).'</li>'."\xA";
+    echo indent(24).'</ul>'."\xA";
+    echo indent(20).'</div>'."\xA";
+    echo indent(16).'</nav>'."\xA";
 }
 function navbarTecnico()
 {
     echo '<nav class="navbar navbar-default" role="navigation">'."\xA";
-    echo '                    <div class="navbar-header">'."\xA";
-    echo '                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">'."\xA";
-    echo '                            <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>'."\xA";
-    echo '                        </button><a class="navbar-brand" href="default.php">TEcn</a>'."\xA";
-    echo '                    </div>'."\xA";
-    echo '                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">'."\xA";
-    echo '                        <ul class="nav navbar-nav">'."\xA";
-    echo '                            <li class="dropdown">'."\xA";
-    echo '                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>'."\xA";
-    echo '                                <ul class="dropdown-menu">'."\xA";
-    echo '                                    <li><a href="tecdev.php?ic=0">Ver lista de diademas en stock</a></li>'."\xA";
-    echo '                                    <li class="divider"></li>'."\xA";
-    echo '                                    <li><a href="tecdev.php?ic=1">Crear diadema</a></li>'."\xA";
-    echo '                                    <li><a href="tecdev.php?ic=2">Cambiar diadema</a></li>'."\xA";
-    echo '                                    <li><a href="tecdev.php?ic=3">Recoger diademas</a></li>'."\xA";
-    echo '                                    <li class="divider"></li>'."\xA";
-    echo '                                    <li><a href="tecdev.php?ic=4">Enviar a reparación</a></li>'."\xA";
-    echo '                                    <li><a href="tecdev.php?ic=5">Recibir de reparación</a></li>'."\xA";
-    echo '                                </ul>'."\xA";
-    echo '                            </li>'."\xA";
-    echo '                        </ul>'."\xA";
-    echo '                        <form class="navbar-form navbar-left" role="search">'."\xA";
-    echo '                            <div class="form-group">'."\xA";
-    echo '                                <input type="text" class="form-control">'."\xA";
-    echo '                            </div>'."\xA";
-    echo '                            <button type="submit" class="btn btn-default">'."\xA";
-    echo '                                Buscar diadema'."\xA";
-    echo '                            </button>'."\xA";
-    echo '                        </form>'."\xA";
-    echo '                        <ul class="nav navbar-nav navbar-right">'."\xA";
-    echo '                            <li class="dropdown">'."\xA";
-    echo '                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">'."\xA";
-    echo '                                    <span class="caret"></span>'."\xA";
-    echo '                                    <span class="glyphicon glyphicon-user"></span> '.$_SESSION['nombres'].' '.$_SESSION['apellidos']."\xA";
-    echo '                                </a>'."\xA";
-    echo '                                <ul class="dropdown-menu">'."\xA";
-    echo '                                    <li><a href="#"><span class="glyphicon glyphicon-info-sign"></span> Ver información personal</a></li>'."\xA";
-    echo '                                    <li class="divider"></li>'."\xA";
-    echo '                                    <li><a href="logout.php?rol=0"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>'."\xA";
-    echo '                                </ul>'."\xA";
-    echo '                            </li>'."\xA";
-    echo '                        </ul>'."\xA";
-    echo '                    </div>'."\xA";
-    echo '                </nav>'."\xA";
+    echo indent(20).'<div class="navbar-header">'."\xA";
+    echo indent(24).'<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">'."\xA";
+    echo indent(28).'<span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>'."\xA";
+    echo indent(24).'</button><a class="navbar-brand" href="default.php">TEcn</a>'."\xA";
+    echo indent(20).'</div>'."\xA";
+    echo indent(20).'<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">'."\xA";
+    echo indent(24).'<ul class="nav navbar-nav">'."\xA";
+    echo indent(28).'<li class="dropdown">'."\xA";
+    echo indent(32).'<a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>'."\xA";
+    echo indent(32).'<ul class="dropdown-menu">'."\xA";
+    echo indent(36).'<li><a href="tecdev.php?ic=0">Ver lista de diademas en stock</a></li>'."\xA";
+    echo indent(36).'<li class="divider"></li>'."\xA";
+    echo indent(36).'<li><a href="tecdev.php?ic=1">Crear diadema</a></li>'."\xA";
+    echo indent(36).'<li><a href="tecdev.php?ic=2">Cambiar diadema</a></li>'."\xA";
+    echo indent(36).'<li><a href="tecdev.php?ic=3">Recoger diademas</a></li>'."\xA";
+    echo indent(36).'<li class="divider"></li>'."\xA";
+    echo indent(36).'<li><a href="tecdev.php?ic=4">Enviar a reparación</a></li>'."\xA";
+    echo indent(36).'<li><a href="tecdev.php?ic=5">Recibir de reparación</a></li>'."\xA";
+    echo indent(36).'<li><a href="tecdev.php?ic=6">Entregar a campaña</a></li>'."\xA";
+    echo indent(32).'</ul>'."\xA";
+    echo indent(28).'</li>'."\xA";
+    echo indent(24).'</ul>'."\xA";
+    echo indent(24).'<form class="navbar-form navbar-left" role="search">'."\xA";
+    echo indent(28).'<div class="form-group">'."\xA";
+    echo indent(32).'<input type="text" class="form-control">'."\xA";
+    echo indent(28).'</div>'."\xA";
+    echo indent(28).'<button type="submit" class="btn btn-default">'."\xA";
+    echo indent(32).'Buscar diadema'."\xA";
+    echo indent(28).'</button>'."\xA";
+    echo indent(24).'</form>'."\xA";
+    echo indent(24).'<ul class="nav navbar-nav navbar-right">'."\xA";
+    echo indent(28).'<li class="dropdown">'."\xA";
+    echo indent(32).'<a class="dropdown-toggle" data-toggle="dropdown" href="#">'."\xA";
+    echo indent(36).'<span class="caret"></span>'."\xA";
+    echo indent(36).'<span class="glyphicon glyphicon-user"></span> '.$_SESSION['nombres'].' '.$_SESSION['apellidos']."\xA";
+    echo indent(32).'</a>'."\xA";
+    echo indent(32).'<ul class="dropdown-menu">'."\xA";
+    echo indent(36).'<li><a href="#"><span class="glyphicon glyphicon-info-sign"></span> Ver información personal</a></li>'."\xA";
+    echo indent(36).'<li class="divider"></li>'."\xA";
+    echo indent(36).'<li><a href="logout.php?rol=0"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>'."\xA";
+    echo indent(32).'</ul>'."\xA";
+    echo indent(28).'</li>'."\xA";
+    echo indent(24).'</ul>'."\xA";
+    echo indent(20).'</div>'."\xA";
+    echo indent(16).'</nav>'."\xA";
 }
 function crearCoordinadores()
 {
@@ -486,192 +490,193 @@ function comprobarAdmin()
 }
 function crearDiadema()
 {
-    echo '<form class="form-horizontal" role="form" action="crear_diadema.php" method="post">'."\xA";
-    echo '                                                <div align="center">'."\xA";
-    echo '                                                    <p class="text-left"><small>Utilice esta opción para crear dispositivos.</small></p>'."\xA";
-    echo '                                                    <!--Formulario-->'."\xA";
-    echo '                                                    <div class="form-group">'."\xA";
-    echo '                                                        <label for="serial" class="col-md-4 control-label">Serial:</label>'."\xA";
-    echo '                                                        <div class="col-md-6">'."\xA";
-    echo '                                                            <input type="text" data-toggle="tooltip" title="<br><img src='.$diadema.'><br><br>Verifique el consecutivo grabado en la bocina de la diadema.<br><br>" class="form-control back-tooltips" rel="serial" id="serial" name="serial" autocomplete="off" placeholder="Consecutivo grabado en el auricular" required autofocus>'."\xA";
-    echo '                                                        </div>'."\xA";
-    echo '                                                    </div>'."\xA";
-    echo '                                                    <div class="form-group">'."\xA";
-    echo '                                                        <label for="nombres" class="col-md-4 control-label">Nombre(s) y apellidos o Dirección IP: </label>'."\xA";
-    echo '                                                        <div class="col-md-6">'."\xA";
-    echo '                                                            <input type="text" data-toggle="tooltip" title="Si la diadema es fija, ingrese la dirección IP. Si fue asignada a un agente, ingrese los nombres y apellidos de este." class="form-control back-tooltip" id="nombres" name="nombres" placeholder="Nombres o dirección IP" required autocomplete="off">'."\xA";
-    echo '                                                        </div>'."\xA";
-    echo '                                                    </div>'."\xA";
-    echo '                                                    <div class="form-group">'."\xA";
-    echo '                                                        <label for="marca" class="col-md-4 control-label">Marca:</label>'."\xA";
-    echo '                                                        <div class="col-md-4">'."\xA";
-    echo '                                                            <select id="marca" name="marca" class="selectpicker" data-live-search="true" title="Seleccione una marca" data-width="355px" required>'."\xA";
-    echo '                                                                <option value="Jabra">Jabra</option>'."\xA";
-    echo '                                                                <option value="Plantronics">Plantronics</option>'."\xA";
-    echo '                                                                <option value="China">China</option>'."\xA";
-    echo '                                                            </select>'."\xA";
-    echo '                                                        </div>'."\xA";
-    echo '                                                    </div>'."\xA";
-    echo '                                                    <div class="form-group">'."\xA";
-    echo '                                                        <label for="serialnumber" class="col-sm-4 control-label">S/N: </label>'."\xA";
-    echo '                                                        <div class="col-md-6">'."\xA";
-    echo '                                                            <input type="text" data-toggle="tooltip" title="<br><img src='.$jabra.'><br><br>Si la diadema es marca Jabra, ubique el S/N e ingreselo.<br><br>" class="form-control bfh-number back-tooltip" name="serialnumber" id="serialnumber" autocomplete="off" disabled required>'."\xA";
-    echo '                                                        </div>'."\xA";
-    echo '                                                    </div>'."\xA";
-    echo '                                                    <div class="form-group">'."\xA";
-    echo '                                                        <div class="col-md-10" align="right">'."\xA";
-    echo '                                                            <fieldset>'."\xA";
-                                                                      if(isset($_GET['ag'])){
-                                                                          $padding = 25;
-                                                                          if($_GET['ag'] == 0){
-    echo '                                                                <label for="agregar" class="alert alert-danger col-md-4 col-md-offset-5 text-center" style="padding: 15px;">'."\xA";
-    echo '                                                                    <strong>Error: Serial '.$_GET["sd"].' duplicado</strong>'."\xA";
-    echo '                                                                </label>'."\xA";
-                                                                          }else if($_GET['ag'] == 1){
-    echo '                                                                <label for="agregar" class="alert alert-success col-md-4 col-md-offset-5 text-center" style="padding: 15px;">'."\xA";
-    echo '                                                                    <strong>Diadema '.$_GET["sd"].' agregada correctamente</strong>'."\xA";
-    echo '                                                                </label>'."\xA";
-                                                                          }
-                                                                      }
-    echo '                                                                <button type="submit" class="btn btn-success" id="agregar" name="agregar" style="padding: '.$padding.'px;">Agregar</button>'."\xA";
-    echo '                                                            </fieldset>'."\xA";
-    echo '                                                        </div>'."\xA";
-    echo '                                                    </div>'."\xA";
-    echo '                                                </div>'."\xA";
-    echo '                                            </form>'."\xA";
-    echo '                                            <script>'."\xA";
-    echo '                                                $("#marca").on("changed.bs.select", function(e) {'."\xA";
-    echo '                                                    var val = $("#marca").val();'."\xA";
-    echo '                                                    if (val == "Jabra") $("#serialnumber").prop("disabled", false);'."\xA";
-    echo '                                                    else $("#serialnumber").prop("disabled", true);'."\xA";
-    echo '                                                });'."\xA";
-    echo '                                            </script>'."\xA";
+    echo            '<form class="form-horizontal" role="form" action="crear_diadema.php" method="post">'."\xA";
+    echo indent(48).'<div align="center">'."\xA";
+    echo indent(52).'<p class="text-left"><small>Utilice esta opción para crear dispositivos.</small></p>'."\xA";
+    echo indent(52).'<!--Formulario-->'."\xA";
+    echo indent(52).'<div class="form-group">'."\xA";
+    echo indent(56).'<label for="serial" class="col-md-4 control-label">Serial:</label>'."\xA";
+    echo indent(56).'<div class="col-md-6">'."\xA";
+    echo indent(60).'<input type="text" data-toggle="tooltip" title="<br><img src='.$diadema.'><br><br>Verifique el consecutivo grabado en la bocina de la diadema.<br><br>" class="form-control back-tooltips" rel="serial" id="serial" name="serial" autocomplete="off" placeholder="Consecutivo grabado en el auricular" required autofocus>'."\xA";
+    echo indent(56).'</div>'."\xA";
+    echo indent(52).'</div>'."\xA";
+    echo indent(52).'<div class="form-group">'."\xA";
+    echo indent(56).'<label for="nombres" class="col-md-4 control-label">Nombre(s) y apellidos o Dirección IP: </label>'."\xA";
+    echo indent(56).'<div class="col-md-6">'."\xA";
+    echo indent(60).'<input type="text" data-toggle="tooltip" title="Si la diadema es fija, ingrese la dirección IP. Si fue asignada a un agente, ingrese los nombres y apellidos de este." class="form-control back-tooltip" id="nombres" name="nombres" placeholder="Nombres o dirección IP" required autocomplete="off">'."\xA";
+    echo indent(56).'</div>'."\xA";
+    echo indent(52).'</div>'."\xA";
+    echo indent(52).'<div class="form-group">'."\xA";
+    echo indent(56).'<label for="marca" class="col-md-4 control-label">Marca:</label>'."\xA";
+    echo indent(56).'<div class="col-md-4">'."\xA";
+    echo indent(60).'<select id="marca" name="marca" class="selectpicker" data-live-search="true" title="Seleccione una marca" data-width="355px" required>'."\xA";
+    echo indent(64).'<option value="Jabra">Jabra</option>'."\xA";
+    echo indent(64).'<option value="Plantronics">Plantronics</option>'."\xA";
+    echo indent(64).'<option value="China">China</option>'."\xA";
+    echo indent(60).'</select>'."\xA";
+    echo indent(56).'</div>'."\xA";
+    echo indent(52).'</div>'."\xA";
+    echo indent(52).'<div class="form-group">'."\xA";
+    echo indent(56).'<label for="serialnumber" class="col-sm-4 control-label">S/N: </label>'."\xA";
+    echo indent(56).'<div class="col-md-6">'."\xA";
+    echo indent(60).'<input type="text" data-toggle="tooltip" title="<br><img src='.$jabra.'><br><br>Si la diadema es marca Jabra, ubique el S/N e ingreselo.<br><br>" class="form-control bfh-number back-tooltip" name="serialnumber" id="serialnumber" autocomplete="off" disabled required>'."\xA";
+    echo indent(56).'</div>'."\xA";
+    echo indent(52).'</div>'."\xA";
+    echo indent(52).'<div class="form-group">'."\xA";
+    echo indent(56).'<div class="col-md-10" align="right">'."\xA";
+    echo indent(60).'<fieldset>'."\xA";
+
+    if(isset($_GET['ag'])){
+        $padding = 25;
+        if($_GET['ag'] == 0){
+            echo indent(64).'<label for="agregar" class="alert alert-danger col-md-4 col-md-offset-5 text-center" style="padding: 15px;">'."\xA";
+            echo indent(68).'<strong>Error: Serial '.$_GET["sd"].' duplicado</strong>'."\xA";
+            echo indent(64).'</label>'."\xA";
+        }
+        else if($_GET['ag'] == 1){
+            echo indent(64).'<label for="agregar" class="alert alert-success col-md-4 col-md-offset-5 text-center" style="padding: 15px;">'."\xA";
+            echo indent(68).'<strong>Diadema '.$_GET["sd"].' agregada correctamente</strong>'."\xA";
+            echo indent(64).'</label>'."\xA";
+        }
+    }
+
+    echo indent(64).'<button type="submit" class="btn btn-success" id="agregar" name="agregar" style="padding: '.$padding.'px;">Agregar</button>'."\xA";
+    echo indent(60).'</fieldset>'."\xA";
+    echo indent(56).'</div>'."\xA";
+    echo indent(52).'</div>'."\xA";
+    echo indent(48).'</div>'."\xA";
+    echo indent(44).'</form>'."\xA";
+    echo indent(44).'<script>'."\xA";
+    echo indent(48).'$("#marca").on("changed.bs.select", function(e) {'."\xA";
+    echo indent(52).'var val = $("#marca").val();'."\xA";
+    echo indent(52).'if (val == "Jabra") $("#serialnumber").prop("disabled", false);'."\xA";
+    echo indent(52).'else $("#serialnumber").prop("disabled", true);'."\xA";
+    echo indent(48).'});'."\xA";
+    echo indent(44).'</script>'."\xA";
 }
 function verDiadema($opcion)
 {
-    $listaCampaigns     = getListaCampaigns();
+    $listaCampaigns                       = getListaCampaigns();
     if($opcion == "0"){
-        $listaCoordinadores = getListaCoordinadores();
-        $idcamps            = array_keys($listaCampaigns);
-        $cant               = getCantidadDiademasPorCampaign();
-    }else if($opcion == "1"){
-        $cant['6118'] = getDiademasEnStock();
-    }else if($opcion == "2"){
-        $cant['6118'] = getDiademasEnReparacion();
+        $listaCoordinadores               = getListaCoordinadores();
+        $idcamps                          = array_keys($listaCampaigns);
+        $cant                             = getCantidadDiademasPorCampaign();
     }
+    else if($opcion == "1") $cant['6118'] = getDiademasEnStock();
+    else if($opcion == "2") $cant['6118'] = getDiademasEnReparacion();
     
     $inner = '<center><a href="exportardiademas.php" class="text-success">Descargar en formato .xls<span class="glyphicon glyphicon-download-alt"></span></a></center><br>';
-    echo '    <form class="form-horizontal" role="form">'."\xA";
+    echo indent(4).'<form class="form-horizontal" role="form">'."\xA";
     if($_SESSION['rol'] == 0 && $opcion != "1" && $opcion != "2"){
-        echo "                                                <script>\xA";
-        echo"                                                    document.getElementById('exportar').innerHTML = '".$inner."';\xA";
-        echo "                                                </script>\xA";
-        echo '                                                <div class="form-group">'."\xA";
-        echo '                                                    <label for="selectorCampaign" class="col-md-4 control-label">Listar por campaña:</label>'."\xA";
-        echo '                                                    <div class="col-md-4">'."\xA";
+        echo indent(48)."<script>\xA";
+        echo indent(52)."document.getElementById('exportar').innerHTML = '".$inner."';\xA";
+        echo indent(48)."</script>\xA";
+        echo indent(48).'<div class="form-group">'."\xA";
+        echo indent(52).'<label for="selectorCampaign" class="col-md-4 control-label">Listar por campaña:</label>'."\xA";
+        echo indent(52).'<div class="col-md-4">'."\xA";
         // ------ Opciones selector de campaña ------- //    
-        echo '                                                        <select data-size="7" id="selectorCampaign" name="selectorCampaign" class="selectpicker form-control" data-live-search="true" title="Seleccione una campaña" required autocomplete="off" data-width="355px">'."\xA";
-        echo '                                                            <option value="Todas las campañas">Todas las campañas</option>'."\xA";
+        echo indent(56).'<select data-size="7" id="selectorCampaign" name="selectorCampaign" class="selectpicker form-control" data-live-search="true" title="Seleccione una campaña" required autocomplete="off" data-width="355px">'."\xA";
+        echo indent(60).'<option value="Todas las campañas">Todas las campañas</option>'."\xA";
 
         for($i = 0; $i < count($idcamps); $i++){
             $idcamp     = $idcamps[$i];
             if($idcamp != "6118"){
                 $nombrecamp = $listaCampaigns[$idcamp]['nombre'];
-                echo '                                                            <option value="'.$idcamp.'">'.$nombrecamp.'</option>'."\xA";
+                echo indent(60).'<option value="'.$idcamp.'">'.$nombrecamp.'</option>'."\xA";
             }
         }
-        echo '                                                        </select>'."\xA";
-        echo '                                                    </div>'."\xA";
-        echo '                                                </div>'."\xA";
+        echo indent(56).'</select>'."\xA";
+        echo indent(52).'</div>'."\xA";
+        echo indent(48).'</div>'."\xA";
     }
-        echo '                                                <h4 id="campseleccionada">&nbsp;</h4>';
+        echo indent(48).'<h4 id="campseleccionada">&nbsp;</h4>';
         
     for($i = 0; $i < count($listaCampaigns); $i++){
         if($_SESSION['rol'] == "0"){
-            if($opcion == "1" || $opcion == "2")    $camp = "6118";
+            if($opcion == "1" || $opcion == "2") $camp = "6118";
             else{
-                if(!isset($_GET['camplist']))       $camp = $idcamps[$i];
-                else                                $camp = $_GET['camplist'];
+                if(!isset($_GET['camplist']))    $camp = $idcamps[$i];
+                else                             $camp = $_GET['camplist'];
             }
         }else{
-            if($opcion == "1" || $opcion == "2")    $camp = "6118";
-            else                                    $camp = $_SESSION['campid'];
+            if($opcion == "1" || $opcion == "2") $camp = "6118";
+            else if($opcion == "100")            $camp = $_SESSION['campid'];
         }
         for($j = 0; $j < count($cant[$camp]); $j++){
-            $diadema                      = $cant[$camp][$j];
-            $idcoord                      = end($diadema['resumen'])['coordinador_id'];
-            $nombreAg                     = end($diadema['resumen'])['nombresAg'];
-            $ip                           = end($diadema['resumen'])['ipequipo'];
-            $estado                       = end($diadema['resumen'])['estado'];
-            $nombrecamp                   = $listaCampaigns[$camp]['nombre'];
-            $nombrecoord                  = $listaCoordinadores[$idcoord]['nombre'];
-            $marca                        = $diadema['Marca'];
-            $id                           = $diadema['_id'];
-
-            if($estado == "1" || ($opcion == "1" || $opcion == "2")){
+            $diadema     = $cant[$camp][$j];
+            $idcoord     = end($diadema['resumen'])['coordinador_id'];
+            $nombreAg    = end($diadema['resumen'])['nombresAg'];
+            $ip          = end($diadema['resumen'])['ipequipo'];
+            $estado      = end($diadema['resumen'])['estado'];
+            $nombrecamp  = $listaCampaigns[$camp]['nombre'];
+            $nombrecoord = $listaCoordinadores[$idcoord]['nombre'];
+            $marca       = $diadema['Marca'];
+            $id          = $diadema['_id'];
+            if($estado == "1" || ($opcion == "1" || $opcion == "2" || $opcion == "100")){
                 echo '<div class="form-group">'."\xA";
-                echo '                                                    <div>'."\xA";
-                echo '                                                        <label for="iddiadema" class="col-md-3 control-label">Consecutivo:</label>'."\xA";
-                echo '                                                        <div class="col-md-9 ">'."\xA";
-                echo '                                                            <input type="text" class="form-control" rel="iddiadema" id="iddiadema" name="iddiadema" value="'.$id.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
-                echo '                                                        </div>'."\xA";
+                echo indent(52).'<div>'."\xA";
+                echo indent(56).'<label for="iddiadema" class="col-md-3 control-label">Consecutivo:</label>'."\xA";
+                echo indent(56).'<div class="col-md-9 ">'."\xA";
+                echo indent(60).'<input type="text" class="form-control" rel="iddiadema" id="iddiadema" name="iddiadema" value="'.$id.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+                echo indent(56).'</div>'."\xA";
 
                 if($opcion != "1" && $opcion != "2"){
-                    echo '                                                        <label for="ip" class="col-md-3 control-label">IP del equipo:</label>'."\xA";
-                    echo '                                                        <div class="col-md-9">'."\xA";
-                    echo '                                                            <input type="text" class="form-control" rel="ip" id="ip" name="ip" value="'.$ip.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
-                    echo '                                                        </div>'."\xA";
+                    echo indent(56).'<label for="ip" class="col-md-3 control-label">IP del equipo:</label>'."\xA";
+                    echo indent(56).'<div class="col-md-9">'."\xA";
+                    echo indent(60).'<input type="text" class="form-control" rel="ip" id="ip" name="ip" value="'.$ip.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+                    echo indent(56).'</div>'."\xA";
                 }
 
-                echo '                                                        <label for="marca" class="col-md-3 control-label">Marca:</label>'."\xA";
-                echo '                                                        <div class="col-md-9">'."\xA";
-                echo '                                                            <input type="text" class="form-control" rel="marca" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
-                echo '                                                        </div>'."\xA";
+                echo indent(56).'<label for="marca" class="col-md-3 control-label">Marca:</label>'."\xA";
+                echo indent(56).'<div class="col-md-9">'."\xA";
+                echo indent(60).'<input type="text" class="form-control" rel="marca" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+                echo indent(56).'</div>'."\xA";
 
                 if($_SESSION['rol'] == 0){
                     if(!isset($_GET['camplist'])){
-                        echo '                                                        <label for="campaign" class="col-md-3 control-label">Campaña:</label>'."\xA";
-                        echo '                                                        <div class="col-md-9">'."\xA";
-                        echo '                                                            <input type="text" class=" form-control" rel="campaign" id="campaign" name="campaign" value="'.$nombrecamp.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
-                        echo '                                                        </div>'."\xA";
+                        echo indent(56).'<label for="campaign" class="col-md-3 control-label">Campaña:</label>'."\xA";
+                        echo indent(56).'<div class="col-md-9">'."\xA";
+                        echo indent(60).'<input type="text" class=" form-control" rel="campaign" id="campaign" name="campaign" value="'.$nombrecamp.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+                        echo indent(56).'</div>'."\xA";
                     }
                     if($opcion != "1" && $opcion != "2"){
-                        echo '                                                        <label for="nombrecoord" class="col-md-3 control-label">Nombre del coordinador:</label>'."\xA";
-                        echo '                                                        <div class="col-md-9">'."\xA";
-                        echo '                                                            <input type="text" class=" form-control" rel="nombrecoord" id="nombrecoord" name="nombrecoord" value="'.$nombrecoord.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
-                        echo '                                                        </div>'."\xA";
+                        echo indent(56).'<label for="nombrecoord" class="col-md-3 control-label">Nombre del coordinador:</label>'."\xA";
+                        echo indent(56).'<div class="col-md-9">'."\xA";
+                        echo indent(60).'<input type="text" class=" form-control" rel="nombrecoord" id="nombrecoord" name="nombrecoord" value="'.$nombrecoord.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+                        echo indent(56).'</div>'."\xA";
                     }
                 }
-                echo '                                                    </div>'."\xA";
-                echo '                                                </div>'."\xA";
+                echo indent(52).'</div>'."\xA";
+                echo indent(48).'</div>'."\xA";
             }
         }
         if(isset($_GET['camplist']))
             break 1;
-        elseif(isset($_SESSION['campid'])  || $opcion == "1" || $opcion == "2")
+        elseif(isset($_SESSION['campid']) || $opcion == "1" || $opcion == "2")
             break;
     }
     if($opcion == "0"){
-        echo '                                                <script>'."\xA";
-        echo '                                                    $("#selectorCampaign").on("changed.bs.select", function (e) {'."\xA";
-        echo '                                                        var val = $("#selectorCampaign").val();'."\xA";
-        echo '                                                        if(val == "Todas las campañas")'."\xA";
-        echo '                                                        {'."\xA";
-        echo '                                                            window.location.href = "device.php?ic=0";'."\xA";
-        echo '                                                        }'."\xA";
-        echo '                                                        else'."\xA";
-        echo '                                                        {'."\xA";
-        echo '                                                            window.location.href = "device.php?ic=0&camplist="+val;'."\xA";
-        echo '                                                        }'."\xA";
-        echo '                                                    });'."\xA";
-        echo '                                                </script>'."\xA";   
-        echo '                                            </form>' . "\xA";
+        echo indent(48).'<script>'."\xA";
+        echo indent(52).'$("#selectorCampaign").on("changed.bs.select", function (e) {'."\xA";
+        echo indent(56).'var val = $("#selectorCampaign").val();'."\xA";
+        echo indent(56).'if(val == "Todas las campañas")'."\xA";
+        echo indent(56).'{'."\xA";
+        echo indent(60).'window.location.href = "device.php?ic=0";'."\xA";
+        echo indent(56).'}'."\xA";
+        echo indent(56).'else'."\xA";
+        echo indent(56).'{'."\xA";
+        echo indent(60).'window.location.href = "device.php?ic=0&camplist="+val;'."\xA";
+        echo indent(56).'}'."\xA";
+        echo indent(52).'});'."\xA";
+        echo indent(48).'</script>'."\xA";   
+        echo indent(44).'</form>' . "\xA";
     }
-    if(isset($_GET['camplist']))    echo '                                        <script>document.getElementById("campseleccionada").innerHTML = "'.$listaCampaigns[$_GET['camplist']]['nombre'].' ('.count( $cant[$_GET['camplist']] ).')"; </script>'."\xA";
+    if(isset($_GET['camplist'])) echo indent(40).'<script>document.getElementById("campseleccionada").innerHTML = "'.$listaCampaigns[$_GET['camplist']]['nombre'].' ('.count( $cant[$_GET['camplist']] ).')"; </script>'."\xA";
     else{
-        if($opcion == "0")          echo '                                        <script>document.getElementById("campseleccionada").innerHTML = "Todas las campañas ('.getTotalDiademas().')"; </script>'."\xA";
-        else if($opcion == "1")     echo '                                        <script>document.getElementById("campseleccionada").innerHTML = "Cantidad de diademas que se encuentran en la oficina de Mantenimiento: '.count($cant['6118']).'"; </script>'."\xA";
-        else if($opcion == "2")     echo '                                        <script>document.getElementById("campseleccionada").innerHTML = "En reparación ('.count($cant['6118']).')"; </script>'."\xA";
+        if($opcion == "0")       echo indent(40).'<script>document.getElementById("campseleccionada").innerHTML = "Todas las campañas ('.getTotalDiademas().')"; </script>'."\xA";
+        else if($opcion == "1")  echo indent(40).'<script>document.getElementById("campseleccionada").innerHTML = "Cantidad de diademas que se encuentran en la oficina de Mantenimiento: '.count($cant['6118']).'"; </script>'."\xA";
+        else if($opcion == "2")  echo indent(40).'<script>document.getElementById("campseleccionada").innerHTML = "En reparación ('.count($cant['6118']).')"; </script>'."\xA";
+        else                     echo indent(40).'<script>document.getElementById("campseleccionada").innerHTML = "'.$listaCampaigns[$camp]['nombre'].' ('.count(getCantidadDiademasPorCampaign()[$camp]).')"; </script>'."\xA";
     }
 }
 function crearCamp()
@@ -680,51 +685,56 @@ function crearCamp()
     $conn = fSesion();
     $sql = "select id_ubicacion, nombre_ubicacion from ubicaciones order by nombre_ubicacion asc";
     $stmt = sqlsrv_query($conn, $sql);
-    echo '<form class="form-horizontal" role="form" action="crear_camp.php" method="post">' . "\xA";
-    echo '  <div align="center">' . "\xA";
-    echo '                    <!--Formulario-->';
-    echo '    <div class="form-group">' . "\xA";
-    echo '      <label for="idcamp" class="col-md-4 control-label">ID:</label>' . "\xA";
-    echo '        <div class="col-md-6">' . "\xA";
-    echo '          <input type="text" class="form-control back-tooltips" id="idcamp" name="idcamp" autocomplete="off" placeholder="Ingrese el identificador de la campaña" required autofocus>' . "\xA";
-    echo '        </div>' . "\xA";
-    echo '    </div>' . "\xA";
-    echo '    <div class="form-group">' . "\xA";
-    echo '      <label for="nombre" class="col-md-4 control-label">Nombre: </label>';
-    echo '        <div class="col-md-6">' . "\xA";
-    echo '          <input type="text" class="form-control back-tooltip" id="nombre" name="nombre" placeholder="Nombre de la campaña" autocomplete="off" required>' . "\xA";
-    echo '        </div>' . "\xA";
-    echo '    </div>' . "\xA";
-    echo '    <div class="form-group">' . "\xA";
-    echo '      <label for="sede" class="col-md-4 control-label">Sede:</label>' . "\xA";
-    echo '        <div class="col-md-4">' . "\xA";
-    echo '          <select id="sede" name="sede" class="selectpicker" data-live-search="true" title="Sede en donde se encuentra la campaña" data-width="355px" required>' . "\xA";
-                        while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)){
-    echo '              <option value="'.$row['id_ubicacion'].'">'.$row['nombre_ubicacion'].'</option>';
-                        }
-    echo '          </select>' . "\xA";
-    echo '        </div>' . "\xA";
-    echo '    </div>' . "\xA";
-    echo '    <div class="form-group">' . "\xA";
-    echo '      <div class="col-md-10" align="right">' . "\xA";
-    echo '        <fieldset>' . "\xA";
+    
+    echo            '<form class="form-horizontal" role="form" action="crear_camp.php" method="post">' . "\xA";
+    echo indent(02).'<div align="center">' . "\xA";
+    echo indent(20).'<!--Formulario-->';
+    echo indent(04).'<div class="form-group">' . "\xA";
+    echo indent(06).'<label for="idcamp" class="col-md-4 control-label">ID:</label>' . "\xA";
+    echo indent(08).'<div class="col-md-6">' . "\xA";
+    echo indent(10).'<input type="text" class="form-control back-tooltips" id="idcamp" name="idcamp" autocomplete="off" placeholder="Ingrese el identificador de la campaña" required autofocus>' . "\xA";
+    echo indent(08).'</div>' . "\xA";
+    echo indent(04).'</div>' . "\xA";
+    echo indent(04).'<div class="form-group">' . "\xA";
+    echo indent(06).'<label for="nombre" class="col-md-4 control-label">Nombre: </label>';
+    echo indent(08).'<div class="col-md-6">' . "\xA";
+    echo indent(10).'<input type="text" class="form-control back-tooltip" id="nombre" name="nombre" placeholder="Nombre de la campaña" autocomplete="off" required>' . "\xA";
+    echo indent(08).'</div>' . "\xA";
+    echo indent(04).'</div>' . "\xA";
+    echo indent(04).'<div class="form-group">' . "\xA";
+    echo indent(06).'<label for="sede" class="col-md-4 control-label">Sede:</label>' . "\xA";
+    echo indent(08).'<div class="col-md-4">' . "\xA";
+    echo indent(10).'<select id="sede" name="sede" class="selectpicker" data-live-search="true" title="Sede en donde se encuentra la campaña" data-width="355px" required>' . "\xA";
+    
+    while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)){
+        echo indent(14).'<option value="'.$row['id_ubicacion'].'">'.$row['nombre_ubicacion'].'</option>';
+    }
+    
+    echo indent(10).'</select>' . "\xA";
+    echo indent(08).'</div>' . "\xA";
+    echo indent(04).'</div>' . "\xA";
+    echo indent(04).'<div class="form-group">' . "\xA";
+    echo indent(06).'<div class="col-md-10" align="right">' . "\xA";
+    echo indent(08).'<fieldset>' . "\xA";
+    
     if(isset($_GET['ag'])){
         $padding = 25;
         if($_GET['ag'] == 0){
-            echo '                <label for="agregar" class="alert alert-danger col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
-            echo '                    <strong>Error al crear. Valide la información</strong>';
-            echo '                </label>';
+            echo indent(16).'<label for="agregar" class="alert alert-danger col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
+            echo indent(20).'<strong>Error al crear. Valide la información</strong>';
+            echo indent(16).'</label>';
         }
         else if($_GET['ag'] == 1){
-            echo '                <label for="agregar" class="alert alert-success col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
-            echo '                    <strong>Campaña agregada correctamente</strong>';
-            echo '                </label>';
+            echo indent(16).'<label for="agregar" class="alert alert-success col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
+            echo indent(20).'<strong>Campaña agregada correctamente</strong>';
+            echo indent(16).'</label>';
         }
     }
-    echo '            <button type="submit" class="btn btn-success" id="agregar" name="agregar" style="padding: '.$padding.'px;">Agregar</button>' . "\xA";
-    echo '              </fieldset>' . "\xA";
-    echo '            </div>' . "\xA";
-    echo '         </form>' . "\xA";
+    
+    echo indent(12).'<button type="submit" class="btn btn-success" id="agregar" name="agregar" style="padding: '.$padding.'px;">Agregar</button>' . "\xA";
+    echo indent(14).'</fieldset>' . "\xA";
+    echo indent(12).'</div>' . "\xA";
+    echo indent(8).'</form>' . "\xA";
 }
 function verCamp()
 {
@@ -748,91 +758,99 @@ function verCamp()
             if($cant['total'] == NULL){
                 $cant['total'] = 0;
             }
-            echo '        <div class="form-group">' . "\xA";
-            echo '            <label for="nombre'.$index.'" class="col-md-4 control-label">Nombre de la campaña:</label>' . "\xA";
-            echo '            <div class="col-md-6">' . "\xA";
-            echo '                <input type="text" class="form-control back-tooltips" id="nombre'.$index.'" name="nombre'.$index.'" value="'.$campaigns["nombre"].'" disabled>' . "\xA";
-            echo '            </div>' . "\xA";
-            echo '            <label for="cantagentes'.$index.'" class="col-md-4 control-label">Cantidad de agentes:</label>' . "\xA";
-            echo '            <div class="col-md-6">' . "\xA";
-            echo '                <input type="text" class="form-control back-tooltips" id="cant'.$index.'" name="cant'.$index.'" value="'.$cant['total'].'" disabled>' . "\xA";
-            echo '            </div>' . "\xA";
-            echo '            <label for="cantdiademas'.$index.'" class="col-md-4 control-label">Cantidad de diademas:</label>' . "\xA";
-            echo '            <div class="col-md-6">' . "\xA";
-            echo '                <input type="text" class="form-control back-tooltips" id="cant'.$index.'" name="cant'.$index.'" value="'.$cant['total'].'" disabled>' . "\xA";
-            echo '            </div>' . "\xA";
-            echo '        </div>' . "\xA";
+            echo indent(08).'<div class="form-group">' . "\xA";
+            echo indent(12).'<label for="nombre'.$index.'" class="col-md-4 control-label">Nombre de la campaña:</label>' . "\xA";
+            echo indent(12).'<div class="col-md-6">' . "\xA";
+            echo indent(16).'<input type="text" class="form-control back-tooltips" id="nombre'.$index.'" name="nombre'.$index.'" value="'.$campaigns["nombre"].'" disabled>' . "\xA";
+            echo indent(12).'</div>' . "\xA";
+            echo indent(12).'<label for="cantagentes'.$index.'" class="col-md-4 control-label">Cantidad de agentes:</label>' . "\xA";
+            echo indent(12).'<div class="col-md-6">' . "\xA";
+            echo indent(16).'<input type="text" class="form-control back-tooltips" id="cant'.$index.'" name="cant'.$index.'" value="'.$cant['total'].'" disabled>' . "\xA";
+            echo indent(12).'</div>' . "\xA";
+            echo indent(12).'<label for="cantdiademas'.$index.'" class="col-md-4 control-label">Cantidad de diademas:</label>' . "\xA";
+            echo indent(12).'<div class="col-md-6">' . "\xA";
+            echo indent(16).'<input type="text" class="form-control back-tooltips" id="cant'.$index.'" name="cant'.$index.'" value="'.$cant['total'].'" disabled>' . "\xA";
+            echo indent(12).'</div>' . "\xA";
+            echo indent(08).'</div>' . "\xA";
         }
     }
-    echo '          </div>' . "\xA";
-    echo '      </div>' . "\xA";
-    echo '    </div>' . "\xA";
+    echo indent(10).'</div>' . "\xA";
+    echo indent(06).'</div>' . "\xA";
+    echo indent(04).'</div>' . "\xA";
     echo '</form>' . "\xA";
     echo '<script>' . "\xA";
+    
     sqlsrv_free_stmt($stmt);
     sqlsrv_free_stmt($stmt2);
 }
 function adminCrearDiadema()
 {
     $diadema = "'img/diadema1.jpg' width='150px' height='150px'";
-    $jabra = "'img/jabrasn.jpg' width='150px' height='100px'";
+    $jabra   = "'img/jabrasn.jpg'  width='150px' height='100px'";
     $padding = 10;
-    $index = 0;
-    echo '<form class="form-horizontal" role="form" action="admin_crear_diadema.php" method="post">'."\xA";
-    echo '                                            <div align="center">'."\xA";
-    echo '                                                    <p class="text-left"><small>Utilice esta opción para crear dispositivos. Quedarán almacenados como dispositivos en stock.</small></p>'."\xA";
-    echo '                                                <!--Formulario-->'."\xA";
-    echo '                                                <div class="form-group">'."\xA";
-    echo '                                                    <label for="serial" class="col-md-4 control-label">Serial:</label>'."\xA";
-    echo '                                                    <div class="col-md-6">'."\xA";
-    echo '                                                        <input type="text" data-toggle="tooltip" title="<br><img src='.$diadema.'><br><br>Verifique el consecutivo grabado en la bocina de la diadema.<br><br>" class="form-control back-tooltips" rel="serial" id="serial" name="serial" autocomplete="off" placeholder="Consecutivo grabado en el auricular" required autofocus>'."\xA";
-    echo '                                                    </div>'."\xA";
-    echo '                                                </div>'."\xA";
-    echo '                                                <div class="form-group">'."\xA";
-    echo '                                                    <label for="marca" class="col-md-4 control-label">Marca:</label>'."\xA";
-    echo '                                                    <div class="col-md-4">'."\xA";
-    echo '                                                        <select id="marca" name="marca" class="selectpicker" data-live-search="true" title="Seleccione una marca" data-width="355px" required>'."\xA";
-    echo '                                                            <option value="Jabra">Jabra</option>'."\xA";
-    echo '                                                            <option value="Plantronics">Plantronics</option>'."\xA";
-    echo '                                                            <option value="China">China</option>'."\xA";
-    echo '                                                        </select>'."\xA";
-    echo '                                                    </div>'."\xA";
-    echo '                                                </div>'."\xA";
-    echo '                                                <div class="form-group">'."\xA";
-    echo '                                                    <label for="serialnumber" class="col-sm-4 control-label">S/N: </label>'."\xA";
-    echo '                                                    <div class="col-md-6">'."\xA";
-    echo '                                                        <input type="text" data-toggle="tooltip" title="<br><img src='.$jabra.'><br><br>Si la diadema es marca Jabra, ubique el S/N e ingreselo.<br><br>" class="form-control bfh-number back-tooltip" name="serialnumber" id="serialnumber" autocomplete="off" disabled required>'."\xA";
-    echo '                                                    </div>'."\xA";
-    echo '                                                </div>'."\xA";
-    echo '                                                <div class="form-group">'."\xA";
-    echo '                                                    <div class="col-md-10" align="right">'."\xA";
-    echo '                                                        <fieldset>'."\xA";
-                                                                   if(isset($_GET['ag'])){
-                                                                       $padding = 25;
-                                                                       if($_GET['ag'] == 0){
-    echo '                                                            <label for="agregar" class="alert alert-danger col-md-4 col-md-offset-5 text-center" style="padding: 15px;">'."\xA";
-    echo '                                                                <strong>Error: Serial '.$_GET["sd"].' duplicado</strong>'."\xA";
-    echo '                                                            </label>'."\xA";
-                                                                      } else if($_GET['ag'] == 1) {
-    echo '                                                            <label for="agregar" class="alert alert-success col-md-4 col-md-offset-5 text-center" style="padding: 15px;">'."\xA";
-    echo '                                                                <strong>Diadema '.$_GET["sd"].' agregada correctamente</strong>'."\xA";
-    echo '                                                            </label>'."\xA";
-                                                                      }
-                                                                   }
-    echo '                                                            <button type="submit" class="btn btn-success" id="agregar" name="agregar" style="padding: '.$padding.'px;">Agregar</button>'."\xA";
-    echo '                                                        </fieldset>'."\xA";
-    echo '                                                    </div>'."\xA";
-    echo '                                                </div>'."\xA";
-    echo '                                            </div>'."\xA";
-    echo '                                        </form>'."\xA";
-    echo '                                        <script>'."\xA";
-    echo '                                            $("#marca").on("changed.bs.select", function(e) {'."\xA";
-    echo '                                                var val = $("#marca").val();'."\xA";
-    echo '                                                if (val == "Jabra") $("#serialnumber").prop("disabled", false);'."\xA";
-    echo '                                                else $("#serialnumber").prop("disabled", true);'."\xA";
-    echo '                                            });'."\xA";
-    echo '                                        '."\xA";
-    echo '                                        </script>'."\xA";
+    $index   = 0;
+
+    echo            '<form class="form-horizontal" role="form" action="admin_crear_diadema.php" method="post">'."\xA";
+    echo indent(44).'<div align="center">'."\xA";
+    echo indent(52).'<p class="text-left"><small>Utilice esta opción para crear dispositivos. Quedarán almacenados como dispositivos en stock.</small></p>'."\xA";
+    echo indent(48).'<!--Formulario-->'."\xA";
+    echo indent(48).'<div class="form-group">'."\xA";
+    echo indent(52).'<label for="serial" class="col-md-4 control-label">Serial:</label>'."\xA";
+    echo indent(52).'<div class="col-md-6">'."\xA";
+    echo indent(56).'<input type="text" data-toggle="tooltip" title="<br><img src='.$diadema.'>'."\xA";
+    echo indent(57).'<br><br>Verifique el consecutivo grabado en la bocina de la diadema.<br><br>"'."\xA";
+    echo indent(57).'class="form-control back-tooltips" rel="serial" id="serial" name="serial" autocomplete="off" placeholder="Consecutivo grabado en el auricular" required autofocus>'."\xA";
+    echo indent(52).'</div>'."\xA";
+    echo indent(48).'</div>'."\xA";
+    echo indent(48).'<div class="form-group">'."\xA";
+    echo indent(52).'<label for="marca" class="col-md-4 control-label">Marca:</label>'."\xA";
+    echo indent(52).'<div class="col-md-4">'."\xA";
+    echo indent(56).'<select id="marca" name="marca" class="selectpicker" data-live-search="true" title="Seleccione una marca" data-width="355px" required>'."\xA";
+    echo indent(60).'<option value="Jabra">Jabra</option>'."\xA";
+    echo indent(60).'<option value="Plantronics">Plantronics</option>'."\xA";
+    echo indent(60).'<option value="China">China</option>'."\xA";
+    echo indent(56).'</select>'."\xA";
+    echo indent(52).'</div>'."\xA";
+    echo indent(48).'</div>'."\xA";
+    echo indent(48).'<div class="form-group">'."\xA";
+    echo indent(52).'<label for="serialnumber" class="col-sm-4 control-label">S/N: </label>'."\xA";
+    echo indent(52).'<div class="col-md-6">'."\xA";
+    echo indent(56).'<input type="text" data-toggle="tooltip" title="<br><img src='.$jabra.'>'."\xA";
+    echo indent(57).'<br><br>Si la diadema es marca Jabra, ubique el S/N e ingreselo.<br><br>"'."\xA";
+    echo indent(57).'class="form-control bfh-number back-tooltip" name="serialnumber" id="serialnumber" autocomplete="off" disabled required>'."\xA";
+    echo indent(52).'</div>'."\xA";
+    echo indent(48).'</div>'."\xA";
+    echo indent(48).'<div class="form-group">'."\xA";
+    echo indent(52).'<div class="col-md-10" align="right">'."\xA";
+    echo indent(56).'<fieldset>'."\xA";
+    
+    if(isset($_GET['ag'])){
+        $padding = 25;
+        if($_GET['ag'] == "0"){
+            echo indent(60).'<label for="agregar" class="alert alert-danger col-md-4 col-md-offset-5 text-center" style="padding: 15px;">'."\xA";
+            echo indent(64).'<strong>Error: Serial '.$_GET["sd"].' duplicado</strong>'."\xA";
+            echo indent(60).'</label>'."\xA";
+        } else if($_GET['ag'] == 1) {
+            echo indent(60).'<label for="agregar" class="alert alert-success col-md-4 col-md-offset-5 text-center" style="padding: 15px;">'."\xA";
+            echo indent(64).'<strong>Diadema '.$_GET["sd"].' agregada correctamente</strong>'."\xA";
+            echo indent(60).'</label>'."\xA";
+        }
+    }
+
+    echo indent(60).'<button type="submit" class="btn btn-success" id="agregar" name="agregar" style="padding: '.$padding.'px;">Agregar</button>'."\xA";
+    echo indent(56).'</fieldset>'."\xA";
+    echo indent(52).'</div>'."\xA";
+    echo indent(48).'</div>'."\xA";
+    echo indent(44).'</div>'."\xA";
+    echo indent(40).'</form>'."\xA";
+    echo indent(40).'<script>'."\xA";
+    echo indent(44).'$("#marca").on("changed.bs.select", function(e) {'."\xA";
+    echo indent(48).'var val = $("#marca").val();'."\xA";
+    echo indent(48).'if (val == "Jabra") $("#serialnumber").prop("disabled", false);'."\xA";
+    echo indent(48).'else $("#serialnumber").prop("disabled", true);'."\xA";
+    echo indent(44).'});'."\xA";
+    echo indent(40).''."\xA";
+    echo indent(40).'</script>'."\xA";
                                             
 }
 function correccionTexto($texto)
@@ -862,7 +880,7 @@ function getListaCoordinadores()
     
     while($ppl = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC)){
         $coordinadores[$ppl['idcoord']] = array(
-            "nombre"     => $ppl['nombres']." ".$ppl['apellidos'],
+            "nombre"     => correccionTexto($ppl['nombres']." ".$ppl['apellidos']),
             "idcamp"     => $ppl['idcamp'],
             "nombrecamp" => $ppl['nombrecamp']
         );
@@ -872,7 +890,7 @@ function getListaCoordinadores()
 function getListaCampaigns()
 {
     $conn = fSesion();
-    $sql1 = "select * from campaigns";
+    $sql1 = "select * from campaigns order by nombre_campaign";
     $stmt1 = sqlsrv_query($conn, $sql1);
     $campaigns = array();
     while($camps = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC)){
@@ -924,47 +942,51 @@ function pprint($arreglo)
 }
 function crearTecnico()
 {
-    echo '<form class="form-horizontal" role="form" action="creartecnico.php" method="post">'."\xA";
-    echo '                            <div>'."\xA";
-    echo '                            <!--Formulario-->'."\xA";
-    echo '                                <br>'."\xA";
-    echo '                                <div class="form-group">'."\xA";
-    echo '                                    <label for="nombres" class="col-md-4 control-label">Nombres:</label>'."\xA";
-    echo '                                    <div class="col-md-6">'."\xA";
-    echo '                                        <input type="text" class="form-control" id="nombres" name="nombres" autocomplete="off" placeholder="Nombre(s) del técnico" required autofocus>'."\xA";
-    echo '                                    </div>'."\xA";
-    echo '                                </div>'."\xA";
-    echo '                                <div class="form-group">'."\xA";
-    echo '                                    <label for="apellidos" class="col-md-4 control-label">Apellidos:</label>'."\xA";
-    echo '                                    <div class="col-md-6">'."\xA";
-    echo '                                        <input type="text" class="form-control" rel="apellidos" id="apellidos" name="apellidos" autocomplete="off" placeholder="Apellidos del técnico" required autofocus>'."\xA";
-    echo '                                    </div>'."\xA";
-    echo '                                </div>'."\xA";
-    echo '                                <div class="form-group">'."\xA";
-    echo '                                    <label for="lider" class="col-md-4 control-label">Líder:</label>'."\xA";
-    echo '                                    <div class="col-md-6">'."\xA";
-    echo '                                        <select id="lider" name="lider" class="selectpicker" data-live-search="true" title="Seleccione el líder del técnico que está creando" data-width="400px" required>'."\xA";
-                                                  llamarLideres();
-    echo '                                        </select>'."\xA";
-    echo '                                    </div>'."\xA";
-    echo '                                </div>'."\xA";
-    echo '                                <div class="form-group">'."\xA";
-    echo '                                    <label for="ubicacion" class="col-md-4 control-label">Ubicación:</label>'."\xA";
-    echo '                                    <div class="col-md-6">'."\xA";
-    echo '                                        <select id="ubicacion" name="ubicacion" class="selectpicker" data-live-search="true" title="Seleccione la sede en donde se encuentra el técnico" data-width="400px" required>'."\xA";
-                                                  llamarUbicaciones();
-    echo '                                        </select>'."\xA";
-    echo '                                    </div>'."\xA";
-    echo '                                </div>'."\xA";
-    echo '                                <div class="form-group">'."\xA";
-    echo '                                    <div class="col-md-10" align="right">'."\xA";
-    echo '                                        <fieldset>'."\xA";
-    echo '                                            <button type="submit" class="btn btn-success" id="agregar" name="agregar" style="padding: '.$padding.'px;">Crear</button>'."\xA";
-    echo '                                        </fieldset>'."\xA";
-    echo '                                    </div>'."\xA";
-    echo '                                </div>'."\xA";
-    echo '                            </div>'."\xA";
-echo '                        </form>'."\xA";
+    echo            '<form class="form-horizontal" role="form" action="creartecnico.php" method="post">'."\xA";
+    echo indent(28).'<div>'."\xA";
+    echo indent(28).'<!--Formulario-->'."\xA";
+    echo indent(32).'<br>'."\xA";
+    echo indent(32).'<div class="form-group">'."\xA";
+    echo indent(36).'<label for="nombres" class="col-md-4 control-label">Nombres:</label>'."\xA";
+    echo indent(36).'<div class="col-md-6">'."\xA";
+    echo indent(40).'<input type="text" class="form-control" id="nombres" name="nombres" autocomplete="off" placeholder="Nombre(s) del técnico" required autofocus>'."\xA";
+    echo indent(36).'</div>'."\xA";
+    echo indent(32).'</div>'."\xA";
+    echo indent(32).'<div class="form-group">'."\xA";
+    echo indent(36).'<label for="apellidos" class="col-md-4 control-label">Apellidos:</label>'."\xA";
+    echo indent(36).'<div class="col-md-6">'."\xA";
+    echo indent(40).'<input type="text" class="form-control" rel="apellidos" id="apellidos" name="apellidos" autocomplete="off" placeholder="Apellidos del técnico" required autofocus>'."\xA";
+    echo indent(36).'</div>'."\xA";
+    echo indent(32).'</div>'."\xA";
+    echo indent(32).'<div class="form-group">'."\xA";
+    echo indent(36).'<label for="lider" class="col-md-4 control-label">Líder:</label>'."\xA";
+    echo indent(36).'<div class="col-md-6">'."\xA";
+    echo indent(40).'<select id="lider" name="lider" class="selectpicker" data-live-search="true" title="Seleccione el líder del técnico que está creando" data-width="400px" required>'."\xA";
+    
+    llamarLideres();
+    
+    echo indent(40).'</select>'."\xA";
+    echo indent(36).'</div>'."\xA";
+    echo indent(32).'</div>'."\xA";
+    echo indent(32).'<div class="form-group">'."\xA";
+    echo indent(36).'<label for="ubicacion" class="col-md-4 control-label">Ubicación:</label>'."\xA";
+    echo indent(36).'<div class="col-md-6">'."\xA";
+    echo indent(40).'<select id="ubicacion" name="ubicacion" class="selectpicker" data-live-search="true" title="Seleccione la sede en donde se encuentra el técnico" data-width="400px" required>'."\xA";
+
+    llamarUbicaciones();
+    
+    echo indent(40).'</select>'."\xA";
+    echo indent(36).'</div>'."\xA";
+    echo indent(32).'</div>'."\xA";
+    echo indent(32).'<div class="form-group">'."\xA";
+    echo indent(36).'<div class="col-md-10" align="right">'."\xA";
+    echo indent(40).'<fieldset>'."\xA";
+    echo indent(44).'<button type="submit" class="btn btn-success" id="agregar" name="agregar" style="padding: '.$padding.'px;">Crear</button>'."\xA";
+    echo indent(40).'</fieldset>'."\xA";
+    echo indent(36).'</div>'."\xA";
+    echo indent(32).'</div>'."\xA";
+    echo indent(28).'</div>'."\xA";
+    echo indent(28).'</form>'."\xA";
 }
 function llamarLideres()
 {
@@ -974,7 +996,7 @@ function llamarLideres()
     while($ppl = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)){
         if($ppl['rol_admin'] == "1"){
             $nombrelider = $ppl['nombres_admin']." ".$ppl['apellidos_admin'];
-            echo '                                            <option value="'.$ppl['id_admin'].'">'.$nombrelider.'</option>'."\xA";
+            echo indent(44).'<option value="'.$ppl['id_admin'].'">'.$nombrelider.'</option>'."\xA";
         }
     }
 }
@@ -984,7 +1006,7 @@ function llamarUbicaciones()
     $sql = "select id_ubicacion, nombre_ubicacion from ubicaciones order by nombre_ubicacion";
     $stmt= sqlsrv_query($conn, $sql);
     while($ppl = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)){
-        echo '                                            <option value="'.$ppl['id_ubicacion'].'">'.$ppl['nombre_ubicacion'].'</option>'."\xA";
+        echo indent(44).'<option value="'.$ppl['id_ubicacion'].'">'.$ppl['nombre_ubicacion'].'</option>'."\xA";
     }
 }
 function cambioDiadema()
@@ -1029,91 +1051,91 @@ function cambioDiadema()
             array_push($diademasbod, str_replace(" ", "", $resbod[$i]['_id']));
         }
     }
-    echo '    <form class="form-horizontal" role="form" action="cambiodiadema.php" method="post">' . "\xA";
-    echo '<small><p>Utilice este formulario para realizar cambio de diademas.</small></p>';
-    echo '                                        <div align="center">' . "\xA";
-    echo '                                            <div class="form-group">'."\xA";
-    echo '                                                <label for="campid" class="col-md-4 control-label">Seleccione la campaña:</label>'."\xA";
-    echo '                                                <div class="col-md-4">'."\xA";
-    echo '                                                    <select data-size="7" id="campid" name="campid" class="selectpicker form-control" data-live-search="true" title="Seleccione una campaña" required autocomplete="off" data-width="355px">'."\xA";
+    echo indent(04).'<form class="form-horizontal" role="form" action="cambiodiadema.php" method="post">' . "\xA";
+    echo            '<small><p>Utilice este formulario para realizar cambio de diademas.</small></p>';
+    echo indent(40).'<div align="center">' . "\xA";
+    echo indent(44).'<div class="form-group">'."\xA";
+    echo indent(48).'<label for="campid" class="col-md-4 control-label">Seleccione la campaña:</label>'."\xA";
+    echo indent(48).'<div class="col-md-4">'."\xA";
+    echo indent(52).'<select data-size="7" id="campid" name="campid" class="selectpicker form-control" data-live-search="true" title="Seleccione una campaña" required autocomplete="off" data-width="355px">'."\xA";
 
     for($i = 0; $i < count($idcamps); $i++){
         if($idcamps[$i] != "6118")
-        echo '                                                        <option value="'.$idcamps[$i].'">'.$campaigns[$idcamps[$i]]['nombre'].'</option>'."\xA";
+        echo indent(56).'<option value="'.$idcamps[$i].'">'.$campaigns[$idcamps[$i]]['nombre'].'</option>'."\xA";
     }
     
     sqlsrv_free_stmt($stmt);
 
-    echo '                                                    </select>'."\xA";
-    echo '                                                </div>'."\xA";
-    echo '                                            </div>'."\xA";
-    echo '                                            <!--Formulario-->'."\xA";
-    echo '                                            <div class="form-group">' . "\xA";
-    echo '                                                <label for="coordid" class="col-md-4 control-label">Seleccione un coordinador:</label>' . "\xA";
-    echo '                                                <div class="col-md-4">' . "\xA";
-    echo '                                                    <select id="coordid" name="coordid" class="selectpicker" data-live-search="true" title="Seleccione un coordinador" data-width="355px" required>' . "\xA";
+    echo indent(52).'</select>'."\xA";
+    echo indent(48).'</div>'."\xA";
+    echo indent(44).'</div>'."\xA";
+    echo indent(44).'<!--Formulario-->'."\xA";
+    echo indent(44).'<div class="form-group">' . "\xA";
+    echo indent(48).'<label for="coordid" class="col-md-4 control-label">Seleccione un coordinador:</label>' . "\xA";
+    echo indent(48).'<div class="col-md-4">' . "\xA";
+    echo indent(52).'<select id="coordid" name="coordid" class="selectpicker" data-live-search="true" title="Seleccione un coordinador" data-width="355px" required>' . "\xA";
 
     for($i = 0; $i < count($idcoords); $i++){
         $idcoord = $idcoords[$i];
-        echo '                                                        <option value="'.$idcoord.'" data-tokens="'.$coords[$idcoord]['nombrecamp'].' '.ucwords(mb_strtolower($coords[$idcoord]['nombre'])).'">'.ucwords(mb_strtolower($coords[$idcoord]['nombre'])).'</option>'."\xA";
+        echo indent(56).'<option value="'.$idcoord.'" data-tokens="'.$coords[$idcoord]['nombrecamp'].' '.ucwords(mb_strtolower($coords[$idcoord]['nombre'])).'">'.ucwords(mb_strtolower($coords[$idcoord]['nombre'])).'</option>'."\xA";
     }
 
-    echo '                                                    </select>' . "\xA";
-    echo '                                                </div>' . "\xA";
-    echo '                                            </div>' . "\xA";
-    echo '                                            <div class="form-group">' . "\xA";
-    echo '                                                <label for="diademaentrante" class="col-md-4 control-label">Serial de la diadema recogida:</label>' . "\xA";
-    echo '                                                <div class="col-md-4">' . "\xA";
-    echo '                                                    <select id="diademaentrante" name="diademaentrante" class="selectpicker" data-live-search="true" title="Seleccione el serial de la diadema recogida" data-width="355px" required>' . "\xA";
+    echo indent(52).'</select>' . "\xA";
+    echo indent(48).'</div>' . "\xA";
+    echo indent(44).'</div>' . "\xA";
+    echo indent(44).'<div class="form-group">' . "\xA";
+    echo indent(48).'<label for="diademaentrante" class="col-md-4 control-label">Serial de la diadema recogida:</label>' . "\xA";
+    echo indent(48).'<div class="col-md-4">' . "\xA";
+    echo indent(52).'<select id="diademaentrante" name="diademaentrante" class="selectpicker" data-live-search="true" title="Seleccione el serial de la diadema recogida" data-width="355px" required>' . "\xA";
     
     for($i = 0; $i < count($diademascamp); $i++){
         $idcamp = end($rescamp[$i]['resumen'])['campaign'];
-        echo '                                                        <option value="'.$diademascamp[$i].'" data-tokens="'.$campaigns[$idcamp]['nombre'].' '.$diademascamp[$i].'">'.$diademascamp[$i].'</option>'."\xA";
+        echo indent(56).'<option value="'.$diademascamp[$i].'" data-tokens="'.$campaigns[$idcamp]['nombre'].' '.$diademascamp[$i].'">'.$diademascamp[$i].'</option>'."\xA";
     }
     
-    echo '                                                    </select>' . "\xA";
-    echo '                                                </div>' . "\xA";
-    echo '                                            </div>' . "\xA";
-    echo '                                            <div class="form-group">' . "\xA";
-    echo '                                                <label for="diademasaliente" class="col-md-4 control-label">Serial de la diadema entregada:</label>' . "\xA";
-    echo '                                                    <div class="col-md-4">' . "\xA";
-    echo '                                                        <select id="diademasaliente" name="diademasaliente" class="selectpicker" data-live-search="true" title="Seleccione el serial de la diadema entregada" data-width="355px" required>' . "\xA";
+    echo indent(52).'</select>' . "\xA";
+    echo indent(48).'</div>' . "\xA";
+    echo indent(44).'</div>' . "\xA";
+    echo indent(44).'<div class="form-group">' . "\xA";
+    echo indent(48).'<label for="diademasaliente" class="col-md-4 control-label">Serial de la diadema entregada:</label>' . "\xA";
+    echo indent(52).'<div class="col-md-4">' . "\xA";
+    echo indent(56).'<select id="diademasaliente" name="diademasaliente" class="selectpicker" data-live-search="true" title="Seleccione el serial de la diadema entregada" data-width="355px" required>' . "\xA";
     
     for($i = 0; $i < count($diademasbod); $i++){
-        echo '                                                            <option value="'.$diademasbod[$i].'">'.$diademasbod[$i].'</option>';
+        echo indent(60).'<option value="'.$diademasbod[$i].'">'.$diademasbod[$i].'</option>';
     }
     
-    echo '                                                        </select>' . "\xA";
-    echo '                                                    </div>' . "\xA";
-    echo '                                                </div>' . "\xA";
-    echo '                                            <div class="form-group">' . "\xA";
-    echo '                                                <div class="col-md-10" align="right">' . "\xA";
-    echo '                                                    <fieldset>' . "\xA";
+    echo indent(56).'</select>' . "\xA";
+    echo indent(52).'</div>' . "\xA";
+    echo indent(48).'</div>' . "\xA";
+    echo indent(44).'<div class="form-group">' . "\xA";
+    echo indent(48).'<div class="col-md-10" align="right">' . "\xA";
+    echo indent(52).'<fieldset>' . "\xA";
     
     if(isset($_GET['ag'])){
         $padding = 15;
         if($_GET['ag'] == 0){
-            echo '                                                        <label for="agregar" class="alert alert-danger col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
-            echo '                                                            <strong>Error: Serial '.$_GET["sd"].' duplicado</strong>' . "\xA";
-            echo '                                                        </label>' . "\xA";
+            echo indent(56).'<label for="agregar" class="alert alert-danger col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
+            echo indent(60).'<strong>Error: Serial '.$_GET["sd"].' duplicado</strong>' . "\xA";
+            echo indent(56).'</label>' . "\xA";
         }
         else if($_GET['ag'] == 1){
-            echo '                                                        <label for="agregar" class="alert alert-success col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
-            echo '                                                            <strong>Diadema '.$_GET["sd"].' agregada correctamente</strong>' . "\xA";
-            echo '                                                        </label>' . "\xA";
+            echo indent(56).'<label for="agregar" class="alert alert-success col-md-4 col-md-offset-5 text-center"  style="padding: 15px;">' . "\xA";
+            echo indent(60).'<strong>Diadema '.$_GET["sd"].' agregada correctamente</strong>' . "\xA";
+            echo indent(56).'</label>' . "\xA";
         }
     }
-    echo '                                                    <button type="submit" class="btn btn-success" id="agregar" name="agregar" style="padding: '.$padding.'px;">Realizar cambio</button>' . "\xA";
-    echo '                                                </fieldset>' . "\xA";
-    echo '                                            </div>' . "\xA";
-    echo '                                        </form>' . "\xA";
-    echo '                                        <script>' . "\xA";
-    echo '                                            $("#marca").on("changed.bs.select", function (e) {' . "\xA";
-    echo '                                                var val = $("#marca").val();' . "\xA";
-    echo '                                                if(val == "Jabra") $( "#serialnumber" ).prop( "disabled", false );' . "\xA";
-    echo '                                                else $( "#serialnumber" ).prop( "disabled", true );' . "\xA";
-    echo '                                            });' . "\xA";
-    echo '                                        </script>' . "\xA";
+    echo indent(52).'<button type="submit" class="btn btn-success" id="agregar" name="agregar" style="padding: '.$padding.'px;">Realizar cambio</button>' . "\xA";
+    echo indent(48).'</fieldset>' . "\xA";
+    echo indent(44).'</div>' . "\xA";
+    echo indent(40).'</form>' . "\xA";
+    echo indent(40).'<script>' . "\xA";
+    echo indent(44).'$("#marca").on("changed.bs.select", function (e) {' . "\xA";
+    echo indent(48).'var val = $("#marca").val();' . "\xA";
+    echo indent(48).'if(val == "Jabra") $( "#serialnumber" ).prop( "disabled", false );' . "\xA";
+    echo indent(48).'else $( "#serialnumber" ).prop( "disabled", true );' . "\xA";
+    echo indent(44).'});' . "\xA";
+    echo indent(40).'</script>' . "\xA";
 }
 function verTecnicos()
 {
@@ -1128,30 +1150,30 @@ function verTecnicos()
         $ubicacion      = $ppl['nombre_ubicacion'];
         
         echo '<form class="form-horizontal" role="form" action="creartecnico.php" method="post">'."\xA";
-        echo '                            <div>'."\xA";
-        echo '                            <!--Formulario-->'."\xA";
-        echo '                                <br>'."\xA";
-        echo '                                <div class="form-group">'."\xA";
-        echo '                                    <label for="idtecnico" class="col-md-4 control-label">ID:</label>'."\xA";
-        echo '                                    <div class="col-md-6">'."\xA";
-        echo '                                        <input type="text" class="form-control" id="idtecnico" name="idtecnico" autocomplete="off" value="'.$idtecnico.'" disabled>'."\xA";
-        echo '                                    </div>'."\xA";
-        echo '                                    <label for="nombres" class="col-md-4 control-label">Nombres:</label>'."\xA";
-        echo '                                    <div class="col-md-6">'."\xA";
-        echo '                                        <input type="text" class="form-control" id="nombres" name="nombres" autocomplete="off" value="'.$nombreTecnico.'" disabled>'."\xA";
-        echo '                                    </div>'."\xA";
-        echo '                                    <label for="lider" class="col-md-4 control-label">Líder:</label>'."\xA";
-        echo '                                    <div class="col-md-6">'."\xA";
-        echo '                                        <input type="text" class="form-control" id="nombres" name="nombres" autocomplete="off" value="'.$lider.'" disabled>'."\xA";
-        echo '                                    </div>'."\xA";
-        echo '                                    <label for="ubicacion" class="col-md-4 control-label">Ubicación:</label>'."\xA";
-        echo '                                    <div class="col-md-6">'."\xA";
-        echo '                                        <input type="text" class="form-control" id="nombres" name="nombres" autocomplete="off" value="'.$ubicacion.'" disabled>'."\xA";
-        echo '                                    </div>'."\xA";
-        echo '                                </div>'."\xA";
-        echo '                            </div>'."\xA";
-        echo '                        </form>'."\xA";
-        echo '                        <script>document.getElementById("tecnicoheader").innerHTML = "Ver técnicos";</script>';
+        echo indent(28).'<div>'."\xA";
+        echo indent(28).'<!--Formulario-->'."\xA";
+        echo indent(32).'<br>'."\xA";
+        echo indent(32).'<div class="form-group">'."\xA";
+        echo indent(36).'<label for="idtecnico" class="col-md-4 control-label">ID:</label>'."\xA";
+        echo indent(36).'<div class="col-md-6">'."\xA";
+        echo indent(40).'<input type="text" class="form-control" id="idtecnico" name="idtecnico" autocomplete="off" value="'.$idtecnico.'" disabled>'."\xA";
+        echo indent(36).'</div>'."\xA";
+        echo indent(36).'<label for="nombres" class="col-md-4 control-label">Nombres:</label>'."\xA";
+        echo indent(36).'<div class="col-md-6">'."\xA";
+        echo indent(40).'<input type="text" class="form-control" id="nombres" name="nombres" autocomplete="off" value="'.$nombreTecnico.'" disabled>'."\xA";
+        echo indent(36).'</div>'."\xA";
+        echo indent(36).'<label for="lider" class="col-md-4 control-label">Líder:</label>'."\xA";
+        echo indent(36).'<div class="col-md-6">'."\xA";
+        echo indent(40).'<input type="text" class="form-control" id="nombres" name="nombres" autocomplete="off" value="'.$lider.'" disabled>'."\xA";
+        echo indent(36).'</div>'."\xA";
+        echo indent(36).'<label for="ubicacion" class="col-md-4 control-label">Ubicación:</label>'."\xA";
+        echo indent(36).'<div class="col-md-6">'."\xA";
+        echo indent(40).'<input type="text" class="form-control" id="nombres" name="nombres" autocomplete="off" value="'.$ubicacion.'" disabled>'."\xA";
+        echo indent(36).'</div>'."\xA";
+        echo indent(32).'</div>'."\xA";
+        echo indent(28).'</div>'."\xA";
+        echo indent(24).'</form>'."\xA";
+        echo indent(24).'<script>document.getElementById("tecnicoheader").innerHTML = "Ver técnicos";</script>';
     }
 }
 function getDiademasEnStock()
@@ -1199,31 +1221,31 @@ function recogerDiademas()
     $campaigns = getListaCampaigns();
 
     echo '<form action="recoger.php" method="post" class="form-horizontal">'."\xA";
-    echo '<p class="text-left"><small>Utilice esta opción para seleccionar una o varias diademas que se deban recoger.</small></p>';
-    echo '    <fieldset>'."\xA";
-    echo '        <div class="form-group">'."\xA";
-    echo '            <label class="col-md-2 control-label" for="id" name="id"></label>'."\xA";
-    echo '            <div class="col-md-8 input-group" style="outline: 0px>'."\xA";
-    echo '                <span class="input-group-addon"></span>'."\xA";
-    echo '                <select id="diademas[]" name="diademas[]" class="selectpicker" data-live-search="true" multiple data-selected-text-format="count" title="Seleccione las diademas a recoger" data-width="100%">'."\xA";
+    echo indent(04).'<p class="text-left"><small>Utilice esta opción para seleccionar una o varias diademas que se deban recoger.</small></p>';
+    echo indent(04).'<fieldset>'."\xA";
+    echo indent(08).'<div class="form-group">'."\xA";
+    echo indent(12).'<label class="col-md-2 control-label" for="id" name="id"></label>'."\xA";
+    echo indent(12).'<div class="col-md-8 input-group" style="outline: 0px>'."\xA";
+    echo indent(16).'<span class="input-group-addon"></span>'."\xA";
+    echo indent(16).'<select id="diademas[]" name="diademas[]" class="selectpicker" data-live-search="true" multiple data-selected-text-format="count" title="Seleccione las diademas a recoger" data-width="100%">'."\xA";
     
     for($i = 0; $i < count($diademas); $i++){
         $idcamp = end($diademas[$i]['resumen'])['campaign'];
         $nombrecamp = $campaigns[$idcamp]['nombre'];
-        echo '                        <option data-tokens="'.$nombrecamp.' '.$diademas[$i]['_id'].'">'.$diademas[$i]['_id'].'</option>'."\xA";
+        echo indent(24).'<option data-tokens="'.$nombrecamp.' '.$diademas[$i]['_id'].'">'.$diademas[$i]['_id'].'</option>'."\xA";
     }
     
-    echo '                </select>'."\xA";
-    echo '            </div>'."\xA";
-    echo '        </div>'."\xA";
-    echo '        <div class="form-group">'."\xA";
-    echo '            <div class="col-md-10 input-group" style="outline: 0px" align="right">'."\xA";
-    echo '                <fieldset>'."\xA";
-    echo '                    <button id="ingresar" name="ingresar" class="btn btn-primary">Recoger</button>'."\xA";
-    echo '                </fieldset>'."\xA";
-    echo '            </div>'."\xA";
-    echo '        </div>'."\xA";
-    echo '    </fieldset>'."\xA";
+    echo indent(16).'</select>'."\xA";
+    echo indent(12).'</div>'."\xA";
+    echo indent(08).'</div>'."\xA";
+    echo indent(08).'<div class="form-group">'."\xA";
+    echo indent(12).'<div class="col-md-10 input-group" style="outline: 0px" align="right">'."\xA";
+    echo indent(16).'<fieldset>'."\xA";
+    echo indent(20).'<button id="ingresar" name="ingresar" class="btn btn-primary">Recoger</button>'."\xA";
+    echo indent(16).'</fieldset>'."\xA";
+    echo indent(12).'</div>'."\xA";
+    echo indent(08).'</div>'."\xA";
+    echo indent(04).'</fieldset>'."\xA";
     echo '</form>'."\xA";
     
 }
@@ -1257,29 +1279,29 @@ function repararDiademas()
 
     echo '<form class="form-horizontal" role="form" action="reparar.php" method="post">'."\xA";
     echo '<p class="text-left"><small>Utilice esta opción para seleccionar las diademas que se encuentren en la oficina de Mantenimiento y deban ser reparadas.</small></p>';
-    echo '                                            <fieldset>'."\xA";
-    echo '                                                <div class="form-group">'."\xA";
-    echo '                                                    <label class="col-md-2 control-label" for="id" name="id"></label>'."\xA";
-    echo '                                                    <div class="col-md-8 input-group" style="outline: 0px>'."\xA";
-    echo '                                                        <span class="input-group-addon"></span>'."\xA";
-    echo '                                                        <select id="diademas[]" name="diademas[]" class="selectpicker" data-live-search="true" multiple data-selected-text-format="count" title="Seleccione las diademas para reparar" data-width="100%">'."\xA";
+    echo indent(44).'<fieldset>'."\xA";
+    echo indent(48).'<div class="form-group">'."\xA";
+    echo indent(52).'<label class="col-md-2 control-label" for="id" name="id"></label>'."\xA";
+    echo indent(52).'<div class="col-md-8 input-group" style="outline: 0px>'."\xA";
+    echo indent(56).'<span class="input-group-addon"></span>'."\xA";
+    echo indent(56).'<select id="diademas[]" name="diademas[]" class="selectpicker" data-live-search="true" multiple data-selected-text-format="count" title="Seleccione las diademas para reparar" data-width="100%">'."\xA";
     
     for($i = 0; $i < count($diademas); $i++){
-        echo '                                                            <option>'.$diademas[$i]['_id'].'</option>'."\xA";
+        echo indent(60).'<option>'.$diademas[$i]['_id'].'</option>'."\xA";
     }
     
-    echo '                                                        </select>'."\xA";
-    echo '                                                    </div>'."\xA";
-    echo '                                                </div>'."\xA";
-    echo '                                                <div class="form-group">'."\xA";
-    echo '                                                    <div class="col-md-10 input-group" style="outline: 0px" align="right">'."\xA";
-    echo '                                                        <fieldset>'."\xA";
-    echo '                                                            <button id="ingresar" name="ingresar" class="btn btn-success">Enviar a reparación</button>'."\xA";
-    echo '                                                        </fieldset>'."\xA";
-    echo '                                                    </div>'."\xA";
-    echo '                                                </div>'."\xA";
-    echo '                                            </fieldset>'."\xA";
-    echo '                                        </form>'."\xA";
+    echo indent(56).'</select>'."\xA";
+    echo indent(52).'</div>'."\xA";
+    echo indent(48).'</div>'."\xA";
+    echo indent(48).'<div class="form-group">'."\xA";
+    echo indent(52).'<div class="col-md-10 input-group" style="outline: 0px" align="right">'."\xA";
+    echo indent(56).'<fieldset>'."\xA";
+    echo indent(60).'<button id="ingresar" name="ingresar" class="btn btn-success">Enviar a reparación</button>'."\xA";
+    echo indent(56).'</fieldset>'."\xA";
+    echo indent(52).'</div>'."\xA";
+    echo indent(48).'</div>'."\xA";
+    echo indent(44).'</fieldset>'."\xA";
+    echo indent(40).'</form>'."\xA";
     
 }
 function recibirDiademasDeReparacion()
@@ -1288,57 +1310,57 @@ function recibirDiademasDeReparacion()
 
     echo '<form class="form-horizontal" role="form" action="recoger.php" method="post">'."\xA";
     echo '<p class="text-left"><small>Use esta opción para recibir diademas de reparación. Si alguna de las diademas que se están recibiendo no cuentan con el consecutivo grabado en el auricular, esta debe ser marcada y creada desde la opción "crear diadema".</small></p>';
-    echo '                                            <fieldset>'."\xA";
-    echo '                                                <div class="form-group">'."\xA";
-    echo '                                                    <label class="col-md-2 control-label" for="id" name="id"></label>'."\xA";
-    echo '                                                    <div class="col-md-8 input-group" style="outline: 0px>'."\xA";
-    echo '                                                        <span class="input-group-addon"></span>'."\xA";
-    echo '                                                        <select id="diademas[]" name="diademas[]" class="selectpicker" data-live-search="true" multiple data-selected-text-format="count" title="Seleccione las diademas a recoger" data-width="100%">'."\xA";
+    echo indent(44).'<fieldset>'."\xA";
+    echo indent(48).'<div class="form-group">'."\xA";
+    echo indent(52).'<label class="col-md-2 control-label" for="id" name="id"></label>'."\xA";
+    echo indent(52).'<div class="col-md-8 input-group" style="outline: 0px>'."\xA";
+    echo indent(56).'<span class="input-group-addon"></span>'."\xA";
+    echo indent(56).'<select id="diademas[]" name="diademas[]" class="selectpicker" data-live-search="true" multiple data-selected-text-format="count" title="Seleccione las diademas a recoger" data-width="100%">'."\xA";
     
     for($i = 0; $i < count($diademas); $i++){
-        echo '                                                            <option>'.$diademas[$i]['_id'].'</option>'."\xA";
+        echo indent(60).'<option>'.$diademas[$i]['_id'].'</option>'."\xA";
     }
     
-    echo '                                                        </select>'."\xA";
-    echo '                                                    </div>'."\xA";
-    echo '                                                </div>'."\xA";
-    echo '                                                <div class="form-group">'."\xA";
-    echo '                                                    <div class="col-md-10 input-group" style="outline: 0px" align="right">'."\xA";
-    echo '                                                        <fieldset>'."\xA";
-    echo '                                                            <button id="ingresar" name="ingresar" class="btn btn-primary">Recoger</button>'."\xA";
-    echo '                                                        </fieldset>'."\xA";
-    echo '                                                    </div>'."\xA";
-    echo '                                                </div>'."\xA";
-    echo '                                            </fieldset>'."\xA";
-    echo '                                        </form>'."\xA";
+    echo indent(56).'</select>'."\xA";
+    echo indent(52).'</div>'."\xA";
+    echo indent(48).'</div>'."\xA";
+    echo indent(48).'<div class="form-group">'."\xA";
+    echo indent(52).'<div class="col-md-10 input-group" style="outline: 0px" align="right">'."\xA";
+    echo indent(56).'<fieldset>'."\xA";
+    echo indent(60).'<button id="ingresar" name="ingresar" class="btn btn-primary">Recoger</button>'."\xA";
+    echo indent(56).'</fieldset>'."\xA";
+    echo indent(52).'</div>'."\xA";
+    echo indent(48).'</div>'."\xA";
+    echo indent(44).'</fieldset>'."\xA";
+    echo indent(40).'</form>'."\xA";
     
 }
 function verDiademasEnReparacion()
 {
     $cant  = getDiademasEnReparacion();
     $inner = '<center><a href="exportardiademas.php" class="text-success">Descargar en formato .xls<span class="glyphicon glyphicon-download-alt"></span></a></center><br>';
-    echo '    <form class="form-horizontal" role="form">'."\xA";
-    echo '                                                <h4 id="campseleccionada">&nbsp;</h4>';
-    
+    echo indent(04).'<form class="form-horizontal" role="form">'."\xA";
+    echo indent(48).'<h4 id="campseleccionada">&nbsp;</h4>';
+                                        
     for($i = 0; $i < count($cant); $i++){
         
         $id     = $cant[$i]['_id'];
         $marca  = $cant[$i]['Marca'];
 
         echo '<div class="form-group">'."\xA";
-        echo '                                                    <div>'."\xA";
-        echo '                                                        <label for="iddiadema" class="col-md-3 control-label">Consecutivo:</label>'."\xA";
-        echo '                                                        <div class="col-md-9 ">'."\xA";
-        echo '                                                            <input type="text" class="form-control" rel="iddiadema" id="iddiadema" name="iddiadema" value="'.$id.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
-        echo '                                                        </div>'."\xA";
-        echo '                                                        <label for="marca" class="col-md-3 control-label">Marca:</label>'."\xA";
-        echo '                                                        <div class="col-md-9">'."\xA";
-        echo '                                                            <input type="text" class="form-control" rel="marca" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
-        echo '                                                        </div>'."\xA";
-        echo '                                                    </div>'."\xA";
-        echo '                                                </div>'."\xA";
+        echo indent(52).'<div>'."\xA";
+        echo indent(56).'<label for="iddiadema" class="col-md-3 control-label">Consecutivo:</label>'."\xA";
+        echo indent(56).'<div class="col-md-9 ">'."\xA";
+        echo indent(60).'<input type="text" class="form-control" rel="iddiadema" id="iddiadema" name="iddiadema" value="'.$id.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+        echo indent(56).'</div>'."\xA";
+        echo indent(56).'<label for="marca" class="col-md-3 control-label">Marca:</label>'."\xA";
+        echo indent(56).'<div class="col-md-9">'."\xA";
+        echo indent(60).'<input type="text" class="form-control" rel="marca" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+        echo indent(56).'</div>'."\xA";
+        echo indent(52).'</div>'."\xA";
+        echo indent(48).'</div>'."\xA";
     }
-    echo '                                            <script>document.getElementById("campseleccionada").innerHTML = "Cantidad de diademas que se encuentran en reparación: '.count($cant).'"; </script>'."\xA";
+    echo indent(44).'<script>document.getElementById("campseleccionada").innerHTML = "Cantidad de diademas que se encuentran en reparación: '.count($cant).'"; </script>'."\xA";
 }
 function entregarDiademas()
 {
@@ -1348,69 +1370,107 @@ function entregarDiademas()
     $idcamps    = array_keys($campaigns);
     $idcoords   = array_keys($coords);
 
-    echo '<form action="entregar.php" method="post" class="form-horizontal">'."\xA";
-    echo '<p class="text-center"><small>Utilice esta opción para seleccionar una o varias diademas que se van a entregar.</small></p>';
-    echo '    <fieldset>'."\xA";
-    echo '        <div class="form-group">'."\xA";
-    echo '            <label class="col-md-2 control-label" for="camp" name="camp"></label>'."\xA";
-    echo '            <div class="col-md-8 input-group" style="outline: 0px>'."\xA";
-    echo '                <span class="input-group-addon"></span>'."\xA";
-    echo '                <select data-size="7" id="camp" name="camp" class="selectpicker" data-live-search="true" data-selected-text-format="count" title="Seleccione una campaña" data-width="100%">'."\xA";
+    echo indent(00).'<form action="entregar.php" method="post" class="form-horizontal">'."\xA";
+    echo indent(00).'<p class="text-center"><small>Utilice esta opción para seleccionar una o varias diademas que se van a entregar.</small></p>';
+    echo indent(04).'<fieldset>'."\xA";
+    echo indent(08).'<div class="form-group">'."\xA";
+    echo indent(12).'<label class="col-md-2 control-label" for="campid" name="campid"></label>'."\xA";
+    echo indent(12).'<div class="col-md-8 input-group" style="outline: 0px>'."\xA";
+    echo indent(16).'<span class="input-group-addon"></span>'."\xA";
+    echo indent(16).'<select data-size="7" id="campid" name="campid" class="selectpicker" data-live-search="true" data-selected-text-format="count" title="Seleccione una campaña" data-width="100%">'."\xA";
     
     for($i = 0; $i < count($idcamps); $i++){
-        if($idcamps[$i] != "6118")
-        echo '                                                        <option value="'.$idcamps[$i].'">'.$campaigns[$idcamps[$i]]['nombre'].'</option>'."\xA";
+        if($idcamps[$i] != "6118"){
+            echo indent(56).'<option value="'.$idcamps[$i].'">'.$campaigns[$idcamps[$i]]['nombre'].'</option>'."\xA";
+        }
     }
     
     sqlsrv_free_stmt($stmt);
     
-    echo '                </select>'."\xA";
-    echo '            </div>'."\xA";
-    echo '        </div>'."\xA";
+    echo indent(16).'</select>'."\xA";
+    echo indent(12).'</div>'."\xA";
+    echo indent(08).'</div>'."\xA";
     
-    echo '        <div class="form-group">'."\xA";
-    echo '            <label class="col-md-2 control-label" for="coord" name="coord"></label>'."\xA";
-    echo '            <div class="col-md-8 input-group" style="outline: 0px>'."\xA";
-    echo '                <span class="input-group-addon"></span>'."\xA";
-    echo '                <select data-size="7" id="coord" name="coord" class="selectpicker" data-live-search="true" data-selected-text-format="count" title="Seleccione un coordinador" data-width="100%">'."\xA";
+    echo indent(08).'<div class="form-group">'."\xA";
+    echo indent(12).'<label class="col-md-2 control-label" for="coordid" name="coordid"></label>'."\xA";
+    echo indent(12).'<div class="col-md-8 input-group" style="outline: 0px>'."\xA";
+    echo indent(16).'<span class="input-group-addon"></span>'."\xA";
+    echo indent(16).'<select data-size="7" id="coordid" name="coordid" class="selectpicker" data-live-search="true" data-selected-text-format="count" title="Seleccione un coordinador" data-width="100%">'."\xA";
     
     for($i = 0; $i < count($idcoords); $i++){
         $idcoord = $idcoords[$i];
-        echo '                                                        <option value="'.$idcoord.'" data-tokens="'.$coords[$idcoord]['nombrecamp'].' '.ucwords(mb_strtolower($coords[$idcoord]['nombre'])).'">'.ucwords(mb_strtolower($coords[$idcoord]['nombre'])).'</option>'."\xA";
+        echo indent(56).'<option value="'.$idcoord.'" data-tokens="'.$coords[$idcoord]['nombrecamp'].' '.ucwords(mb_strtolower($coords[$idcoord]['nombre'])).'">'.ucwords(mb_strtolower($coords[$idcoord]['nombre'])).'</option>'."\xA";
     }
     
-    echo '                </select>'."\xA";
-    echo '            </div>'."\xA";
-    echo '        </div>'."\xA";
+    echo indent(16).'</select>'."\xA";
+    echo indent(12).'</div>'."\xA";
+    echo indent(08).'</div>'."\xA";
     
     
     
-    echo '        <div class="form-group">'."\xA";
-    echo '            <label class="col-md-2 control-label" for="diademas[]" name="diademas[]"></label>'."\xA";
-    echo '            <div class="col-md-8 input-group" style="outline: 0px>'."\xA";
-    echo '                <span class="input-group-addon"></span>'."\xA";
-    echo '                <select id="diademas[]" name="diademas[]" class="selectpicker" data-live-search="true" multiple data-selected-text-format="count" title="Seleccione las diademas a entregar" data-width="100%">'."\xA";
+    echo indent(08).'<div class="form-group">'."\xA";
+    echo indent(12).'<label class="col-md-2 control-label" for="diademas[]" name="diademas[]"></label>'."\xA";
+    echo indent(12).'<div class="col-md-8 input-group" style="outline: 0px>'."\xA";
+    echo indent(16).'<span class="input-group-addon"></span>'."\xA";
+    echo indent(16).'<select id="diademas[]" name="diademas[]" class="selectpicker" data-live-search="true" multiple data-selected-text-format="count" title="Seleccione las diademas a entregar" data-width="100%">'."\xA";
     
     for($i = 0; $i < count($diademas); $i++){
         $idcamp = end($diademas[$i]['resumen'])['campaign'];
         $nombrecamp = $campaigns[$idcamp]['nombre'];
-        echo '                        <option data-tokens="'.$diademas[$i]['_id'].'">'.$diademas[$i]['_id'].'</option>'."\xA";
+        echo indent(24).'<option data-tokens="'.$diademas[$i]['_id'].'">'.$diademas[$i]['_id'].'</option>'."\xA";
     }
     
-    echo '                </select>'."\xA";
-    echo '            </div>'."\xA";
-    echo '        </div>'."\xA";
+    echo indent(16).'</select>'."\xA";
+    echo indent(12).'</div>'."\xA";
+    echo indent(08).'</div>'."\xA";
     
     
     
-    echo '        <div class="form-group">'."\xA";
-    echo '            <div class="col-md-10 input-group" style="outline: 0px" align="right">'."\xA";
-    echo '                <fieldset>'."\xA";
-    echo '                    <button id="entregar" name="entregar" class="btn btn-primary">Entregar</button>'."\xA";
-    echo '                </fieldset>'."\xA";
-    echo '            </div>'."\xA";
-    echo '        </div>'."\xA";
-    echo '    </fieldset>'."\xA";
-    echo '</form>'."\xA";
+    echo indent(08).'<div class="form-group">'."\xA";
+    echo indent(12).'<div class="col-md-10 input-group" style="outline: 0px" align="right">'."\xA";
+    echo indent(16).'<fieldset>'."\xA";
+    echo indent(20).'<button id="entregar" name="entregar" class="btn btn-primary">Entregar</button>'."\xA";
+    echo indent(16).'</fieldset>'."\xA";
+    echo indent(12).'</div>'."\xA";
+    echo indent(08).'</div>'."\xA";
+    echo indent(04).'</fieldset>'."\xA";
+    echo indent(00).'</form>'."\xA";
+    
+}
+function indent($contador)
+{
+    for($i = 0; $i<$contador; $i++){
+        echo " ";
+    }
+}
+function bajaDiademas()
+{
+    $diademas = getDiademasEnStock();
+
+    echo '<form class="form-horizontal" role="form" action="baja.php" method="post">'."\xA";
+    echo '<p class="text-left"><small>Utilice esta opción para seleccionar las diademas que se encuentren en la oficina de Mantenimiento y deban ser reparadas.</small></p>';
+    echo indent(44).'<fieldset>'."\xA";
+    echo indent(48).'<div class="form-group">'."\xA";
+    echo indent(52).'<label class="col-md-2 control-label" for="id" name="id"></label>'."\xA";
+    echo indent(52).'<div class="col-md-8 input-group" style="outline: 0px>'."\xA";
+    echo indent(56).'<span class="input-group-addon"></span>'."\xA";
+    echo indent(56).'<select id="diademas[]" name="diademas[]" class="selectpicker" data-live-search="true" multiple data-selected-text-format="count" title="Seleccione las diademas para reparar" data-width="100%">'."\xA";
+    
+    for($i = 0; $i < count($diademas); $i++){
+        echo indent(60).'<option>'.$diademas[$i]['_id'].'</option>'."\xA";
+    }
+    
+    echo indent(56).'</select>'."\xA";
+    echo indent(52).'</div>'."\xA";
+    echo indent(48).'</div>'."\xA";
+    echo indent(48).'<div class="form-group">'."\xA";
+    echo indent(52).'<div class="col-md-10 input-group" style="outline: 0px" align="right">'."\xA";
+    echo indent(56).'<fieldset>'."\xA";
+    echo indent(60).'<button id="ingresar" name="ingresar" class="btn btn-success">Enviar a reparación</button>'."\xA";
+    echo indent(56).'</fieldset>'."\xA";
+    echo indent(52).'</div>'."\xA";
+    echo indent(48).'</div>'."\xA";
+    echo indent(44).'</fieldset>'."\xA";
+    echo indent(40).'</form>'."\xA";
     
 }

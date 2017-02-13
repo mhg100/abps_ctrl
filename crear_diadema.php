@@ -67,7 +67,7 @@ if(!isset($_GET['ic']))
     $diadema = array_merge($infoDiadema, $resumenDiadema);
 
     pprint($diadema);
-    echo '<pre>id coordinador: '.$_SESSION['id'].'</pre>';
+    //echo '<pre>id coordinador: '.$_SESSION['id'].'</pre>';
 }
 
 try {

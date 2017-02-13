@@ -46,35 +46,38 @@ resumen: [
 */
 if(!isset($_GET['ic']))
 {
-    $collection = fMongoDB();
+    $id             = strtoupper(str_replace(array(".", ",", " ", "-"), "", $_POST['serial']));
+    $serial         = strtoupper(str_replace(array(".", ",", " ", "-"), "", $_POST['serialnumber']));
+    $marca          = strtoupper($_POST['marca']);
+    $collection     = fMongoDB();
     session_start();
     $infoDiadema = array(
-        "_id"    => strtoupper($_POST['serial']),
-        "Marca"  => strtoupper($_POST['marca']),
-        "serial" => strtoupper($_POST['serialnumber'])
+        "_id"       => $id,
+        "Marca"     => $marca,
+        "serial"    => $serial
     );
-    $resumen = array("_id"      => "001",
-                     "estado"   => "0",
-                     "campaign" => "6118",
-                     "fechaMov" => date("Y-m-d H:i"),
+    $resumen = array(
+        "_id"       => "001",   
+        "estado"    => "0",
+        "campaign"  => 6118,
+        "fechaMov"  => date("Y-m-d H:i"),
     );
     $resumenDiadema = array("resumen" => [$resumen]);
+    $diadema        = array_merge($infoDiadema, $resumenDiadema);
 
-    $diadema = array_merge($infoDiadema, $resumenDiadema);
-
-    echo '<pre>';
-    var_dump($diadema);
-    echo '</pre>';
-    echo '<pre>id coordinador: '.$_SESSION['id'].'</pre>';
+    //echo '<pre>';
+    //var_dump($diadema);
+    //echo '</pre>';
+    //echo '<pre>id coordinador: '.$_SESSION['id'].'</pre>';
 }
 
 try {
     $collection->insert($diadema);
-    header( "refresh:0; device.php?ic=1&ag=1&sd=".$_POST['serial']);
+    header( "refresh:0; device.php?ic=1&ag=1&sd=".$id);
 }
 catch (MongoCursorException $e) {
-    echo "error message: ".$e->getMessage()."\n";
-    echo "error code: ".$e->getCode()."\n";
-    header( "refresh:0; defaultdevice.php?ic=1&ag=0&sd=".$_POST['serial']);
+    //echo "error message: ".$e->getMessage()."\n";
+    //echo "error code: ".$e->getCode()."\n";
+    header( "refresh:0; device.php?ic=1&ag=0&sd=".$id);
 }
 ?>

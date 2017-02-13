@@ -141,6 +141,7 @@ if(!isset($_GET['ic'])){
     
     $collection->update(array('_id'=>$diademasaliente), array('$addToSet'=>array("resumen"=>$resumen1)));
     $collection->update(array('_id'=>$diademaentrante), array('$addToSet'=>array("resumen"=>$resumen2)));
+    header('Location: device.php?ic=2');
 }
 ?>
 

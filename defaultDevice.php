@@ -14,8 +14,8 @@
                 <div class="jumbotron">
                     <h2 align="center">
                     <?php
-                        if($_GET['ic'] == 0)        echo "Lista de dispositivos";
-                        else if($_GET['ic'] == 1)   echo "Creación de dispositivo";
+                        if($_GET['ic'] == 0)            echo "Lista de dispositivos";
+                        else if($_GET['ic'] == 1)       echo "Creación de dispositivo";
                     ?>
                     </h2>
                     <div class="jumbotron" style="background-color: #F8F8F8; outline: 1px solid #E7E7E7;">
@@ -23,7 +23,7 @@
                         <div class="col-md-8 col-lg-offset-2" style="outline: 1px solid #E7E7E7;">
                             <div class="row">
                             <?php
-                                verDiadema();
+                                if($_GET['ic'] == 0)    verDiadema(100);
                             ?>
                             <p>&nbsp;</p>
                         </div>

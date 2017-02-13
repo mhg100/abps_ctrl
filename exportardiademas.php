@@ -16,7 +16,6 @@ $campaigns          = getListaCampaigns();
 $cantReparaciones   = getCantidadReparaciones();
 $archivo            = "reporte_diademas_".date('m_d_Y').".xls";
 $exportable         = array();
-$formulaSuma        = array("","","","","Cantidad total de mantenimientos: ","=suma(F2:F176)");
 $flag = 1;
 
 //header('Content-Type: text/html; charset=ISO-8859-1');
@@ -31,14 +30,16 @@ foreach($cursor as $document){
     $txtc = iconv('UTF-8', 'ISO-8859-1', "Campaña");
     if($camp == "") $camp = iconv('UTF-8', 'ISO-8859-1', "En reparación");
     if($coor == "") $coor = "Mesa Mantenimiento";
+
     $temp = array(
-        "ID"                => "".$document['_id'],
-        "Marca"             => "".$document['Marca'],
-        "Serial"            => "".$document['serial']."",
-        $txtc               => "".$camp,
-        "Coordinador"       => "".mb_convert_case($coor, MB_CASE_TITLE, "ISO-8859-1"),
-        "# de reparaciones" => "".getCantidadReparaciones()[$document['_id']],
-        "Valor"             => '=SI(B'.($flag + 1).'=$M$1;$M$2;SI(B'.($flag + 1).'=$N$1;$N$2; SI(B'.($flag + 1).'=$O$1;$O$2)))'
+        "ID"                            => "".$document['_id'],
+        "Marca"                         => "".$document['Marca'],
+        "Serial"                        => "".$document['serial']."",
+        $txtc                           => "".$camp,
+        "Coordinador"                   => "".mb_convert_case($coor, MB_CASE_TITLE, "ISO-8859-1"),
+        "# de reparaciones"             => "".getCantidadReparaciones()[$document['_id']],
+        "Valor"                         => '=SI(B'.($flag + 1).'=$N$1,$N$2,SI(B'.($flag + 1).'=$O$1,$O$2, SI(B'.($flag + 1).'=$P$1,$P$2)))',
+        "Costo total de reparaciones "  => "" ."=F".($flag + 1)."*15000"
     );
     
     if($flag == 1){
