@@ -2,27 +2,31 @@
 
 include 'php/php_func.php';
 session_start();
-fTimeStamp();
+error_reporting(E_ALL);
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);
 echo initHTML($_SESSION['rol']);
+fTimeStamp();
 comprobarAdmin();
 ?>
 <body>
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <?php
-                navbar();
-                ?>
+                <?php navbar(); ?>
                 <div class="jumbotron" style="position: relative;">
                     <h2 align="center"><?php
                         if($_GET['ic'] == "0" || !isset($_GET['ic']))   echo "Lista de dispositivos";  
-                        else if($_GET['ic'] == "1")                 echo "Creación de dispositivo";
-                        else if($_GET['ic'] == "2")                 echo "Cambios";
-                        else if($_GET['ic'] == "3")                 echo "Recoger diademas";
-                        else if($_GET['ic'] == "4")                 echo "Diademas en stock";
-                        else if($_GET['ic'] == "5")                 echo "Reparar diademas";
-                        else if($_GET['ic'] == "6")                 echo "Diademas en reparación";
-                        else if($_GET['ic'] == "7")                 echo "Recibir diademas de reparación";
+                        else if($_GET['ic'] == "1")                     echo "Creación de dispositivo";
+                        else if($_GET['ic'] == "2")                     echo "Cambios";
+                        else if($_GET['ic'] == "3")                     echo "Recoger diademas";
+                        else if($_GET['ic'] == "4")                     echo "Diademas en stock";
+                        else if($_GET['ic'] == "5")                     echo "Reparar diademas";
+                        else if($_GET['ic'] == "6")                     echo "Diademas en reparación";
+                        else if($_GET['ic'] == "7")                     echo "Recibir diademas de reparación";
+                        else if($_GET['ic'] == "8")                     echo "Entregar diademas";
+                        else if($_GET['ic'] == "9")                     echo "Baja de diadema";
+                        else if($_GET['ic'] == "10")                    echo "Ver diademas en baja";
                     ?></h2>
                         <div class="clearfix" id="exportar">&nbsp;</div>
                             <div class="jumbotron" style="background-color: #F8F8F8; outline: 0px solid #E7E7E7;">
@@ -31,14 +35,16 @@ comprobarAdmin();
                                         <div class="row">
                                         <?php
                                         if(!isset($_GET['ic']) || $_GET['ic'] == 0) verDiadema("0");
-                                        else if($_GET['ic'] == 1)   adminCrearDiadema();
-                                        else if($_GET['ic'] == 2)   cambioDiadema();
-                                        else if($_GET['ic'] == 3)   recogerDiademas();
-                                        else if($_GET['ic'] == 4)   verDiadema("1");
-                                        else if($_GET['ic'] == 5)   repararDiademas();
-                                        else if($_GET['ic'] == 6)   verDiademasEnReparacion();
-                                        else if($_GET['ic'] == 7)   recibirDiademasDeReparacion();
-                                        else if($_GET['ic'] == 8)   entregarDiademas();
+                                        else if($_GET['ic'] == 1)  adminCrearDiadema();
+                                        else if($_GET['ic'] == 2)  cambioDiadema();
+                                        else if($_GET['ic'] == 3)  recogerDiademas();
+                                        else if($_GET['ic'] == 4)  verDiadema("1");
+                                        else if($_GET['ic'] == 5)  repararDiademas();
+                                        else if($_GET['ic'] == 6)  verDiademasEnReparacion();
+                                        else if($_GET['ic'] == 7)  recibirDiademasDeReparacion();
+                                        else if($_GET['ic'] == 8)  entregarDiademas();
+                                        else if($_GET['ic'] == 9)  bajaDiademas();
+                                        else if($_GET['ic'] == 10) verDiademasEnBaja();
                                         ?>
                                         <p>&nbsp;</p>
                                     </div>

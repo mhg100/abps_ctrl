@@ -3,6 +3,10 @@
     session_start();
     fTimeStamp();
     echo initHTML($_SESSION['rol']);
+
+    error_reporting(E_ALL);
+    ini_set('display_errors', TRUE);
+    ini_set('display_startup_errors', TRUE);
 ?>
 <body>
     <div class="container-fluid">
@@ -23,7 +27,7 @@
                         <div class="col-md-8 col-lg-offset-2" style="outline: 1px solid #E7E7E7;">
                             <div class="row">
                             <?php
-                                if($_GET['ic'] == 0)    verDiadema(100);
+                                if($_GET['ic'] == 0)    verDiadema("100");
                             ?>
                             <p>&nbsp;</p>
                         </div>

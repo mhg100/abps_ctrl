@@ -66,34 +66,34 @@ function llamarPieChart($width, $height)
     $campids    = array_keys($camps);
     //172.29.106.225
     echo '<script type="text/javascript">'."\xA";
-    echo "    google.charts.load('current', {'packages':['corechart']});\xA";
-    echo "    google.charts.setOnLoadCallback(drawChart);\xA";
-    echo "    function drawChart() {\xA";
-    echo "        var data = google.visualization.arrayToDataTable([\xA";
-    echo "            ['Campaña', '% de diademas'],\xA";
+    echo indent(04)."google.charts.load('current', {'packages':['corechart']});\xA";
+    echo indent(04)."google.charts.setOnLoadCallback(drawChart);\xA";
+    echo indent(04)."function drawChart() {\xA";
+    echo indent(08)."var data = google.visualization.arrayToDataTable([\xA";
+    echo indent(12)."['Campaña', '% de diademas'],\xA";
     
     for($i = 0; $i<count($campids); $i++){
         $cant   = count($camps[$campids[$i]]);
         $nombre = getListaCampaigns()[$campids[$i]]['nombre'];
-        echo "            ['".$nombre." (".$cant.")', " .$cant."],\xA";
+        echo indent(12)."['".$nombre." (".$cant.")', " .$cant."],\xA";
     }
 
-    echo "            ['Tecnología (".count(getDiademasEnStock()).")', ".count(getDiademasEnStock())."],\xA";
-    echo "         ]);\xA";
-    echo "         var options = {\xA";
-    echo "             title: '',\xA";
-    echo "             pieHole: 0.45,\xA";
-    echo "             width: ".$width.",\xA";
-    echo "             height: ".$height.",\xA";
-  //echo "             pieStartAngle: 100,\xA";
-    echo "             chartArea:{left:0,top:40,width:'85%',height:'70%'},\xA";
-    echo "             backgroundColor: { fill:'transparent' },\xA";
-    echo "             is3D: false\xA";
-  //echo "             is3D: true\xA";
-    echo "         };\xA";
-    echo "         var chart = new google.visualization.PieChart(document.getElementById('tortaoperaciones'));\xA";
-    echo "         chart.draw(data, options);\xA";
-    echo "     }\xA";
+    echo indent(12)."['Tecnología (".count(getDiademasEnStock()).")', ".count(getDiademasEnStock())."],\xA";
+    echo indent(09)."]);\xA";
+    echo indent(09)."var options = {\xA";
+    echo indent(13)."title: '',\xA";
+    echo indent(13)."pieHole: 0.45,\xA";
+    echo indent(13)."width: ".$width.",\xA";
+    echo indent(13)."height: ".$height.",\xA";
+  //echo indent(13)."pieStartAngle: 100,\xA";
+    echo indent(13)."chartArea:{left:0,top:40,width:'80%',height:'70%'},\xA";
+    echo indent(13)."backgroundColor: { fill:'transparent' },\xA";
+    echo indent(13)."is3D: false\xA";
+  //echo indent(13)."is3D: true\xA";
+    echo indent(09)."};\xA";
+    echo indent(09)."var chart = new google.visualization.PieChart(document.getElementById('tortaoperaciones'));\xA";
+    echo indent(09)."chart.draw(data, options);\xA";
+    echo indent(05)."}\xA";
     echo "</script>\xA";
 }
 function llamarAreaChart($width, $height)
@@ -170,7 +170,8 @@ function navbar()
     echo indent(20).'<div class="navbar-header">'."\xA";
     echo indent(24).'<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">'."\xA";
     echo indent(28).'<span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>'."\xA";
-    echo indent(24).'</button><a class="navbar-brand" href="default.php">ADMin</a>'."\xA";
+    echo indent(24).'</button>'."\xA";
+    echo indent(24).'<a class="navbar-brand" href="default.php">ADMin</a>'."\xA";
     echo indent(20).'</div>'."\xA";
     echo indent(20).'<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">'."\xA";
     echo indent(24).'<ul class="nav navbar-nav">'."\xA";
@@ -180,6 +181,7 @@ function navbar()
     echo indent(36).'<li><a href="device.php">Ver todas las diademas en campaña</a></li>'."\xA";
     echo indent(36).'<li><a href="device.php?ic=4">Ver diademas en stock</a></li>'."\xA";
     echo indent(36).'<li><a href="device.php?ic=6">Ver diademas en reparación</a></li>'."\xA";
+    echo indent(36).'<li><a href="device.php?ic=10">Ver diademas dadas de baja</a></li>'."\xA";
     echo indent(36).'<li role="separator" class="divider"></li>'."\xA";
     echo indent(36).'<li><a href="device.php?ic=1">Crear diadema</a></li>'."\xA";
     echo indent(36).'<li><a href="device.php?ic=2">Realizar cambio</a></li>'."\xA";
@@ -187,6 +189,8 @@ function navbar()
     echo indent(36).'<li><a href="device.php?ic=5">Envío a reparación</a></li>'."\xA";
     echo indent(36).'<li><a href="device.php?ic=7">Recibir de reparación</a></li>'."\xA";
     echo indent(36).'<li><a href="device.php?ic=8">Entregar a campaña</a></li>'."\xA";
+    echo indent(36).'<li role="separator" class="divider"></li>'."\xA";
+    echo indent(36).'<li><a href="device.php?ic=9">Dar de baja</a></li>'."\xA";
     
     if($_SESSION['id'] == "9002"){
         echo indent(36).'<li role="separator" class="divider"></li>'."\xA";
@@ -557,16 +561,15 @@ function crearDiadema()
 function verDiadema($opcion)
 {
     $listaCampaigns                       = getListaCampaigns();
-    if($opcion == "0"){
-        $listaCoordinadores               = getListaCoordinadores();
-        $idcamps                          = array_keys($listaCampaigns);
-        $cant                             = getCantidadDiademasPorCampaign();
-    }
-    else if($opcion == "1") $cant['6118'] = getDiademasEnStock();
+    $cant                                 = getCantidadDiademasPorCampaign();
+    $listaCoordinadores                   = getListaCoordinadores();
+    $idcamps                              = array_keys($listaCampaigns);
+    if($opcion == "1")      $cant['6118'] = getDiademasEnStock();
     else if($opcion == "2") $cant['6118'] = getDiademasEnReparacion();
     
     $inner = '<center><a href="exportardiademas.php" class="text-success">Descargar en formato .xls<span class="glyphicon glyphicon-download-alt"></span></a></center><br>';
     echo indent(4).'<form class="form-horizontal" role="form">'."\xA";
+    
     if($_SESSION['rol'] == 0 && $opcion != "1" && $opcion != "2"){
         echo indent(48)."<script>\xA";
         echo indent(52)."document.getElementById('exportar').innerHTML = '".$inner."';\xA";
@@ -574,7 +577,9 @@ function verDiadema($opcion)
         echo indent(48).'<div class="form-group">'."\xA";
         echo indent(52).'<label for="selectorCampaign" class="col-md-4 control-label">Listar por campaña:</label>'."\xA";
         echo indent(52).'<div class="col-md-4">'."\xA";
+        
         // ------ Opciones selector de campaña ------- //    
+        
         echo indent(56).'<select data-size="7" id="selectorCampaign" name="selectorCampaign" class="selectpicker form-control" data-live-search="true" title="Seleccione una campaña" required autocomplete="off" data-width="355px">'."\xA";
         echo indent(60).'<option value="Todas las campañas">Todas las campañas</option>'."\xA";
 
@@ -589,6 +594,7 @@ function verDiadema($opcion)
         echo indent(52).'</div>'."\xA";
         echo indent(48).'</div>'."\xA";
     }
+    
         echo indent(48).'<h4 id="campseleccionada">&nbsp;</h4>';
         
     for($i = 0; $i < count($listaCampaigns); $i++){
@@ -1439,38 +1445,86 @@ function entregarDiademas()
 }
 function indent($contador)
 {
-    for($i = 0; $i<$contador; $i++){
-        echo " ";
-    }
+    for($i = 0; $i<$contador; $i++) echo " ";
 }
 function bajaDiademas()
 {
     $diademas = getDiademasEnStock();
 
     echo '<form class="form-horizontal" role="form" action="baja.php" method="post">'."\xA";
-    echo '<p class="text-left"><small>Utilice esta opción para seleccionar las diademas que se encuentren en la oficina de Mantenimiento y deban ser reparadas.</small></p>';
+    echo indent(44).'<p class="text-center"><small>Utilice esta opción para seleccionar las diademas que se deban dar de baja.</small></p>'."\xA";
     echo indent(44).'<fieldset>'."\xA";
     echo indent(48).'<div class="form-group">'."\xA";
     echo indent(52).'<label class="col-md-2 control-label" for="id" name="id"></label>'."\xA";
-    echo indent(52).'<div class="col-md-8 input-group" style="outline: 0px>'."\xA";
+    echo indent(52).'<div class="col-md-8 input-group" style="outline: 0px>'."\xA" ;
     echo indent(56).'<span class="input-group-addon"></span>'."\xA";
     echo indent(56).'<select id="diademas[]" name="diademas[]" class="selectpicker" data-live-search="true" multiple data-selected-text-format="count" title="Seleccione las diademas para reparar" data-width="100%">'."\xA";
     
-    for($i = 0; $i < count($diademas); $i++){
-        echo indent(60).'<option>'.$diademas[$i]['_id'].'</option>'."\xA";
-    }
+    for($i = 0; $i < count($diademas); $i++) echo indent(60).'<option>'.$diademas[$i]['_id'].'</option>'."\xA";
     
     echo indent(56).'</select>'."\xA";
     echo indent(52).'</div>'."\xA";
     echo indent(48).'</div>'."\xA";
     echo indent(48).'<div class="form-group">'."\xA";
-    echo indent(52).'<div class="col-md-10 input-group" style="outline: 0px" align="right">'."\xA";
+    echo indent(52).'<div class="col-md-8 input-group col-md-offset-2" align="right">'."\xA";
     echo indent(56).'<fieldset>'."\xA";
     echo indent(60).'<button id="ingresar" name="ingresar" class="btn btn-success">Enviar a reparación</button>'."\xA";
+    if(isset($_GET['m'])){
+        echo indent(60).'<label class="alert alert-success col-md-5 text-center">'."\xA";
+        echo indent(64).'<strong>Diademas dadas de baja correctamente</strong>'."\xA";
+        echo indent(60).'</label>'."\xA";
+    }
     echo indent(56).'</fieldset>'."\xA";
     echo indent(52).'</div>'."\xA";
     echo indent(48).'</div>'."\xA";
     echo indent(44).'</fieldset>'."\xA";
     echo indent(40).'</form>'."\xA";
     
+}
+function getDiademasEnBaja()
+{
+    $collection = fMongoDB();
+    $cursor = $collection->find();
+    $diademasenreparacion = array();
+    
+    foreach($cursor as $document){
+        if(end($document['resumen'])['estado'] == "3"){
+            array_push($diademasenreparacion, $document);
+        }
+    }
+    return $diademasenreparacion;
+}
+function verDiademasEnBaja()
+{
+    $cant  = getDiademasEnBaja();
+    //$inner = '<center><a href="exportardiademas.php" class="text-success">Descargar en formato .xls<span class="glyphicon glyphicon-download-alt"></span></a></center><br>';
+    echo indent(04).'<form class="form-horizontal" role="form">'."\xA";
+    echo indent(48).'<h4 id="campseleccionada">&nbsp;</h4>';
+    echo ''."\xA";
+    for($i = 0; $i < count($cant); $i++){
+        
+        $id    = $cant[$i]['_id'];
+        $marca = $cant[$i]['Marca'];
+        $fecha = end($cant[$i]['resumen'])['fechaMov'];
+
+        echo indent(44).'<div class="form-group">'."\xA";
+        echo indent(48).'<div>'."\xA";
+        echo indent(52).'<label for="iddiadema" class="col-md-3 control-label">Consecutivo:</label>'."\xA";
+        echo indent(52).'<div class="col-md-9 ">'."\xA";
+        echo indent(56).'<input type="text" class="form-control" rel="iddiadema" id="iddiadema" name="iddiadema" value="'.$id.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+        echo indent(52).'</div>'."\xA";
+        echo indent(48).'<div>'."\xA";
+        echo indent(52).'<label for="fecha" class="col-md-3 control-label">Fecha:</label>'."\xA";
+        echo indent(52).'<div class="col-md-9 ">'."\xA";
+        echo indent(56).'<input type="text" class="form-control" rel="fecha" id="fecha" name="fecha" value="'.$fecha.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+        echo indent(52).'</div>'."\xA";
+        echo indent(52).'<label for="marca" class="col-md-3 control-label">Marca:</label>'."\xA";
+        echo indent(52).'<div class="col-md-9">'."\xA";
+        echo indent(56).'<input type="text" class="form-control" rel="marca" id="marca" name="marca" value="'.$marca.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+        echo indent(52).'</div>'."\xA";
+        echo indent(48).'</div>'."\xA";
+        echo indent(48).'</div>'."\xA";
+        echo indent(44).'</div>'."\xA";
+    }
+    echo indent(44).'<script>document.getElementById("campseleccionada").innerHTML = "Cantidad de diademas que se encuentran en baja: '.count($cant).'"; </script>'."\xA";
 }

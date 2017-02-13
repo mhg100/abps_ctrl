@@ -15,7 +15,7 @@ if($cant > 0){
             $id = end($document['resumen'])['_id'];
             $id ++;
             $resumen = array("_id"          => $id,
-                             "estado"       => "0",
+                             "estado"       => "3",
                              "fechaMov"     => date('Y-m-d H:i'),
                              "tecnico_id"    => $_SESSION['id']
             );
@@ -26,24 +26,6 @@ if($cant > 0){
             }
         }
     }
+    header('Location: device.php?ic=9&m=1');
 }
-
-
-/*for($i = 0; count($recoger); $i++){
-    $diademamant = $collection->find(['_id'=>$$recoger[$i]]);
-    
-    foreach($diademamant as $document)  $diademamant = $document;
-    $id = end($diademamant['resumen'])['_id'];
-    $id ++;
-    $resumen2 = array ("_id"                 => $id,
-                       "estado"              => "0",
-                       "fechaMov"            => date ("Y-m-d H:i"),
-                       "tecnico_id"          => $tecnicoid
-    );
-    array_push($diademamant['resumen'], $resumen2);
-    $collection->update(array('_id'=>$diademamant), array('$addToSet'=>array("resumen"=>$resumen2)));
-}*/
-
-
-
 ?>
