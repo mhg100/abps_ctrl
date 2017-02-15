@@ -32,6 +32,9 @@ if (PHP_SAPI == 'cli') die('This example should only be run from a Web Browser')
 require_once 'php/PHPExcel.php';
 
 $objPHPExcel = new PHPExcel();
+$abc = range("A", "Z");
+$num = 123;
+echo strlen($num."");
 
 $objPHPExcel->setActiveSheetIndex(0);
 $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Something');
@@ -46,10 +49,10 @@ $objPHPExcel->getActiveSheet()->setTitle('Name of Sheet 2');
 $objPHPExcel->setActiveSheetIndex(0);
 
 // Redirect output to a client’s web browser (Excel5)
-header('Content-Type: application/vnd.ms-excel');
-header('Content-Disposition: attachment;filename="name_of_file.xls"');
-header('Cache-Control: max-age=0');
-$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-$objWriter->save('php://output');
+//header('Content-Type: application/vnd.ms-excel');
+//header('Content-Disposition: attachment;filename="name_of_file.xls"');
+//header('Cache-Control: max-age=0');
+//$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+//$objWriter->save('php://output');
 
 ?>

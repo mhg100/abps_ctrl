@@ -37,15 +37,14 @@ Marca: 'Jabra',
 serial: '2393-829-109',
 resumen: [
 	 {
-		_id: '001',
+		_id: '1',
 		estado: '0',
 		fechaMov: '25-10-2016 11:33'
 	 }
 ]
 }
 */
-if(!isset($_GET['ic']))
-{
+if(!isset($_GET['ic'])){
     $id             = strtoupper(str_replace(array(".", ",", " ", "-"), "", $_POST['serial']));
     $serial         = strtoupper(str_replace(array(".", ",", " ", "-"), "", $_POST['serialnumber']));
     $marca          = strtoupper($_POST['marca']);
@@ -57,9 +56,10 @@ if(!isset($_GET['ic']))
         "serial"    => $serial
     );
     $resumen = array(
-        "_id"       => "001",   
+        "_id"       => "1",   
         "estado"    => "0",
         "campaign"  => 6118,
+        "tecnico_id"=> $_SESSION['id'],
         "fechaMov"  => date("Y-m-d H:i"),
     );
     $resumenDiadema = array("resumen" => [$resumen]);
@@ -69,15 +69,29 @@ if(!isset($_GET['ic']))
     //var_dump($diadema);
     //echo '</pre>';
     //echo '<pre>id coordinador: '.$_SESSION['id'].'</pre>';
+    $redir = "";
+    
 }
 
 try {
     $collection->insert($diadema);
-    header( "refresh:0; device.php?ic=1&ag=1&sd=".$id);
+    if($_SESSION['id'][0] == "8"){
+        $redir = "refresh:0; tecdev.php?ic=1&ag=1&sd=".$id;
+    }
+    elseif($_SESSION['id'][0] == "9"){
+        $redir = "refresh:0; device.php?ic=1&ag=1&sd=".$id;
+    }
+    header($redir);
 }
 catch (MongoCursorException $e) {
     //echo "error message: ".$e->getMessage()."\n";
     //echo "error code: ".$e->getCode()."\n";
-    header( "refresh:0; device.php?ic=1&ag=0&sd=".$id);
+    if($_SESSION['id'][0] == "8"){
+        $redir = "refresh:0; tecdev.php?ic=1&ag=0&sd=".$id;
+    }
+    elseif($_SESSION['id'][0] == "9"){
+        $redir = "refresh:0; device.php?ic=1&ag=0&sd=".$id;
+    }
+    header($redir);
 }
 ?>

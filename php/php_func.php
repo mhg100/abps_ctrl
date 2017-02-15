@@ -1,5 +1,6 @@
 <?php
 //200.93.165.20
+//172.29.106.225
 //uso, secuencia, clases, actividadas
 function fSesion()
 {
@@ -61,10 +62,10 @@ function initHTML()
 }
 function llamarPieChart($width, $height)
 {
-    $conn       = fSesion();
-    $camps      = getCantidadDiademasPorCampaign();
-    $campids    = array_keys($camps);
-    //172.29.106.225
+    $conn    = fSesion();
+    $camps   = getCantidadDiademasPorCampaign();
+    $campids = array_keys($camps);
+    
     echo '<script type="text/javascript">'."\xA";
     echo indent(04)."google.charts.load('current', {'packages':['corechart']});\xA";
     echo indent(04)."google.charts.setOnLoadCallback(drawChart);\xA";
@@ -89,7 +90,6 @@ function llamarPieChart($width, $height)
     echo indent(13)."chartArea:{left:0,top:40,width:'80%',height:'70%'},\xA";
     echo indent(13)."backgroundColor: { fill:'transparent' },\xA";
     echo indent(13)."is3D: false\xA";
-  //echo indent(13)."is3D: true\xA";
     echo indent(09)."};\xA";
     echo indent(09)."var chart = new google.visualization.PieChart(document.getElementById('tortaoperaciones'));\xA";
     echo indent(09)."chart.draw(data, options);\xA";
@@ -126,6 +126,74 @@ function llamarAreaChart($width, $height)
     echo indent(04)."}\xA";
     echo "</script>\xA";
 }
+function ultimosMovimientos()
+{
+    $collection = fMongoDB();
+    $query      = $collection->find();
+    
+    $movimientos = array("0" => "Entra a stock ",
+                         "1" => "Entregada a ",
+                         "2" => "Sale a reparación ",
+                         "3" => "Dada de baja ");
+    
+    $campaigns  = getListaCampaigns();
+    $diademas   = array();
+    $diademas2  = array();
+    $topdiez    = array();
+    $flag       = 10;
+
+
+    foreach ($query as $diadema){
+        
+        $id      = $diadema["_id"];
+        $resumen = end($diadema['resumen']);
+        $fecha   = $resumen['fechaMov'];
+
+        $diademas2[$id] = array("id"       => $id,
+                                "fecha"    => $fecha,
+                                "resumen"  => $resumen);
+
+        array_push($diademas, $diadema);
+    }
+    
+    usort($diademas2, function($a1, $a2) {
+        $d1 = strtotime($a1['fecha']);
+        $d2 = strtotime($a2['fecha']);
+        return $d2 - $d1;
+    });
+
+    for($i = 0; $i<$flag; $i++){
+        array_push($topdiez, $diademas2[$i]);
+    }
+    echo '<ol>';
+    echo "<table>";
+    echo "<tr>";
+    for($i = 0; $i < count($topdiez); $i++){
+        $id     = $topdiez[$i]['id'];
+        $estado = $topdiez[$i]['resumen']['estado'];
+        $camp   = $topdiez[$i]['resumen']['campaign'];
+        $tecid  = $topdiez[$i]['resumen']['tecnico_id'];
+        
+        switch($estado){
+            case 0:
+                $ech = indent(36)."<td width='45%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]."</li></td></tr>\xA";
+                break;
+            case 1:
+                $ech = indent(36)."<td width='45%'><li><strong>".$diademas[$i]['_id']."</strong></td><td>".$movimientos[$estado]." ".$campaigns[$camp]['nombre']."</li></td></tr>\xA";
+                break;
+            case 2:
+                $ehc = indent(36)."<td width='45%'><li><strong>".$diademas[$i]['_id']."</strong></td><td>".$movimientos[$estado]."</li></td></tr>\xA";
+        }
+        echo $ech;
+    }
+    
+
+        //pprint($diademas[$i]['_id']);
+        //pprint($ultimoresumen);
+    echo indent(32)."</ol>\xA";
+    echo "</table>";
+}
+//db.diademas.find().sort({$natural:-1}).limit(10).pretty()
 function validaEstadoLogin()
 {
     session_start();
@@ -191,6 +259,7 @@ function navbar()
     echo indent(36).'<li><a href="device.php?ic=8">Entregar a campaña</a></li>'."\xA";
     echo indent(36).'<li role="separator" class="divider"></li>'."\xA";
     echo indent(36).'<li><a href="device.php?ic=9">Dar de baja</a></li>'."\xA";
+    echo indent(36).'<li><a href="consecutivo.php">Ver consecutivo de marcación</a></li>'."\xA";
     
     if($_SESSION['id'] == "9002"){
         echo indent(36).'<li role="separator" class="divider"></li>'."\xA";
@@ -560,6 +629,9 @@ function crearDiadema()
 }
 function verDiadema($opcion)
 {
+    ini_set('display_errors', FALSE);
+    ini_set('display_startup_errors', FALSE);
+    
     $listaCampaigns                       = getListaCampaigns();
     $cant                                 = getCantidadDiademasPorCampaign();
     $listaCoordinadores                   = getListaCoordinadores();
@@ -614,8 +686,8 @@ function verDiadema($opcion)
             $nombreAg    = end($diadema['resumen'])['nombresAg'];
             $ip          = end($diadema['resumen'])['ipequipo'];
             $estado      = end($diadema['resumen'])['estado'];
-            $nombrecamp  = $listaCampaigns[$camp]['nombre'];
             $nombrecoord = $listaCoordinadores[$idcoord]['nombre'];
+            $nombrecamp  = $listaCampaigns[$camp]['nombre'];
             $marca       = $diadema['Marca'];
             $id          = $diadema['_id'];
             if($estado == "1" || ($opcion == "1" || $opcion == "2" || $opcion == "100")){
@@ -1050,7 +1122,8 @@ function cambioDiadema()
     $diademasbod = array();
     $resbod      = array();
 
-    foreach($cursor as $doc)    array_push($resbod, $doc);
+    foreach($cursor as $doc)
+        array_push($resbod, $doc);
 
     for($i = 0; $i < count($resbod); $i++){
         if(end($resbod[$i]['resumen'])['estado'] == "0"){
@@ -1412,8 +1485,6 @@ function entregarDiademas()
     echo indent(12).'</div>'."\xA";
     echo indent(08).'</div>'."\xA";
     
-    
-    
     echo indent(08).'<div class="form-group">'."\xA";
     echo indent(12).'<label class="col-md-2 control-label" for="diademas[]" name="diademas[]"></label>'."\xA";
     echo indent(12).'<div class="col-md-8 input-group" style="outline: 0px>'."\xA";
@@ -1429,8 +1500,6 @@ function entregarDiademas()
     echo indent(16).'</select>'."\xA";
     echo indent(12).'</div>'."\xA";
     echo indent(08).'</div>'."\xA";
-    
-    
     
     echo indent(08).'<div class="form-group">'."\xA";
     echo indent(12).'<div class="col-md-10 input-group" style="outline: 0px" align="right">'."\xA";
@@ -1468,7 +1537,7 @@ function bajaDiademas()
     echo indent(48).'<div class="form-group">'."\xA";
     echo indent(52).'<div class="col-md-8 input-group col-md-offset-2" align="right">'."\xA";
     echo indent(56).'<fieldset>'."\xA";
-    echo indent(60).'<button id="ingresar" name="ingresar" class="btn btn-success">Enviar a reparación</button>'."\xA";
+    echo indent(60).'<button id="ingresar" name="ingresar" class="btn btn-success">Dar de baja</button>'."\xA";
     if(isset($_GET['m'])){
         echo indent(60).'<label class="alert alert-success col-md-5 text-center">'."\xA";
         echo indent(64).'<strong>Diademas dadas de baja correctamente</strong>'."\xA";
@@ -1527,4 +1596,12 @@ function verDiademasEnBaja()
         echo indent(44).'</div>'."\xA";
     }
     echo indent(44).'<script>document.getElementById("campseleccionada").innerHTML = "Cantidad de diademas que se encuentran en baja: '.count($cant).'"; </script>'."\xA";
+}
+function getUltimoConsecutivo()
+{
+    $conexion = fSesion();    
+    $sql = "SELECT top 1 * FROM consecutivo ORDER BY id_consecutivo DESC";
+    $qry = sqlsrv_query($conexion, $sql);
+    $resultado = sqlsrv_fetch_array($qry);
+    return $resultado;
 }

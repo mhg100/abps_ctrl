@@ -2,12 +2,9 @@
 
 include 'php/php_func.php';
 session_start();
-error_reporting(E_ALL);
-ini_set('display_errors', TRUE);
-ini_set('display_startup_errors', TRUE);
 echo initHTML($_SESSION['rol']);
-fTimeStamp();
 comprobarAdmin();
+fTimeStamp();
 ?>
 <body>
     <div class="container-fluid">
@@ -16,7 +13,7 @@ comprobarAdmin();
                 <?php navbar(); ?>
                 <div class="jumbotron" style="position: relative;">
                     <h2 align="center"><?php
-                        if($_GET['ic'] == "0" || !isset($_GET['ic']))   echo "Lista de dispositivos";  
+                        if(!isset($_GET['ic']) || $_GET['ic'] == "0")   echo "Lista de dispositivos";  
                         else if($_GET['ic'] == "1")                     echo "Creación de dispositivo";
                         else if($_GET['ic'] == "2")                     echo "Cambios";
                         else if($_GET['ic'] == "3")                     echo "Recoger diademas";

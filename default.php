@@ -1,13 +1,12 @@
 <?php
+session_start();
 include 'php/php_func.php';
 header('Content-Type: text/html; charset=UTF-8');
-session_start();
-fTimeStamp();
+if($_SESSION['rol'] != 0) comprobarAdmin();
 echo initHTML($_SESSION['rol']);
 llamarPieChart(450, 250);
 llamarAreaChart(450, 250);
-if($_SESSION['rol'] != 0)
-comprobarAdmin();
+fTimeStamp();
 ?>
 <body>
     <div class="container-fluid">
@@ -32,7 +31,8 @@ comprobarAdmin();
                         <div class="col-md-4" style="outline: 1px solid #E7E7E7; height:289px">
                             <h4 class="text-center">Últimos 10 movimientos</h4>
                             <div>
-                                <ol type="1">
+                                <?php ultimosMovimientos(); ?>
+                                <!--<ol type="1">
                                     <li>ABPS1010 - Entregada en DPS</li>
                                     <li>ABPS2025 - Cambio por ABPS0321 en Cafam</li>
                                     <li>ABPS1032 - Entregada en DPS</li>
@@ -43,7 +43,7 @@ comprobarAdmin();
                                     <li>Mov 8</li>
                                     <li>Mov 9</li>
                                     <li>Mov 10</li>
-                                </ol>
+                                </ol>-->
                             </div>
                         </div>
                     </div>
