@@ -142,20 +142,17 @@ function ultimosMovimientos()
     $topdiez    = array();
     $flag       = 10;
 
-
     foreach ($query as $diadema){
-        
-        $id      = $diadema["_id"];
-        $resumen = end($diadema['resumen']);
-        $fecha   = $resumen['fechaMov'];
+    $id      = $diadema["_id"];
+    $resumen = end($diadema['resumen']);
+    $fecha   = $resumen['fechaMov'];
 
-        $diademas2[$id] = array("id"       => $id,
-                                "fecha"    => $fecha,
-                                "resumen"  => $resumen);
+    $diademas2[$id] = array("id"       => $id,
+                            "fecha"    => $fecha,
+                            "resumen"  => $resumen);
 
-        array_push($diademas, $diadema);
-    }
-    
+}
+
     usort($diademas2, function($a1, $a2) {
         $d1 = strtotime($a1['fecha']);
         $d2 = strtotime($a2['fecha']);
@@ -165,6 +162,7 @@ function ultimosMovimientos()
     for($i = 0; $i<$flag; $i++){
         array_push($topdiez, $diademas2[$i]);
     }
+    
     echo '<ol>';
     echo "<table>";
     echo "<tr>";
@@ -176,13 +174,13 @@ function ultimosMovimientos()
         
         switch($estado){
             case 0:
-                $ech = indent(36)."<td width='45%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]."</li></td></tr>\xA";
+                $ech = indent(36)."<td width='35%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]."</li></td></tr>\xA";
                 break;
             case 1:
-                $ech = indent(36)."<td width='45%'><li><strong>".$diademas[$i]['_id']."</strong></td><td>".$movimientos[$estado]." ".$campaigns[$camp]['nombre']."</li></td></tr>\xA";
+                $ech = indent(36)."<td width='35%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]." ".$campaigns[$camp]['nombre']."</li></td></tr>\xA";
                 break;
             case 2:
-                $ehc = indent(36)."<td width='45%'><li><strong>".$diademas[$i]['_id']."</strong></td><td>".$movimientos[$estado]."</li></td></tr>\xA";
+                $ehc = indent(36)."<td width='35%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]."</li></td></tr>\xA";
         }
         echo $ech;
     }
@@ -192,8 +190,8 @@ function ultimosMovimientos()
         //pprint($ultimoresumen);
     echo indent(32)."</ol>\xA";
     echo "</table>";
+    //db.diademas.find().sort({$natural:-1}).limit(10).pretty()
 }
-//db.diademas.find().sort({$natural:-1}).limit(10).pretty()
 function validaEstadoLogin()
 {
     session_start();
@@ -639,7 +637,7 @@ function verDiadema($opcion)
     if($opcion == "1")      $cant['6118'] = getDiademasEnStock();
     else if($opcion == "2") $cant['6118'] = getDiademasEnReparacion();
     
-    $inner = '<center><a href="exportardiademas.php" class="text-success">Descargar en formato .xls<span class="glyphicon glyphicon-download-alt"></span></a></center><br>';
+    $inner = '<center><a href="export.php" class="text-success">Descargar en formato .xls<span class="glyphicon glyphicon-download-alt"></span></a></center><br>';
     echo indent(4).'<form class="form-horizontal" role="form">'."\xA";
     
     if($_SESSION['rol'] == 0 && $opcion != "1" && $opcion != "2"){
@@ -942,17 +940,7 @@ function correccionTexto($texto)
 function getListaCoordinadores()
 {
     $conn           = fSesion();
-    $sql1           = "select
-                           coordinadores.id_coordinador as idcoord,
-                           coordinadores.nombres_coordinador as nombres, 
-                           coordinadores.apellidos_coordinador as apellidos, 
-                           coordinadores.campaign_coordinador as idcamp,
-                           campaigns.nombre_campaign as nombrecamp, 
-                           coordinadores.cantidad_agentes_coordinador as cantagentes
-                       from coordinadores, campaigns
-                       where
-                           campaign_coordinador = campaigns.id_campaign
-                       order by nombres";
+    $sql1           = "select coordinadores.id_coordinador as idcoord, coordinadores.nombres_coordinador as nombres, coordinadores.apellidos_coordinador as apellidos, coordinadores.campaign_coordinador as idcamp, campaigns.nombre_campaign as nombrecamp, coordinadores.cantidad_agentes_coordinador as cantagentes from coordinadores, campaigns where campaign_coordinador = campaigns.id_campaign order by nombres";
     $stmt1          = sqlsrv_query($conn, $sql1);
     $coordinadores  = array();
     
@@ -960,7 +948,8 @@ function getListaCoordinadores()
         $coordinadores[$ppl['idcoord']] = array(
             "nombre"     => correccionTexto($ppl['nombres']." ".$ppl['apellidos']),
             "idcamp"     => $ppl['idcamp'],
-            "nombrecamp" => $ppl['nombrecamp']
+            "nombrecamp" => $ppl['nombrecamp'],
+            "id"         => $ppl['idcoord']
         );
     }
     return $coordinadores;
@@ -1156,7 +1145,7 @@ function cambioDiadema()
 
     for($i = 0; $i < count($idcoords); $i++){
         $idcoord = $idcoords[$i];
-        echo indent(56).'<option value="'.$idcoord.'" data-tokens="'.$coords[$idcoord]['nombrecamp'].' '.ucwords(mb_strtolower($coords[$idcoord]['nombre'])).'">'.ucwords(mb_strtolower($coords[$idcoord]['nombre'])).'</option>'."\xA";
+        echo indent(56).'<option value="'.$idcoord.'" data-tokens="'.$coords[$idcoord]['nombrecamp'].' '.ucwords(mb_strtolower($coords[$idcoord]['nombre'])).' '.$idcoord.'">'.ucwords(mb_strtolower($coords[$idcoord]['nombre'])).'</option>'."\xA";
     }
 
     echo indent(52).'</select>' . "\xA";

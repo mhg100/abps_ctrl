@@ -1,25 +1,43 @@
 <?php
-/** Error reporting */
 //error_reporting(E_ALL);
 //ini_set('display_errors', TRUE);
 //ini_set('display_startup_errors', TRUE);
-if (PHP_SAPI == 'cli')
-	die('This example should only be run from a Web Browser');
-/** Include PHPExcel */
 require_once 'php/PHPExcel.php';
-include 'php/php_func.php';
-// Create new PHPExcel object
-$objPHPExcel = new PHPExcel();
-// Set document properties
-$objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
-							 ->setLastModifiedBy("Maarten Balliauw")
-							 ->setTitle("Office 2007 XLSX Test Document")
-							 ->setSubject("Office 2007 XLSX Test Document")
-							 ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
-							 ->setKeywords("office 2007 openxml php")
-							 ->setCategory("Test result file");
+include      'php/php_func.php';
 
-// Descripcion de columnas
+header ('Pragma: public');
+header ('Content-Disposition: attachment;filename="reporte_diademas_'.date('m_d_Y').'.xlsx"');
+header ('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+header ('Cache-Control: cache, must-revalidate');
+header ('Cache-Control: max-age=0');
+header ('Cache-Control: max-age=1');
+
+$objPHPExcel      = new PHPExcel();
+$collection       = fMongoDB();
+$cursor           = $collection->find();
+$coordinadores    = getListaCoordinadores();
+$campaigns        = getListaCampaigns();
+$cantReparaciones = getCantidadReparaciones();
+$archivo          = "reporte_diademas_".date('m_d_Y').".xls";
+$campaigns        = array_values($campaigns);
+$flag             = 2;
+
+$alfabeto   = range("A", "Z");
+$diademas   = array();
+$collection = fMongoDB();
+$query      = $collection->find();
+$campname   = getListaCampaigns();
+
+$objPHPExcel->getProperties()->setCreator("Americas BPS")
+							 ->setLastModifiedBy("Americas  BPS")
+							 ->setTitle("Reporte de diademas")
+							 ->setSubject("")
+							 ->setDescription("Reporte de diademas activas y HV general")
+							 ->setKeywords("Diademas reporte hoja vida hv")
+							 ->setCategory("Reporte");
+
 $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('A1', 'ID')
             ->setCellValue('B1', 'Marca')
@@ -36,22 +54,29 @@ $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('O2', '50')
             ->setCellValue('P2', '45');
 
-$collection       = fMongoDB();
-$cursor           = $collection->find();
-$coordinadores    = getListaCoordinadores();
-$campaigns        = getListaCampaigns();
-$cantReparaciones = getCantidadReparaciones();
-$archivo          = "reporte_diademas_".date('m_d_Y').".xls";
-$exportable       = array();
-$flag             = 2;
-$campaigns        = array_values($campaigns);
+$objPHPExcel->getActiveSheet()->setTitle('Diademas activas');
+
+$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(19);
+$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(12);
+$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(19);
+$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(18);
+$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(27);
+$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(14);
+$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(12);
+$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(21);
 
 foreach($cursor as $document){
     $coor = $coordinadores[end($document['resumen'])['coordinador_id']]['nombre'];
     $camp = $coordinadores[end($document['resumen'])['coordinador_id']]['nombrecamp'];
+    $esta = end($document['resumen'])['estado'];
 
-    if($camp == "") $camp = iconv('UTF-8', 'ISO-8859-1', "En reparación");
-    if($coor == "") $coor = "Mesa Mantenimiento";
+    if($camp == ""){
+        $camp = iconv('UTF-8', 'ISO-8859-1', "En reparación");
+    }
+    if($esta == "0"){
+        $camp = "Tecnología";
+        $coor = "Mesa Mantenimiento";
+    }
 
     $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('A'.$flag, $document['_id'])
@@ -65,36 +90,99 @@ foreach($cursor as $document){
     $flag++;
 }
 
-$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(19);
-$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(12);
-$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(19);
-$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(18);
-$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(27);
-$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(14);
-$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(12);
-$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(21);
-
-$objPHPExcel->getActiveSheet()->setTitle('Diademas activas');
+ ///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 
 $objPHPExcel->createSheet();
-$objPHPExcel->setActiveSheetIndex(1);
 
-// Rename worksheet
-$objPHPExcel->setActiveSheetIndex(1)->setTitle('Hoja de vida de diademas');
-// Redirect output to a client’s web browser (Excel2007)
-header('Pragma: public'); // HTTP/1.0
-header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="01simple.xlsx"');
-header('Cache-Control: max-age=0');
-// If you're serving to IE 9, then the following may be needed
-header('Cache-Control: max-age=1');
-// If you're serving to IE over SSL, then the following may be needed
-header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
-header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
-header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+$objPHPExcel->setActiveSheetIndex(1)
+            ->setTitle('Hoja de vida de diademas')
+            ->setCellValue('A1', 'ID de diadema')
+            ->setCellValue('B1', 'Movimientos');
+
+$objPHPExcel->setActiveSheetIndex(1)->getColumnDimension('A')->setWidth(19);
+
+ //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
+$movimientos = array("0" => "Entra a stock",
+                     "1" => "Entregada a",
+                     "2" => "Sale a reparación",
+                     "3" => "Dada de baja");
+
+foreach($query as $diadema){
+    array_push($diademas, $diadema);
+}
+
+$diademas2 = $diademas;
+
+usort($diademas2, function($a1, $a2) {
+    $d1 = count($a1['resumen']);
+    $d2 = count($a2['resumen']);
+    return $d2 - $d1;
+});
+
+for($i = 0; $i < count($diademas2); $i++){
+    $diadematemp = $diademas2[$i];
+    $id = $diadematemp['_id'];
+    $cursor = $i+1;
+    $objPHPExcel->setActiveSheetIndex(1)->setCellValue('A'.$cursor, $id);
+    
+    for($j = 0; $j < count($diadematemp['resumen']); $j++){
+        $resumentemp = $diadematemp['resumen'][$j];
+        
+        $diademaAnterior = $resumentemp['idDiademaAnterior'];
+        $tecnico = $resumentemp['tecnico_id'];
+        $fecha = $resumentemp['fechaMov'];
+        $estado = $resumentemp['estado'];
+        $camp = $resumentemp['campaign'];
+        
+        $fecha = date("d/m/Y", strtotime($fecha));
+        
+        switch($estado){
+            case 0:
+                $motivo = "$movimientos[0] ";
+                break;
+            case 1:
+                $motivo = $movimientos[1]." ".$campname[$camp]['nombre'];
+                break;
+            case 2:
+                $motivo = $movimientos[2];
+                break;
+            case 3:
+                $motivo = $movimientos[3];
+                break;
+        }
+        
+        
+        //echo "$motivo el día $fecha </br></br>";
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+$objPHPExcel->setActiveSheetIndex(0);
+
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 $objWriter->save('php://output');
+
 exit;
 
-
 ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
