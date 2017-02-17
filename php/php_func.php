@@ -141,32 +141,30 @@ function ultimosMovimientos()
     $diademas2  = array();
     $topdiez    = array();
     $flag       = 10;
-
     foreach ($query as $diadema){
     $id      = $diadema["_id"];
     $resumen = end($diadema['resumen']);
     $fecha   = $resumen['fechaMov'];
-
     $diademas2[$id] = array("id"       => $id,
                             "fecha"    => $fecha,
                             "resumen"  => $resumen);
-
 }
-
     usort($diademas2, function($a1, $a2) {
         $d1 = strtotime($a1['fecha']);
         $d2 = strtotime($a2['fecha']);
         return $d2 - $d1;
     });
-
     for($i = 0; $i<$flag; $i++){
         array_push($topdiez, $diademas2[$i]);
     }
+    
+    //pprint($topdiez);
     
     echo '<ol>';
     echo "<table>";
     echo "<tr>";
     for($i = 0; $i < count($topdiez); $i++){
+        $camp   = "";
         $id     = $topdiez[$i]['id'];
         $estado = $topdiez[$i]['resumen']['estado'];
         $camp   = $topdiez[$i]['resumen']['campaign'];
@@ -174,18 +172,21 @@ function ultimosMovimientos()
         
         switch($estado){
             case 0:
-                $ech = indent(36)."<td width='35%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]."</li></td></tr>\xA";
+                $ech = indent(36)."<td width='50%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]."</li></td></tr>\xA";
                 break;
             case 1:
-                $ech = indent(36)."<td width='35%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]." ".$campaigns[$camp]['nombre']."</li></td></tr>\xA";
+                $ech = indent(36)."<td width='50%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]." ".$campaigns[$camp]['nombre']."</li></td></tr>\xA";
                 break;
             case 2:
-                $ehc = indent(36)."<td width='35%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]."</li></td></tr>\xA";
+                $ech = indent(36)."<td width='50%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]."</li></td></tr>\xA";
+                break;
+            case 3:
+                $ech = indent(36)."<td width='50%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]."</li></td></tr>\xA";
+                break;
         }
         echo $ech;
     }
     
-
         //pprint($diademas[$i]['_id']);
         //pprint($ultimoresumen);
     echo indent(32)."</ol>\xA";
@@ -287,7 +288,7 @@ function navbar()
     echo indent(28).'<li class="dropdown">'."\xA";
     echo indent(32).'<a class="dropdown-toggle" data-toggle="dropdown" href="#">Técnicos<span class="caret"></span></a>'."\xA";
     echo indent(32).'<ul class="dropdown-menu">'."\xA";
-    echo indent(36).'<li><a href="#">Ver técnicos</a></li>'."\xA";
+    echo indent(36).'<li><a href="tecnico.php?ic=0">Ver técnicos</a></li>'."\xA";
     echo indent(36).'<li class="divider"></li>'."\xA";
     echo indent(36).'<li><a href="tecnico.php?ic=1">Crear</a></li>'."\xA";
     echo indent(36).'<li><a href="#">Modificar</a></li>'."\xA";
@@ -559,7 +560,7 @@ function comprobarAdmin()
     if($_SESSION['rol'] == 1)       header('Location: defaultcoord.php');
     elseif($_SESSION['rol'] == 2)   header('Location: tecdefault.php');
 }
-function crearDiadema()
+/*function crearDiadema()
 {
     echo            '<form class="form-horizontal" role="form" action="crear_diadema.php" method="post">'."\xA";
     echo indent(48).'<div align="center">'."\xA";
@@ -624,7 +625,7 @@ function crearDiadema()
     echo indent(52).'else $("#serialnumber").prop("disabled", true);'."\xA";
     echo indent(48).'});'."\xA";
     echo indent(44).'</script>'."\xA";
-}
+}*/
 function verDiadema($opcion)
 {
     ini_set('display_errors', FALSE);
@@ -868,14 +869,14 @@ function adminCrearDiadema()
 
     echo            '<form class="form-horizontal" role="form" action="admin_crear_diadema.php" method="post">'."\xA";
     echo indent(44).'<div align="center">'."\xA";
-    echo indent(52).'<p class="text-left"><small>Utilice esta opción para crear dispositivos. Quedarán almacenados como dispositivos en stock.</small></p>'."\xA";
+    echo indent(52).'<p class="text-left"><small>Utilice esta opción para crear dispositivos. Quedarán almacenados como dispositivos en stock.Consecutivo actual: <strong>'.getUltimoConsecutivo()['numero_consecutivo'].'</strong></small></p>'."\xA";
     echo indent(48).'<!--Formulario-->'."\xA";
     echo indent(48).'<div class="form-group">'."\xA";
     echo indent(52).'<label for="serial" class="col-md-4 control-label">Serial:</label>'."\xA";
     echo indent(52).'<div class="col-md-6">'."\xA";
-    echo indent(56).'<input type="text" data-toggle="tooltip" title="<br><img src='.$diadema.'>'."\xA";
+    echo indent(56).'<input type="text" autofocus data-toggle="tooltip" title="<br><img src='.$diadema.'>'."\xA";
     echo indent(57).'<br><br>Verifique el consecutivo grabado en la bocina de la diadema.<br><br>"'."\xA";
-    echo indent(57).'class="form-control back-tooltips" rel="serial" id="serial" name="serial" autocomplete="off" placeholder="Consecutivo grabado en el auricular" required autofocus>'."\xA";
+    echo indent(57).'<input class="form-control back-tooltips" rel="serial" id="serial" name="serial" autocomplete="off" placeholder="Consecutivo grabado en el auricular" required autofocus">'."\xA";
     echo indent(52).'</div>'."\xA";
     echo indent(48).'</div>'."\xA";
     echo indent(48).'<div class="form-group">'."\xA";
@@ -1204,6 +1205,40 @@ function cambioDiadema()
     echo indent(48).'else $( "#serialnumber" ).prop( "disabled", true );' . "\xA";
     echo indent(44).'});' . "\xA";
     echo indent(40).'</script>' . "\xA";
+}
+function getTecnicos()
+{
+    $conn = fSesion();
+    $sql  = "select tecnicos.id_tecnico, tecnicos.nombres_tecnico, tecnicos.apellidos_tecnico, tecnicos.lider_tecnico, admins.id_admin, admins.nombres_admin, admins.apellidos_admin, tecnicos.ubicacion_tecnico, ubicaciones.nombre_ubicacion from tecnicos, admins, ubicaciones where ubicacion_tecnico = ubicaciones.id_ubicacion and admins.id_admin = tecnicos.lider_tecnico order by nombres_tecnico";
+    $sql2 = "select id_admin,nombres_admin, apellidos_admin from	admins order by nombres_admin";
+    $stmt = sqlsrv_query($conn, $sql);
+    $stmt2= sqlsrv_query($conn, $sql2);
+    
+    $tecs = array();
+    
+    while($ppl = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)){
+        $idtecnico      = $ppl['id_tecnico'];
+        $nombreTecnico  = $ppl['nombres_tecnico']." ".$ppl['apellidos_tecnico'];
+        $lider          = $ppl['nombres_admin']." ".$ppl['apellidos_admin'];
+        $ubicacion      = $ppl['nombre_ubicacion'];
+        
+        $temp = array("id"=>$idtecnico,
+                      "nombre"=>$nombreTecnico,
+                      "lider"=>$lider,
+                      "ubicacion"=>$ubicacion);
+        $tecs[$idtecnico] = $temp;
+    }
+    
+    while($ppl = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC)){
+        $idadmin        = $ppl['id_admin'];
+        $nombreadmin    = $ppl['nombres_admin']." ".$ppl['apellidos_admin'];
+        
+        $temp = array("id"=>$idadmin,
+                      "nombre"=>$nombreadmin);
+        
+        $tecs[$idadmin] = $temp;
+    }
+    return $tecs;
 }
 function verTecnicos()
 {
@@ -1554,16 +1589,19 @@ function getDiademasEnBaja()
 }
 function verDiademasEnBaja()
 {
-    $cant  = getDiademasEnBaja();
+    $cant     = getDiademasEnBaja();
+    $tecnicos = getTecnicos();
     //$inner = '<center><a href="exportardiademas.php" class="text-success">Descargar en formato .xls<span class="glyphicon glyphicon-download-alt"></span></a></center><br>';
     echo indent(04).'<form class="form-horizontal" role="form">'."\xA";
     echo indent(48).'<h4 id="campseleccionada">&nbsp;</h4>';
-    echo ''."\xA";
+    echo '<br>'."\xA";
     for($i = 0; $i < count($cant); $i++){
         
-        $id    = $cant[$i]['_id'];
-        $marca = $cant[$i]['Marca'];
-        $fecha = end($cant[$i]['resumen'])['fechaMov'];
+        $id       = $cant[$i]['_id'];
+        $marca    = $cant[$i]['Marca'];
+        $fecha    = end($cant[$i]['resumen'])['fechaMov'];
+        $tecn     = end($cant[$i]['resumen'])['tecnico_id'];
+        $tecnico  = $tecnicos[$tecn]['nombre'];
 
         echo indent(44).'<div class="form-group">'."\xA";
         echo indent(48).'<div>'."\xA";
@@ -1572,6 +1610,10 @@ function verDiademasEnBaja()
         echo indent(56).'<input type="text" class="form-control" rel="iddiadema" id="iddiadema" name="iddiadema" value="'.$id.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
         echo indent(52).'</div>'."\xA";
         echo indent(48).'<div>'."\xA";
+        echo indent(52).'<label for="tecnico" class="col-md-3 control-label">Tecnico:</label>'."\xA";
+        echo indent(52).'<div class="col-md-9 ">'."\xA";
+        echo indent(56).'<input type="text" class="form-control" rel="tecnico" id="tecnico" name="tecnico" value="'.$tecnico.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";
+        echo indent(52).'</div>'."\xA";
         echo indent(52).'<label for="fecha" class="col-md-3 control-label">Fecha:</label>'."\xA";
         echo indent(52).'<div class="col-md-9 ">'."\xA";
         echo indent(56).'<input type="text" class="form-control" rel="fecha" id="fecha" name="fecha" value="'.$fecha.'" data-toggle="tooltip" autocomplete="off" disabled>'."\xA";

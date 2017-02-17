@@ -5,7 +5,6 @@ echo initHTML(0);
 fTimeStamp();
 $infoUltConsec = getUltimoConsecutivo();
 ?>
-
 <link href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 <body>
     <div class="container-fluid">
@@ -26,8 +25,8 @@ $infoUltConsec = getUltimoConsecutivo();
                 <div class="form-group">
                     <label class="col-md-4 control-label" for="consecutivonuevo"></label>
                     <div class="col-md-4 input-group">
-                        <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-pencil"></span></span>
-                        <input id="consecutivonuevo" name="consecutivonuevo" type="consecutivonuevo" placeholder="Nuevo consecutivo" maxlength="8" class="form-control input-md" required autocomplete="off">
+                        <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-pencil"></span> <strong>ABPS</strong></span>
+                        <input id="consecutivonuevo" name="consecutivonuevo" type="number" placeholder="XXXX" max="9999" class="form-control input-md" required autocomplete="off">
                     </div>
                 </div>
                 <div class="form-group">

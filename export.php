@@ -1,7 +1,7 @@
 <?php
-//error_reporting(E_ALL);
-//ini_set('display_errors', TRUE);
-//ini_set('display_startup_errors', TRUE);
+/*error_reporting(E_ALL);
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);*/
 require_once 'php/PHPExcel.php';
 include      'php/php_func.php';
 
@@ -125,8 +125,8 @@ usort($diademas2, function($a1, $a2) {
 for($i = 0; $i < count($diademas2); $i++){
     $diadematemp = $diademas2[$i];
     $id = $diadematemp['_id'];
-    $cursor = $i+1;
-    $objPHPExcel->setActiveSheetIndex(1)->setCellValue('A'.$cursor, $id);
+    $fila = $i+2;
+    $objPHPExcel->getActiveSheet()->setCellValue('A'.$fila, $id);
     
     for($j = 0; $j < count($diadematemp['resumen']); $j++){
         $resumentemp = $diadematemp['resumen'][$j];
@@ -153,7 +153,21 @@ for($i = 0; $i < count($diademas2); $i++){
                 $motivo = $movimientos[3];
                 break;
         }
+        $s1 = "";
+        $s2 = "";
+        $s3 = "";
         
+        for($k = -1; $k < 8; $k++){
+            if($k > -1){
+                $s1 = $alfabeto[$k];
+            }
+            for($l = 0; $l < count($alfabeto); $l++){
+                $s2 = $alfabeto[$l+1];
+                $str = "$s2";
+                //pprint($str);
+                //$objPHPExcel->getActiveSheet()->setCellValue("$str".$fila, '$Motivo');
+            }
+        }
         
         //echo "$motivo el día $fecha </br></br>";
     }
@@ -163,7 +177,7 @@ for($i = 0; $i < count($diademas2); $i++){
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 
-$objPHPExcel->setActiveSheetIndex(0);
+//$objPHPExcel->setActiveSheetIndex(0);
 
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 $objWriter->save('php://output');

@@ -16,8 +16,9 @@ if($cant > 0){
             $id ++;
             $resumen = array("_id"          => $id,
                              "estado"       => "3",
+                             "campaign"     => "6118",
                              "fechaMov"     => date('Y-m-d H:i'),
-                             "tecnico_id"    => $_SESSION['id']
+                             "tecnico_id"   => $_SESSION['id']
             );
             try{
                 $collection->update(array('_id'=>$recoger[$i]), array('$addToSet'=>array("resumen"=>$resumen)));

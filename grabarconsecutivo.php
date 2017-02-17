@@ -8,7 +8,7 @@ $conexion    = fSesion();
 $collection  = fMongoDB();
 $cursor      = $collection->find();
 
-$consecutivo = strtoupper($_POST['consecutivonuevo']);
+$consecutivo = "ABPS".$_POST['consecutivonuevo'];
 $tecid       = $_SESSION['id'];
 $ingresar    = true;
 
