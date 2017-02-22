@@ -385,6 +385,9 @@ function navbarTecnico()
     echo indent(36).'<li><a href="tecdev.php?ic=4">Enviar a reparación</a></li>'."\xA";
     echo indent(36).'<li><a href="tecdev.php?ic=5">Recibir de reparación</a></li>'."\xA";
     echo indent(36).'<li><a href="tecdev.php?ic=6">Entregar a campaña</a></li>'."\xA";
+    echo indent(36).'<li class="divider"></li>'."\xA";
+    echo indent(36).'<li><a href="consecutivo.php">Ver consecutivo de marcación</a></li>'."\xA";
+    echo indent(36).'<li><a href="tecdev.php?ic=7">Dar de baja</a></li>'."\xA";
     echo indent(32).'</ul>'."\xA";
     echo indent(28).'</li>'."\xA";
     echo indent(24).'</ul>'."\xA";
