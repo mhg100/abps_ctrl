@@ -13,6 +13,6 @@ $abc3= range("A", "Z");
 
 
 
-pprint($abc2);
+pprint(getTecnicos()[8000]['nombre']);
 
 ?>

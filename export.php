@@ -25,7 +25,7 @@ $cantReparaciones   = getCantidadReparaciones();
 $query              = $collection->find();
 $campname           = getListaCampaigns();
 $alfabeto1          = range("A", "Z");
-$alfabeto2          = range("B", "Z");
+$alfabeto2          = range("B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Z", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV", "AW", "AX", "AY", "AZ", "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BK", "BL", "BM", "BN", "BO", "BP", "BQ", "BR", "BS", "BT", "BU", "BV", "BW", "BX", "BY", "BZ");
 $campaigns          = array_values(getListaCampaigns());
 $archivo            = "reporte_diademas_".date('m_d_Y').".xls";
 $centrado           = array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER));
@@ -65,21 +65,21 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(11);
 $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(19);
 $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(18);
 $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(35);
-$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(18);
+$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(19);
 $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(9);
 $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(26);
-$objPHPExcel->getActiveSheet()->getStyle('A')->applyFromArray($izquierda);
-$objPHPExcel->getActiveSheet()->getStyle('B')->applyFromArray($centrado);
-$objPHPExcel->getActiveSheet()->getStyle('C')->applyFromArray($izquierda);
-$objPHPExcel->getActiveSheet()->getStyle('D')->applyFromArray($centrado);
+$objPHPExcel->getActiveSheet()->getStyle('A')    ->applyFromArray($izquierda);
+$objPHPExcel->getActiveSheet()->getStyle('B')    ->applyFromArray($centrado);
+$objPHPExcel->getActiveSheet()->getStyle('C')    ->applyFromArray($izquierda);
+$objPHPExcel->getActiveSheet()->getStyle('D')    ->applyFromArray($centrado);
 $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->applyFromArray($centrado);
 $objPHPExcel->getActiveSheet()->setAutoFilter('A1:H1');
-$objPHPExcel->getActiveSheet()->freezePane('I2');
+$objPHPExcel->getActiveSheet()->freezePane('A2');
 
 foreach($cursor as $document){
     if(isset(end($document['resumen'])['coordinador_id'])){
         $coorid = end($document['resumen'])['coordinador_id'];
-        $coor   = $coordinadores[$coorid]['nombre'];
+        $coor   = htmlentities($coordinadores[$coorid]['nombre'], ENT_HTML5,'UTF-8');
         $camp   = $coordinadores[$coorid]['nombrecamp'];
     }
     $esta = end($document['resumen'])['estado'];
@@ -89,10 +89,12 @@ foreach($cursor as $document){
     if($esta == "0"){
         $camp = "Tecnología";
         $coor = "Mesa Mantenimiento";
+    }elseif($esta == "3" || $esta == "2"){
+        break(1);
     }
     $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('A'.$flag, $document['_id'])
-                ->setCellValue('B'.$flag, ucfirst($document['Marca']))
+                ->setCellValue('B'.$flag, ucfirst(strtolower($document['Marca'])))
                 ->setCellValue('C'.$flag, $document['serial'])
                 ->setCellValue('D'.$flag, $camp)
                 ->setCellValue('E'.$flag, $coor)
@@ -113,6 +115,8 @@ $objPHPExcel->setActiveSheetIndex(1)
 
 $objPHPExcel->setActiveSheetIndex(1)->getColumnDimension('A')->setWidth(19);
 $objPHPExcel->getActiveSheet()->getStyle("A1")->applyFromArray($centrado);
+$objPHPExcel->getActiveSheet()->getStyle("A1:P1")->getFont()->setBold(true);
+$objPHPExcel->getActiveSheet()->freezePane('A2');
 
  //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -171,9 +175,21 @@ for($i = 0; $i < count($diademas2); $i++){
                 break;
         }
         
-        $objPHPExcel->getActiveSheet()->setCellValue("$columna$fila", "$motivo el día $fecha");
+        $objRichText = new PHPExcel_RichText();
+        
+        $objBold = $objRichText->createTextRun($motivo);
+        $objBold->getFont()->setBold(true);
+        $objRichText->createText(" el día ");
+        $objBold = $objRichText->createTextRun($fecha);
+        $objBold->getFont()->setBold(true);
+        $objRichText->createText(" por ");
+        $objBold = $objRichText->createTextRun(getTecnicos()[$tecnico]['nombre']);
+        $objBold->getFont()->setBold(true);
+        
+        $objPHPExcel->getActiveSheet()->setCellValue("$columna$fila", $objRichText);
         $objPHPExcel->getActiveSheet()->getStyle("$columna$fila")->applyFromArray($izquierda);
-        $objPHPExcel->getActiveSheet()->getColumnDimension($columna)->setWidth(42);
+        $objPHPExcel->getActiveSheet()->getColumnDimension($columna)->setWidth(60);
+        $objPHPExcel->getActiveSheet()->getStyle('A')->applyFromArray($izquierda);
         $resumentemp = "";
         $fecha       = "";
         $estado      = "";
