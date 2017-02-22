@@ -14,26 +14,6 @@
     $columna        = 
     $passw          = 
     $ip             = '';
-    
-
-    /*if($_SESSION['rol'] == '0'){
-        $tabla      = 'dbo.admins';
-        $columna    = 'id_admin';
-        $passw      = 'pass_admin';
-        $apellido   = 'apellidos_admin';
-        $fecha      = 'ultimoacceso_admin';
-        $ip         = 'ultimaip_admin';
-    }
-    else if($_SESSION['rol'] == '1'){
-        $tabla      = 'dbo.coordinadores';
-        $columna    = 'id_coordinador';
-        $passw      = 'pass_coordinador';
-        $apellido   = 'apellidos_coordinador';
-        $fecha      = 'ultimoacceso_coordinador';
-        $ip         = 'ultimaip_coordinador';
-    }*/
-
-    ///////--------------------Nuevo login--------------------//////
 
     if($usuario[0] == "9"){
         $_SESSION['rol'] = '0';
@@ -66,7 +46,8 @@
     $qry = sqlsrv_query($conexion, $sql, array(), array( "Scrollable" => 'static' ));
     $resultado = sqlsrv_fetch_array($qry);
 
-    if($resultado[0] == $usuario){//-------------------------------acceso autorizado
+    if($resultado[0] == $usuario){
+        //-------------------------------acceso autorizado
         if($usuario[0] != "8"){
             $sql = "update $tabla set $fecha = GETDATE(), $ip = '$dirip' where $columna = '$usuario'";
             $qry = sqlsrv_query($conexion, $sql, array(), array( "Scrollable" => 'static' ));
@@ -97,7 +78,8 @@
     }
     else
     {
-        $_SESSION['ns'] = 1;//-------------------------------------acceso restringido
+        $_SESSION['ns'] = 1;
+        //-------------------------------------acceso restringido
         header('Location: index.php');
     }
     sqlsrv_close($conn);

@@ -354,7 +354,7 @@ function navbarCoordinadores()
     echo indent(36).'<span class="glyphicon glyphicon-user"></span>'.$_SESSION['nombres'].' '.$_SESSION['apellidos']."\xA";
     echo indent(32).'</a>'."\xA";
     echo indent(32).'<ul class="dropdown-menu">'."\xA";
-    echo indent(36).'<li><a href="#"><span class="glyphicon glyphicon-info-sign"></span> Ver información personal</a></li>'."\xA";
+    echo indent(36).'<li><a href="infopersonal.php"><span class="glyphicon glyphicon-info-sign"></span> Ver información personal</a></li>'."\xA";
     echo indent(36).'<li class="divider"></li>'."\xA";
     echo indent(36).'<li><a href="logout.php?rol=0"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>'."\xA";
     echo indent(32).'</ul>'."\xA";
@@ -403,7 +403,7 @@ function navbarTecnico()
     echo indent(36).'<span class="glyphicon glyphicon-user"></span> '.$_SESSION['nombres'].' '.$_SESSION['apellidos']."\xA";
     echo indent(32).'</a>'."\xA";
     echo indent(32).'<ul class="dropdown-menu">'."\xA";
-    echo indent(36).'<li><a href="#"><span class="glyphicon glyphicon-info-sign"></span> Ver información personal</a></li>'."\xA";
+    echo indent(36).'<li><a href="infopersonal.php"><span class="glyphicon glyphicon-info-sign"></span> Ver información personal</a></li>'."\xA";
     echo indent(36).'<li class="divider"></li>'."\xA";
     echo indent(36).'<li><a href="logout.php?rol=0"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>'."\xA";
     echo indent(32).'</ul>'."\xA";
@@ -1121,7 +1121,7 @@ function cambioDiadema()
         }
     }
     echo indent(04).'<form class="form-horizontal" role="form" action="cambiodiadema.php" method="post">' . "\xA";
-    echo            '<small><p>Utilice este formulario para realizar cambio de diademas.</small></p>';
+    echo            '<small><p>Utilice este formulario para realizar cambio de diademas.</small></p>'."\xA";
     echo indent(40).'<div align="center">' . "\xA";
     echo indent(44).'<div class="form-group">'."\xA";
     echo indent(48).'<label for="campid" class="col-md-4 control-label">Seleccione la campaña:</label>'."\xA";
@@ -1177,6 +1177,26 @@ function cambioDiadema()
     echo indent(56).'</select>' . "\xA";
     echo indent(52).'</div>' . "\xA";
     echo indent(48).'</div>' . "\xA";
+    
+    echo indent(44).'<div class="form-group">' . "\xA";
+    echo indent(48).'<label for="tipocaso" class="col-md-4 control-label">Seleccione el tipo de caso:</label>' . "\xA";
+    echo indent(48).'<div class="col-md-4">' . "\xA";
+    echo indent(52).'<select id="tipocaso" name="tipocaso" class="selectpicker" data-live-search="true" title="Tipo de caso" data-width="355px" required>' . "\xA";
+
+    echo indent(56).'<option value="1">Incidente</option>' . "\xA";
+    echo indent(56).'<option value="2">Requerimiento de servicio</option>' . "\xA";
+    
+    echo indent(52).'</select>' . "\xA";
+    echo indent(48).'</div>' . "\xA";
+    echo indent(44).'</div>' . "\xA";
+    
+    echo indent(48).'<div class="form-group">'."\xA";
+    echo indent(52).'<label for="caso" class="col-md-4 control-label">Número de caso:</label>'."\xA";
+    echo indent(52).'<div class="col-md-6">'."\xA";
+    echo indent(57).'<input class="form-control back-tooltips" rel="caso" id="caso" name="caso" autocomplete="off" placeholder="Número de caso" required">'."\xA";
+    echo indent(52).'</div>'."\xA";
+    echo indent(48).'</div>'."\xA";
+    
     echo indent(44).'<div class="form-group">' . "\xA";
     echo indent(48).'<div class="col-md-10" align="right">' . "\xA";
     echo indent(52).'<fieldset>' . "\xA";

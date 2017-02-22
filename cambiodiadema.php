@@ -84,15 +84,18 @@ Agregar dato:
 */
 if(!isset($_GET['ic'])){
     
-    $collection      = fMongoDB();
-    $diademaentrante = $_POST['diademaentrante'];
-    $diademasaliente = $_POST['diademasaliente'];
-    $campid          = $_POST['campid'];
-    $coordid         = $_POST['coordid'];
-    $tecnicoid       = "8000";
-    $diademacamp     = $collection->find(array("_id" => $diademasaliente));
-    $diademamant     = $collection->find(array("_id" => $diademaentrante));
-    
+    $collection                    = fMongoDB();
+    $diademaentrante               = $_POST['diademaentrante'];
+    $diademasaliente               = $_POST['diademasaliente'];
+    $campid                        = $_POST['campid'];
+    $coordid                       = $_POST['coordid'];
+    $tecnicoid                     = $_SESSION['id'];
+    $caso                          = $_POST['caso'];
+    $diademacamp                   = $collection->find(array("_id" => $diademasaliente));
+    $diademamant                   = $collection->find(array("_id" => $diademaentrante));
+    $tipocaso                      = $_POST['tipocaso'];
+    if($tipocaso == 1)      $caso  = "INC$caso";
+    elseif($tipocaso == 2)  $caso  = "REQ$caso";
     
     // para la diadema que sale a campaña
     
@@ -113,7 +116,8 @@ if(!isset($_GET['ic'])){
                        "campaign"            => $campid,
                        "fechaMov"            => date ("Y-m-d H:i"),
                        "tecnico_id"          => $tecnicoid,
-                       "idDiademaAnterior"   => $diademaentrante
+                       "idDiademaAnterior"   => $diademaentrante,
+                       "caso"                => $caso;
     );
     array_push($diademacamp['resumen'], $resumen1);
     

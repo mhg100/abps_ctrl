@@ -1,12 +1,12 @@
 <?php
-/*error_reporting(E_ALL);
+error_reporting(E_ALL);
 ini_set('display_errors', TRUE);
-ini_set('display_startup_errors', TRUE);*/
+ini_set('display_startup_errors', TRUE);
 require_once 'php/PHPExcel.php';
-include      'php/php_func.php';
+include 'php/php_func.php';
 
 header ('Pragma: public');
-header ('Content-Disposition: attachment;filename="reporte_diademas_'.date('m_d_Y').'.xlsx"');
+header ('Content-Disposition: attachment;filename="reporte_diademas_"'.date('m_d_Y').'".xls"');
 header ('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
 header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
@@ -14,21 +14,20 @@ header ('Cache-Control: cache, must-revalidate');
 header ('Cache-Control: max-age=0');
 header ('Cache-Control: max-age=1');
 
-$objPHPExcel      = new PHPExcel();
-$collection       = fMongoDB();
-$cursor           = $collection->find();
-$coordinadores    = getListaCoordinadores();
-$campaigns        = getListaCampaigns();
-$cantReparaciones = getCantidadReparaciones();
-$archivo          = "reporte_diademas_".date('m_d_Y').".xls";
-$campaigns        = array_values($campaigns);
-$flag             = 2;
-
-$alfabeto   = range("A", "Z");
-$diademas   = array();
-$collection = fMongoDB();
-$query      = $collection->find();
-$campname   = getListaCampaigns();
+$flag               = 2;
+$objPHPExcel        = new PHPExcel();
+$diademas           = array();
+$diademas2          = array();
+$collection         = fMongoDB();
+$cursor             = $collection->find();
+$coordinadores      = getListaCoordinadores();
+$cantReparaciones   = getCantidadReparaciones();
+$query              = $collection->find();
+$campname           = getListaCampaigns();
+$alfabeto1          = range("A", "Z");
+$alfabeto2          = range("B", "Z");
+$campaigns          = array_values(getListaCampaigns());
+$archivo            = "reporte_diademas_".date('m_d_Y').".xls";
 
 $objPHPExcel->getProperties()->setCreator("Americas BPS")
 							 ->setLastModifiedBy("Americas  BPS")
@@ -66,25 +65,26 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(12);
 $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(21);
 
 foreach($cursor as $document){
-    $coor = $coordinadores[end($document['resumen'])['coordinador_id']]['nombre'];
-    $camp = $coordinadores[end($document['resumen'])['coordinador_id']]['nombrecamp'];
+    if(isset(end($document['resumen'])['coordinador_id'])){
+        $coorid = end($document['resumen'])['coordinador_id'];
+        $coor   = $coordinadores[$coorid]['nombre'];
+        $camp   = $coordinadores[$coorid]['nombrecamp'];
+    }
     $esta = end($document['resumen'])['estado'];
-
     if($camp == ""){
-        $camp = iconv('UTF-8', 'ISO-8859-1', "En reparación");
+        $camp = "En reparación";
     }
     if($esta == "0"){
         $camp = "Tecnología";
         $coor = "Mesa Mantenimiento";
     }
-
     $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('A'.$flag, $document['_id'])
                 ->setCellValue('B'.$flag, $document['Marca'])
                 ->setCellValue('C'.$flag, $document['serial'])
                 ->setCellValue('D'.$flag, $camp)
-                ->setCellValue('E'.$flag, mb_convert_case($coor, MB_CASE_TITLE, "ISO-8859-1"))
-                ->setCellValue('F'.$flag, getCantidadReparaciones()[$document['_id']])
+                ->setCellValue('E'.$flag, $coor)
+                ->setCellValue('F'.$flag, $cantReparaciones[$document['_id']])
                 ->setCellValue('G'.$flag, '=IF(B'.($flag).'=N1,N2,IF(B'.($flag).'=O1,O2, IF(B'.($flag).'=P1,P2)))')
                 ->setCellValue('H'.$flag, "=F$flag*14000");
     $flag++;
@@ -94,13 +94,12 @@ foreach($cursor as $document){
 ///////////////////////////////////////////////////////////////////////////
 
 $objPHPExcel->createSheet();
-
 $objPHPExcel->setActiveSheetIndex(1)
             ->setTitle('Hoja de vida de diademas')
             ->setCellValue('A1', 'ID de diadema')
             ->setCellValue('B1', 'Movimientos');
 
-$objPHPExcel->setActiveSheetIndex(1)->getColumnDimension('A')->setWidth(19);
+//$objPHPExcel->setActiveSheetIndex(1)->getColumnDimension('A')->setWidth(19);
 
  //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -112,9 +111,8 @@ $movimientos = array("0" => "Entra a stock",
 
 foreach($query as $diadema){
     array_push($diademas, $diadema);
+    array_push($diademas2,$diadema);
 }
-
-$diademas2 = $diademas;
 
 usort($diademas2, function($a1, $a2) {
     $d1 = count($a1['resumen']);
@@ -124,52 +122,66 @@ usort($diademas2, function($a1, $a2) {
 
 for($i = 0; $i < count($diademas2); $i++){
     $diadematemp = $diademas2[$i];
-    $id = $diadematemp['_id'];
-    $fila = $i+2;
+    $id          = $diadematemp['_id'];
+    $fila        = $i+2;
     $objPHPExcel->getActiveSheet()->setCellValue('A'.$fila, $id);
     
     for($j = 0; $j < count($diadematemp['resumen']); $j++){
-        $resumentemp = $diadematemp['resumen'][$j];
+        $resumentemp = $diadematemp['resumen'][$j];        
+        $fecha       = $resumentemp['fechaMov'];
+        $estado      = $resumentemp['estado'];
+        $fecha       = date("d/m/Y", strtotime($fecha));
         
-        $diademaAnterior = $resumentemp['idDiademaAnterior'];
-        $tecnico = $resumentemp['tecnico_id'];
-        $fecha = $resumentemp['fechaMov'];
-        $estado = $resumentemp['estado'];
-        $camp = $resumentemp['campaign'];
-        
-        $fecha = date("d/m/Y", strtotime($fecha));
-        
+        if(isset($resumentemp['idDiademaAnterior']))
+            $diademaAnterior = $resumentemp['idDiademaAnterior'];
+        else
+            $diademaAnterior = "";
+        if(isset($resumentemp['tecnico_id']))
+            $tecnico         = $resumentemp['tecnico_id'];
+        else
+            $tecnico         = "8000";
+        if(isset($resumentemp['campaign']))
+            $camp            = $resumentemp['campaign'];
+        elseif($estado == 2)
+            $camp            = "Reparacion";
+
         switch($estado){
-            case 0:
-                $motivo = "$movimientos[0] ";
-                break;
-            case 1:
-                $motivo = $movimientos[1]." ".$campname[$camp]['nombre'];
-                break;
-            case 2:
-                $motivo = $movimientos[2];
-                break;
-            case 3:
-                $motivo = $movimientos[3];
-                break;
+            case 0:  $motivo = "$movimientos[0] ";
+            break; 
+            case 1:  $motivo = $movimientos[1]." ".$campname[$camp]['nombre'];
+            break; 
+            case 2:  $motivo = $movimientos[2];
+            break; 
+            case 3:  $motivo = $movimientos[3];
+            break;
         }
+
         $s1 = "";
         $s2 = "";
-        $s3 = "";
-        
-        for($k = -1; $k < 8; $k++){
+
+        for($k = -1; $k < 2; $k++){
             if($k > -1){
-                $s1 = $alfabeto[$k];
+                $s1 = $alfabeto1[$k];
             }
-            for($l = 0; $l < count($alfabeto); $l++){
-                $s2 = $alfabeto[$l+1];
-                $str = "$s2";
-                //pprint($str);
-                //$objPHPExcel->getActiveSheet()->setCellValue("$str".$fila, '$Motivo');
+            for($l = 0; $l < count($alfabeto2); $l++){
+                $idresumen   = "";
+                $resumentemp = $diadematemp['resumen'][$j];
+                if($resumentemp["_id"] === $idresumen){
+                    break;
+                }else{
+                    $idresumen = $resumentemp["_id"];
+                }
+                $s2 = $alfabeto2[$l];
+                $str = "$s1$s2";
+                $objPHPExcel->getActiveSheet()->setCellValue("$str$fila", "$motivo el día $fecha");
             }
         }
         
-        //echo "$motivo el día $fecha </br></br>";
+        $resumentemp = "";
+        $fecha       = "";
+        $estado      = "";
+        $fecha       = "";
+        $motivo      = "";
     }
 }
 
@@ -177,26 +189,10 @@ for($i = 0; $i < count($diademas2); $i++){
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 
-//$objPHPExcel->setActiveSheetIndex(0);
-
+$objPHPExcel->setActiveSheetIndex(0);
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 $objWriter->save('php://output');
 
 exit;
 
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

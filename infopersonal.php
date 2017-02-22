@@ -4,40 +4,76 @@
     fTimeStamp();
     echo initHTML($_SESSION['rol']);
 ?>
-
+<style>
+    .txtPassword{
+        -webkit-text-security:disc;
+    }
+</style>
 <body>
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <?php navbar(); ?>
+                <?php
+                if($_SESSION['id'][0] == 9)     navbar();
+                elseif($_SESSION['id'][0] == 8) navbarTecnicos();
+                else                            navbarCoordinadores();
+                
+                    if($_GET["ic"] == 1){
+                        $disabled = "";
+                    }else{
+                        $disabled = "disabled";
+                    }
+                ?>
                 <div class="jumbotron" style="background-color: #F8F8F8; outline: 1px solid #E7E7E7;">
                     <h2 class="text-center">Información personal</h2>
                     <div class="row">
-                        <form class="form-horizontal" role="form" action="crearcoordinador.php" method="post">';
+                        <form class="form-horizontal" role="form" id="datospersonales" name="datospersonales" method="post" <?php
+                            if($disabled == ""){
+                                echo 'action="clave.php" ';
+                            }
+                            else{
+                                echo 'action="#" ';
+                            }
+                        ?> autocomplete="off">
                             <div class="col-md-10 text-left col-md-offset-2">
                                 <div class="form-group">
                                     <label for="nombres" class="col-sm-2 control-label">Nombre(s):</label>
                                     <div class="col-md-8">
-                                        <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Nombres" required autocomplete="off" value="<?php echo $_SESSION['nombres']; ?>" <?php if(!isset($_GET["ic"]) || $_GET["ic"] != "1") echo "disabled"; ?> >
+                                        <input type="text" class="form-control" id="nombres" name="nombres" placeholder="Nombres" required autocomplete="off" value="<?php echo $_SESSION['nombres']; ?>" disabled >
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="apellidos" class="col-sm-2 control-label">Apellidos: </label>
                                     <div class="col-md-8">
-                                        <input type="text" class="form-control" id="apellidos" name="apellidos" placeholder="Apellidos" required autocomplete="off" value="<?php echo $_SESSION['apellidos']; ?>" <?php if(!isset($_GET["ic"]) || $_GET["ic"] != "1") echo "disabled"; ?> >
+                                        <input type="text" class="form-control has-error" id="apellidos" name="apellidos" placeholder="Apellidos" required autocomplete="off" value="<?php echo $_SESSION['apellidos']; ?>" disabled >
                                     </div>
                                 </div>
                                 <?php
-                                if(isset($_GET["ic"]) && $_GET["ic"] == 1){
-                                    echo '                                <div class="form-group">';
-                                    echo '                                    <div class="col-sm-offset-2 col-sm-10">';
-                                    echo '                                        <button type="submit" class="btn btn-default" id="cant_agentes" name="cant_agentes">';
-                                    echo '                                            Modificar';
-                                    echo '                                        </button>';
-                                    echo '                                    </div>';
-                                    echo '                                </div>';
-                                }
+                                
+                                if($disabled != "disabled"){
                                 ?>
+                                <div class="form-group" id="pass1">
+                                    <label for="clave" class="col-sm-2 control-label">Clave: </label>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control txtPassword" id="clave" name="clave" placeholder="Nueva clave" required autocomplete="off" value="" <?php echo $disabled?>>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="pass2">
+                                    <label for="clave2" class="col-sm-2 control-label">Repita la nueva clave: </label>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control txtPassword" id="clave2" name="clave2" placeholder="Repita la nueva clave" required autocomplete="off" value="" <?php echo $disabled?>>
+                                    </div>
+                                </div><?php } ?><div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <?php
+                                        if($disabled == ""){
+                                            echo indent(40).'<button type="button" id="enviar" name="enviar" onclick="alerta()" class="btn btn-default" id="modificar" name="modificar">Modificar clave</button>'."\xA";
+                                        }
+                                        elseif($disabled == "disabled"){
+                                            echo indent(40).'<button type="button" id="enviar" name="enviar" onclick="location.href='."'infopersonal.php?ic=1'".'" class="btn btn-default">Modificar clave</button>'."\xA";
+                                        }
+                                        ?></div>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -73,5 +109,32 @@
             </div>
         </div>
     </div>
+    <script>
+        function alerta(){
+            var a = document.getElementById('clave').value;
+            var b = document.getElementById('clave2').value;
+            var c = document.getElementById('pass1');
+            var d = document.getElementById('pass2');
+
+            if(a.length >= 8){
+                if(a === b){
+                    c.className = "form-group has-success"; 
+                    d.className = "form-group has-success";
+                    document.forms['datospersonales'].submit();
+                }else{
+                    c.className = "form-group has-error";
+                    d.className = "form-group has-error";
+                    returnToPreviousPage();
+                    /*document.getElementById("datospersonales").addEventListener("click", function(event){
+                        event.preventDefault()
+                    });*/
+                }
+            }else{
+                c.className = "form-group has-error";
+                d.className = "form-group has-error";
+                returnToPreviousPage();
+            }
+        }
+    </script>
 </body>
 </html>
