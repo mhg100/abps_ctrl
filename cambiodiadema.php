@@ -1,5 +1,10 @@
 <?php
 include 'php/php_func.php';
+error_reporting(E_ALL);
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);
+require_once 'php/PHPExcel.php';
+
 /*
 {
 estados:
@@ -117,7 +122,7 @@ if(!isset($_GET['ic'])){
                        "fechaMov"            => date ("Y-m-d H:i"),
                        "tecnico_id"          => $tecnicoid,
                        "idDiademaAnterior"   => $diademaentrante,
-                       "caso"                => $caso;
+                       "caso"                => $caso
     );
     array_push($diademacamp['resumen'], $resumen1);
     
@@ -139,7 +144,8 @@ if(!isset($_GET['ic'])){
                        "campaign"            => "6118", //--ID de tecnología
                        "fechaMov"            => date ("Y-m-d H:i"),
                        "tecnico_id"          => $tecnicoid,
-                       "idDiademaNueva"      => $diademasaliente
+                       "idDiademaNueva"      => $diademasaliente,
+                       "caso"                => $caso
     );
     array_push($diademamant['resumen'], $resumen2);
     

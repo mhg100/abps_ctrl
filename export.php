@@ -163,6 +163,10 @@ for($i = 0; $i < count($diademas2); $i++){
             $camp            = $resumentemp['campaign'];
         elseif($estado == 2)
             $camp            = "Reparacion";
+        if(isset($resumentemp['caso']))
+            $caso            = " (caso # ".$resumentemp['caso'].")";
+        else
+            $caso            = "";
 
         switch($estado){
             case 0:  $motivo = "$movimientos[0]";
@@ -185,11 +189,13 @@ for($i = 0; $i < count($diademas2); $i++){
         $objRichText->createText(" por ");
         $objBold = $objRichText->createTextRun(getTecnicos()[$tecnico]['nombre']);
         $objBold->getFont()->setBold(true);
+        $objRichText->createText("$caso");
         
         $objPHPExcel->getActiveSheet()->setCellValue("$columna$fila", $objRichText);
         $objPHPExcel->getActiveSheet()->getStyle("$columna$fila")->applyFromArray($izquierda);
-        $objPHPExcel->getActiveSheet()->getColumnDimension($columna)->setWidth(60);
+        $objPHPExcel->getActiveSheet()->getColumnDimension($columna)->setWidth(68);
         $objPHPExcel->getActiveSheet()->getStyle('A')->applyFromArray($izquierda);
+        $objPHPExcel->getActiveSheet()->getStyle('B')->applyFromArray($centrado);
         $resumentemp = "";
         $fecha       = "";
         $estado      = "";
@@ -202,11 +208,65 @@ for($i = 0; $i < count($diademas2); $i++){
        //////////////////////////// / /////////////////////////////////////
       //////////////////////////// / /////////////////////////////////////
 
+$lista = getDiademasEnBaja();
+
+$objPHPExcel->createSheet();
+$objPHPExcel->setActiveSheetIndex(2)
+            ->setTitle('Diademas dadas de baja')
+            ->setCellValue('A1', 'ID de diadema')
+            ->setCellValue('B1', 'Fecha')
+            ->setCellValue('C1', 'Técnico');
+
+for($i = 0; $i < count($lista); $i++){
+    $fila  = $i+2;
+    $id    = $lista[$i]['_id'];
+    $fecha = end($lista[$i]['resumen'])['fechaMov'];
+    $tecid = end($lista[$i]['resumen'])['tecnico_id'];
+    $tecn  = getTecnicos()[$tecid]['nombre'];
+    $objPHPExcel->getActiveSheet()->setCellValue("A$fila", $id);
+    $objPHPExcel->getActiveSheet()->setCellValue("B$fila", $fecha);
+    $objPHPExcel->getActiveSheet()->setCellValue("C$fila", $tecn);
+}
+
+$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(19);
+$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(35);
+$objPHPExcel->getActiveSheet()->freezePane('A2');
+$objPHPExcel->getActiveSheet()->getStyle("A1:C1")->applyFromArray($centrado);
+$objPHPExcel->getActiveSheet()->getStyle("A1:C1")->getFont()->setBold(true);
 
 
+  //////////////////////////// / /////////////////////////////////////
+ //////////////////////////// / /////////////////////////////////////
+//////////////////////////// / /////////////////////////////////////
 
 
+$lista = getDiademasEnReparacion();
 
+$objPHPExcel->createSheet();
+$objPHPExcel->setActiveSheetIndex(3)
+            ->setTitle('Diademas en reparación')
+            ->setCellValue('A1', 'ID de diadema')
+            ->setCellValue('B1', 'Fecha');
+
+for($i = 0; $i < count($lista); $i++){
+    $fila  = $i+2;
+    $id    = $lista[$i]['_id'];
+    $fecha = end($lista[$i]['resumen'])['fechaMov'];
+    $tecid = end($lista[$i]['resumen'])['tecnico_id'];
+    $tecn  = getTecnicos()[$tecid]['nombre'];
+    $objPHPExcel->getActiveSheet()->setCellValue("A$fila", $id);
+    $objPHPExcel->getActiveSheet()->setCellValue("B$fila", $fecha);
+    $objPHPExcel->getActiveSheet()->setCellValue("C$fila", $tecn);
+}
+
+$objPHPExcel->getActiveSheet()->getStyle("A1:C1")->getFont()->setBold(true);
+$objPHPExcel->getActiveSheet()->getStyle("A1:C1")->applyFromArray($centrado);
+$objPHPExcel->getActiveSheet()->getStyle("A2:A10000")->applyFromArray($izquierda);
+$objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(19);
+$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(35);
+$objPHPExcel->getActiveSheet()->freezePane('A2');
 
   //////////////////////////// / /////////////////////////////////////
  //////////////////////////// / /////////////////////////////////////
@@ -217,5 +277,4 @@ $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 $objWriter->save('php://output');
 
 exit;
-
 ?>

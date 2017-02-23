@@ -7,12 +7,12 @@ ini_set('display_startup_errors', TRUE);
 require 'php/php_func.php';
 session_start();
 
-$abc = range("B", "Z");
-$abc2= range("B", "Z");
-$abc3= range("A", "Z");
-
-
-
-pprint(getTecnicos()[8000]['nombre']);
+$bajas = getDiademasEnBaja();
+for($i = 0; $i < count($bajas); $i++){
+    $id    = $bajas[$i]['_id'];
+    $fecha = end($bajas[$i]['resumen'])['fechaMov'];
+    $tecid = end($bajas[$i]['resumen'])['tecnico_id'];
+    $tecn  = getTecnicos()[$tecid]['nombre'];
+}
 
 ?>

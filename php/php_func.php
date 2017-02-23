@@ -245,17 +245,17 @@ function navbar()
     echo indent(28).'<li class="dropdown">'."\xA";
     echo indent(32).'<a class="dropdown-toggle" data-toggle="dropdown" href="#">Diademas<span class="caret"></span></a>'."\xA";
     echo indent(32).'<ul class="dropdown-menu">'."\xA";
-    echo indent(36).'<li><a href="device.php">Ver todas las diademas en campaña</a></li>'."\xA";
-    echo indent(36).'<li><a href="device.php?ic=4">Ver diademas en stock</a></li>'."\xA";
-    echo indent(36).'<li><a href="device.php?ic=6">Ver diademas en reparación</a></li>'."\xA";
     echo indent(36).'<li><a href="device.php?ic=10">Ver diademas dadas de baja</a></li>'."\xA";
+    echo indent(36).'<li><a href="device.php">Ver todas las diademas en campaña</a></li>'."\xA";
+    echo indent(36).'<li><a href="device.php?ic=6">Ver diademas en reparación</a></li>'."\xA";
+    echo indent(36).'<li><a href="device.php?ic=4">Ver diademas en stock</a></li>'."\xA";
     echo indent(36).'<li role="separator" class="divider"></li>'."\xA";
     echo indent(36).'<li><a href="device.php?ic=1">Crear diadema</a></li>'."\xA";
+    echo indent(36).'<li><a href="device.php?ic=8">Entregar a campaña</a></li>'."\xA";
+    echo indent(36).'<li><a href="device.php?ic=5">Envío a reparación</a></li>'."\xA";
     echo indent(36).'<li><a href="device.php?ic=2">Realizar cambio</a></li>'."\xA";
     echo indent(36).'<li><a href="device.php?ic=3">Recoger diademas</a></li>'."\xA";
-    echo indent(36).'<li><a href="device.php?ic=5">Envío a reparación</a></li>'."\xA";
     echo indent(36).'<li><a href="device.php?ic=7">Recibir de reparación</a></li>'."\xA";
-    echo indent(36).'<li><a href="device.php?ic=8">Entregar a campaña</a></li>'."\xA";
     echo indent(36).'<li role="separator" class="divider"></li>'."\xA";
     echo indent(36).'<li><a href="device.php?ic=9">Dar de baja</a></li>'."\xA";
     echo indent(36).'<li><a href="consecutivo.php">Ver consecutivo de marcación</a></li>'."\xA";
@@ -1245,10 +1245,10 @@ function getTecnicos()
         $lider          = $ppl['nombres_admin']." ".$ppl['apellidos_admin'];
         $ubicacion      = $ppl['nombre_ubicacion'];
         
-        $temp = array("id"=>$idtecnico,
-                      "nombre"=>$nombreTecnico,
-                      "lider"=>$lider,
-                      "ubicacion"=>$ubicacion);
+        $temp = array("id"          =>$idtecnico,
+                      "nombre"      =>$nombreTecnico,
+                      "lider"       =>$lider,
+                      "ubicacion"   =>$ubicacion);
         $tecs[$idtecnico] = $temp;
     }
     
@@ -1256,8 +1256,8 @@ function getTecnicos()
         $idadmin        = $ppl['id_admin'];
         $nombreadmin    = $ppl['nombres_admin']." ".$ppl['apellidos_admin'];
         
-        $temp = array("id"=>$idadmin,
-                      "nombre"=>$nombreadmin);
+        $temp = array("id"      =>$idadmin,
+                      "nombre"  =>$nombreadmin);
         
         $tecs[$idadmin] = $temp;
     }
@@ -1601,14 +1601,14 @@ function getDiademasEnBaja()
 {
     $collection = fMongoDB();
     $cursor = $collection->find();
-    $diademasenreparacion = array();
+    $diademasenbaja = array();
     
     foreach($cursor as $document){
         if(end($document['resumen'])['estado'] == "3"){
-            array_push($diademasenreparacion, $document);
+            array_push($diademasenbaja, $document);
         }
     }
-    return $diademasenreparacion;
+    return $diademasenbaja;
 }
 function verDiademasEnBaja()
 {
