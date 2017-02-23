@@ -25,7 +25,7 @@ $cantReparaciones   = getCantidadReparaciones();
 $query              = $collection->find();
 $campname           = getListaCampaigns();
 $alfabeto1          = range("A", "Z");
-$alfabeto2          = range("B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Z", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV", "AW", "AX", "AY", "AZ", "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BK", "BL", "BM", "BN", "BO", "BP", "BQ", "BR", "BS", "BT", "BU", "BV", "BW", "BX", "BY", "BZ");
+$alfabeto2          = array("B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Z", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV", "AW", "AX", "AY", "AZ", "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BK", "BL", "BM", "BN", "BO", "BP", "BQ", "BR", "BS", "BT", "BU", "BV", "BW", "BX", "BY", "BZ");
 $campaigns          = array_values(getListaCampaigns());
 $archivo            = "reporte_diademas_".date('m_d_Y').".xls";
 $centrado           = array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER));
@@ -198,9 +198,19 @@ for($i = 0; $i < count($diademas2); $i++){
     }
 }
 
-  ////////////////////////////////// / /////////////////////////////////////
- ////////////////////////////////// / /////////////////////////////////////
-////////////////////////////////// / /////////////////////////////////////
+        //////////////////////////// / /////////////////////////////////////
+       //////////////////////////// / /////////////////////////////////////
+      //////////////////////////// / /////////////////////////////////////
+
+
+
+
+
+
+
+  //////////////////////////// / /////////////////////////////////////
+ //////////////////////////// / /////////////////////////////////////
+//////////////////////////// / /////////////////////////////////////
 
 $objPHPExcel->setActiveSheetIndex(0);
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
