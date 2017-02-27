@@ -172,16 +172,16 @@ function ultimosMovimientos()
         
         switch($estado){
             case 0:
-                $ech = indent(36)."<td width='50%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]."</li></td></tr>\xA";
+                $ech = indent(36)."<td width='40%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]."</li></td></tr>\xA";
                 break;
             case 1:
-                $ech = indent(36)."<td width='50%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]." ".$campaigns[$camp]['nombre']."</li></td></tr>\xA";
+                $ech = indent(36)."<td width='40%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]." ".$campaigns[$camp]['nombre']."</li></td></tr>\xA";
                 break;
             case 2:
-                $ech = indent(36)."<td width='50%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]."</li></td></tr>\xA";
+                $ech = indent(36)."<td width='40%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]."</li></td></tr>\xA";
                 break;
             case 3:
-                $ech = indent(36)."<td width='50%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]."</li></td></tr>\xA";
+                $ech = indent(36)."<td width='40%'><li><strong>".$id."</strong></td><td>".$movimientos[$estado]."</li></td></tr>\xA";
                 break;
         }
         echo $ech;
