@@ -1,18 +1,21 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', TRUE);
-ini_set('display_startup_errors', TRUE);
+//error_reporting(E_ALL);
+//ini_set('display_errors', TRUE);
+//ini_set('display_startup_errors', TRUE);
 
 require 'php/php_func.php';
 session_start();
+$collection = fMongoDB();
+$cursor     = $collection->find();
 
-$bajas = getDiademasEnBaja();
-for($i = 0; $i < count($bajas); $i++){
-    $id    = $bajas[$i]['_id'];
-    $fecha = end($bajas[$i]['resumen'])['fechaMov'];
-    $tecid = end($bajas[$i]['resumen'])['tecnico_id'];
-    $tecn  = getTecnicos()[$tecid]['nombre'];
+foreach($cursor as $diadema){
+    //pprint($diadema['_id']);
+    if(end($diadema["resumen"])['campaign'] != '6118'){
+        //pprint(end($diadema["resumen"]));
+    }
 }
+
+pprint(getListaCoordinadores());
 
 ?>

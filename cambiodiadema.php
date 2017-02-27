@@ -4,6 +4,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
 require_once 'php/PHPExcel.php';
+session_start();
 
 /*
 {
@@ -140,7 +141,7 @@ if(!isset($_GET['ic'])){
     $id2 ++;
     $resumen2 = array ("_id"                 => $id2,
                        "estado"              => "0",
-                       "coord_id"            => $coordid,
+                       "coordinador_id"      => $coordid,
                        "campaign"            => "6118", //--ID de tecnología
                        "fechaMov"            => date ("Y-m-d H:i"),
                        "tecnico_id"          => $tecnicoid,

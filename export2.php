@@ -5,14 +5,14 @@ ini_set('display_startup_errors', TRUE);
 require_once 'php/PHPExcel.php';
 include 'php/php_func.php';
 
-header ('Pragma: public');
-header ('Content-Disposition: attachment;filename="reporte_diademas_'.date('m_d_Y').'.xlsx"');
-header ('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
-header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header ('Cache-Control: cache, must-revalidate');
-header ('Cache-Control: max-age=0');
-header ('Cache-Control: max-age=1');
+//header ('Pragma: public');
+//header ('Content-Disposition: attachment;filename="reporte_diademas_'.date('m_d_Y').'.xlsx"');
+//header ('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+//header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+//header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+//header ('Cache-Control: cache, must-revalidate');
+//header ('Cache-Control: max-age=0');
+//header ('Cache-Control: max-age=1');
 
 $flag             = 2;
 $objPHPExcel      = new PHPExcel();
@@ -79,32 +79,31 @@ $objPHPExcel->getActiveSheet()->freezePane('A2');
 $diademas  = getCantidadDiademasPorCampaign();
 $campaigns = getListaCampaigns();
 $campid    = array_keys($campaigns);
+$totalres  = array();
 
-for($i = 0; $i < count($campid); $i++){
-    for($j = 0; $j < count($diademas[$campid[$i]]); $j++){
-        $camp = "";
-        $diademaptemp = $diademas[$campid[$i]][$j];
-        $resumentemp  = end($diadematemp['resumen']);
-        if(isset($resumentemp['coordinador_id'])){
-            $coorid   = 'coordinador_id';
-            $coor     = $coordinadores[$coorid]['nombre'];
-            $camp     = $coordinadores[$coorid]['nombrecamp'];
-            $id       = $diadematemp['_id'];
-            $marca    = $diadematemp['Marca'];
-            $serial   = $diadematemp['serial'];
-        }
-        
-        $esta = $resumentemp['estado'];
-        if($camp === ""){
-            $camp = "En reparación";
-        }elseif($camp === "6118" || $esta == "0"){
-            $camp = "Tecnología";
-            $coor = "Mesa mantenimiento";
-        }elseif($esta == "3" || $esta == "2"){
-            break(1);
-        }
-        
-        $objPHPExcel->setActiveSheetIndex(0)
+foreach($cursor as $diadema){
+    $id      = $diadema['_id'];
+    $marca   = $diadema['Marca'];
+    $serial  = $diadema['serial'];
+    $coordid = end($diadema["resumen"])['coordinador_id'];
+    $coord   = $coordinadores[$coord]['nombre'];
+    $camp    = $coordinadores[$coord]['nombrecamp'];
+    $esta = $resumentemp['estado'];
+    
+    if($camp === ""){
+        $camp = "En reparación";
+    }elseif($camp === "6118" || $esta == "0"){
+        $camp = "Tecnología";
+        $coor = "Mesa mantenimiento";
+    }elseif($esta == "3" || $esta == "2"){
+        break(1);
+    }
+    
+    $repara  = $cantReparaciones[$id];
+    
+    
+    
+    $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('A'.$flag, $id)
                 ->setCellValue('B'.$flag, $marca)
                 ->setCellValue('C'.$flag, $serial)
@@ -113,9 +112,47 @@ for($i = 0; $i < count($campid); $i++){
                 ->setCellValue('F'.$flag, $cantReparaciones[$id])
                 ->setCellValue('G'.$flag, '=IF(B'.($flag).'=N1,N2,IF(B'.($flag).'=O1,O2, IF(B'.($flag).'=P1,P2)))')
                 ->setCellValue('H'.$flag, "=F$flag*14000");
-        $flag++;
-    }
+    $flag++;
 }
+
+/*for($i = 0; $i < count($campid); $i++){
+    if(gettype($diademas[$campid[$i]]) != "NULL"){
+        for($j = 0; $j < count($diademas[$campid[$i]]); $j++){
+            $camp = "";
+            $diadematemp = $diademas[$campid[$i]][$j];
+            $resumentemp  = end($diadematemp['resumen']);
+            if(isset($resumentemp['coordinador_id'])){
+                $coorid   = $resumentemp['coordinador_id'];
+                $coor     = $coordinadores[$coorid]['nombre'];
+                $camp     = $coordinadores[$coorid]['nombrecamp'];
+                $id       = $diadematemp['_id'];
+                $marca    = $diadematemp['Marca'];
+                $serial   = $diadematemp['serial'];
+            }
+            $esta = $resumentemp['estado'];
+            if($camp === ""){
+                $camp = "En reparación";
+            }elseif($camp === "6118" || $esta == "0"){
+                $camp = "Tecnología";
+                $coor = "Mesa mantenimiento";
+            }elseif($esta == "3" || $esta == "2"){
+                break(1);
+            }
+
+            $objPHPExcel->setActiveSheetIndex(0)
+                    ->setCellValue('A'.$flag, $id)
+                    ->setCellValue('B'.$flag, $marca)
+                    ->setCellValue('C'.$flag, $serial)
+                    ->setCellValue('D'.$flag, $camp)
+                    ->setCellValue('E'.$flag, $coor)
+                    ->setCellValue('F'.$flag, $cantReparaciones[$id])
+                    ->setCellValue('G'.$flag, '=IF(B'.($flag).'=N1,N2,IF(B'.($flag).'=O1,O2, IF(B'.($flag).'=P1,P2)))')
+                    ->setCellValue('H'.$flag, "=F$flag*14000");
+            $flag++;
+
+        }
+    }
+}*/
 
 /*foreach($cursor as $document){
     if(isset(end($document['resumen'])['coordinador_id'])){
