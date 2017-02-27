@@ -14,22 +14,23 @@ header ('Cache-Control: cache, must-revalidate');
 header ('Cache-Control: max-age=0');
 header ('Cache-Control: max-age=1');
 
-$flag               = 2;
-$objPHPExcel        = new PHPExcel();
-$diademas           = array();
-$diademas2          = array();
-$collection         = fMongoDB();
-$cursor             = $collection->find();
-$coordinadores      = getListaCoordinadores();
-$cantReparaciones   = getCantidadReparaciones();
-$query              = $collection->find();
-$campname           = getListaCampaigns();
-$alfabeto1          = range("A", "Z");
-$alfabeto2          = array("B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Z", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV", "AW", "AX", "AY", "AZ", "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BK", "BL", "BM", "BN", "BO", "BP", "BQ", "BR", "BS", "BT", "BU", "BV", "BW", "BX", "BY", "BZ");
-$campaigns          = array_values(getListaCampaigns());
-$archivo            = "reporte_diademas_".date('m_d_Y').".xls";
-$centrado           = array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER));
-$izquierda          = array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT));
+$flag             = 2;
+$objPHPExcel      = new PHPExcel();
+$diademas         = array();
+$diademas2        = array();
+$collection       = fMongoDB();
+$cursor           = $collection->find();
+$cantdiademas     = getCantidadDiademasPorCampaign();
+$coordinadores    = getListaCoordinadores();
+$cantReparaciones = getCantidadReparaciones();
+$query            = $collection->find();
+$campname         = getListaCampaigns();
+$alfabeto1        = range("A", "Z");
+$alfabeto2        = array("B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Z", "Z", "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV", "AW", "AX", "AY", "AZ", "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BK", "BL", "BM", "BN", "BO", "BP", "BQ", "BR", "BS", "BT", "BU", "BV", "BW", "BX", "BY", "BZ");
+$campaigns        = array_values(getListaCampaigns());
+$archivo          = "reporte_diademas_".date('m_d_Y').".xls";
+$centrado         = array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER));
+$izquierda        = array('alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT));
 
 
 
@@ -76,7 +77,48 @@ $objPHPExcel->getActiveSheet()->getStyle('A1:H1')->applyFromArray($centrado);
 $objPHPExcel->getActiveSheet()->setAutoFilter('A1:H1');
 $objPHPExcel->getActiveSheet()->freezePane('A2');
 
-foreach($cursor as $document){
+$diademas  = getCantidadDiademasPorCampaign();
+$campaigns = getListaCampaigns();
+$campid    = array_keys($cantdiademas);
+
+for($i = 0; $i < count($campid); $i++){
+    for($j = 0; $j < count($diademas[$campid[$i]]); $j++){
+        $camp = "";
+        $diadematemp = $diademas[$campid[$i]][$j];
+        $resumentemp  = end($diadematemp['resumen']);
+        if(isset($resumentemp['coordinador_id'])){
+            $coorid   = $resumentemp['coordinador_id'];
+            $coor     = $coordinadores[$coorid]['nombre'];
+            $camp     = $coordinadores[$coorid]['nombrecamp'];
+            $id       = $diadematemp['_id'];
+            $marca    = $diadematemp['Marca'];
+            $serial   = $diadematemp['serial'];
+        }
+        $esta = $resumentemp['estado'];
+        if($camp === ""){
+            $camp = "En reparación";
+        }elseif($camp === "6118" || $esta == "0"){
+            $camp = "Tecnología";
+            $coor = "Mesa mantenimiento";
+        }elseif($esta == "3" || $esta == "2"){
+            break(1);
+        }
+        
+        $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$flag, $id)
+                ->setCellValue('B'.$flag, $marca)
+                ->setCellValue('C'.$flag, $serial)
+                ->setCellValue('D'.$flag, $camp)
+                ->setCellValue('E'.$flag, $coor)
+                ->setCellValue('F'.$flag, $cantReparaciones[$id])
+                ->setCellValue('G'.$flag, '=IF(B'.($flag).'=N1,N2,IF(B'.($flag).'=O1,O2, IF(B'.($flag).'=P1,P2)))')
+                ->setCellValue('H'.$flag, "=F$flag*14000");
+        $flag++;
+        
+    }
+}
+
+/*foreach($cursor as $document){
     if(isset(end($document['resumen'])['coordinador_id'])){
         $coorid = end($document['resumen'])['coordinador_id'];
         $coor   = htmlentities($coordinadores[$coorid]['nombre'], ENT_HTML5,'UTF-8');
@@ -85,8 +127,7 @@ foreach($cursor as $document){
     $esta = end($document['resumen'])['estado'];
     if($camp == ""){
         $camp = "En reparación";
-    }
-    if($esta == "0"){
+    }elseif($camp === "6118" || $esta === "0"){
         $camp = "Tecnología";
         $coor = "Mesa Mantenimiento";
     }elseif($esta == "3" || $esta == "2"){
@@ -102,7 +143,7 @@ foreach($cursor as $document){
                 ->setCellValue('G'.$flag, '=IF(B'.($flag).'=N1,N2,IF(B'.($flag).'=O1,O2, IF(B'.($flag).'=P1,P2)))')
                 ->setCellValue('H'.$flag, "=F$flag*14000");
     $flag++;
-}
+}*/
 
  ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
