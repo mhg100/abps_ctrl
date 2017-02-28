@@ -14,15 +14,14 @@
         <div class="row">
             <div class="col-md-12">
                 <?php
-                if($_SESSION['id'][0] == 9)     navbar();
-                elseif($_SESSION['id'][0] == 8) navbarTecnicos();
-                else                            navbarCoordinadores();
-                
-                    if($_GET["ic"] == 1){
-                        $disabled = "";
-                    }else{
-                        $disabled = "disabled";
-                    }
+                if($_SESSION['id'][0] == "9")     navbar();
+                elseif($_SESSION['id'][0] == "8") navbarTecnico();
+                else                              navbarCoordinadores();
+                if($_GET["ic"] == 1){
+                    $disabled = "";
+                }else{
+                    $disabled = "disabled";
+                }
                 ?>
                 <div class="jumbotron" style="background-color: #F8F8F8; outline: 1px solid #E7E7E7;">
                     <h2 class="text-center">Información personal</h2>
